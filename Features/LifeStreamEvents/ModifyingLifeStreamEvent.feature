@@ -72,3 +72,16 @@ Examples:
 | Init                                                                                                                              | Init Date)                                                                                                                         | X              | NEO-LSE-BR-10004 | Life stream event metadata title can not include special characters |
 | sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss | Init Date                                                                                                                          | X              | NEO-LSE-BR-10005 | Life stream event title length can not be greater than 128          |
 | Feeling                                                                                                                           | ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss s | X              | NEO-LSE-BR-10006 | Life stream event metadata title length can not be greater than 128 |
+
+Scenario Outline: Life stream event is not allowed to get modified with duplicated matadata 
+Given There is a defined life stream event with title with following properties
+ | Title        | Metadata |
+ | Conversation |          |
+And I have reprovided some life stream event metadata with following properties
+| Title    |
+| Duration |
+| Duration |
+When I modify life stream event 'Duration' with follwoing properties
+| Title        | Metadata |
+| Conversation |          |
+Then I get error with code 'NEO-LSE-BR-10007' and message 'There are duplicated metadata' within the system  
