@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Src\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />
+  </ItemGroup>
+
 </Project>
