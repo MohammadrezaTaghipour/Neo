@@ -1,5 +1,3 @@
-
-
 using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Application.Contracts.StreamEventTypes;
