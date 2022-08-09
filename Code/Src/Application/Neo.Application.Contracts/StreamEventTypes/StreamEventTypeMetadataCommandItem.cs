@@ -1,6 +1,6 @@
 namespace Neo.Application.Contracts.StreamEventTypes;
 
-public class StreamEventTypeMetadaCommandItem
+public class StreamEventTypeMetadataCommandItem
 {
     public string Title { get; set; }
 }
