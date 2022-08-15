@@ -7,7 +7,6 @@
             "type": "process",
             "args": [
                 "build",
-                // "${workspaceFolder}/Code/Src/Application/Neo.Application/Neo.Application.csproj",
                 "${workspaceFolder}/Code/Src/Application/Neo.Application.Contracts/Neo.Application.Contracts.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"

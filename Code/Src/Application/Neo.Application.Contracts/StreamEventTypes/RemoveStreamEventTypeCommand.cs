@@ -6,5 +6,5 @@ public class RemoveStreamEventTypeCommand : ICommand
 {
     public Guid CorrelationId { get; set; }
     public Guid Id { get; set; }
-    public long Version { get; set; }
+    public int Version { get; set; }
 }

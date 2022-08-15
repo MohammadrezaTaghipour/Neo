@@ -13,5 +13,5 @@ public class ModifyStreamEventTypeCommand : ICommand
     public Guid Id { get; set; }
     public string Title { get; set; }
     public IReadOnlyList<StreamEventTypeMetadataCommandItem> Metadata { get; set; }
-    public long Version { get; set; }
+    public int Version { get; set; }
 }
