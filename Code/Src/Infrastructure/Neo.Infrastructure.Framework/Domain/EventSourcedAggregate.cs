@@ -1,4 +1,3 @@
-
 using System;
 using Neo.Infrastructure.Framework.Domain;
 
@@ -7,7 +6,6 @@ namespace Neo.Infrastructure.Framework.Domain;
 public class EventSourcedAggregate<T> : Aggregate<T>
     where T : AggregateState<T>, new()
 {
-
     readonly List<IDomainEvent> _pendingChanges = new();
     public IReadOnlyCollection<IDomainEvent> Changes => _pendingChanges.AsReadOnly();
 
@@ -16,7 +14,7 @@ public class EventSourcedAggregate<T> : Aggregate<T>
 
     protected void AddChange(IDomainEvent evt) => _pendingChanges.Add(evt);
 
-    protected override (T PreviousState, T CurrentState) Apply(IDomainEvent eventToHandle)
+    protected sealed override (T PreviousState, T CurrentState) Apply(IDomainEvent eventToHandle)
     {
         AddChange(eventToHandle);
         return base.Apply(eventToHandle);

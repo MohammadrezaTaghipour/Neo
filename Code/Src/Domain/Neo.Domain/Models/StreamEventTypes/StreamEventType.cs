@@ -6,10 +6,8 @@ namespace Neo.Domain.Models.StreamEventTypes;
 
 public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>
 {
-
     private StreamEventType()
     {
-
     }
 
     protected StreamEventType(StreamEventTypeArg arg)
@@ -21,7 +19,7 @@ public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>
         StreamEventTypeArg arg)
     {
         StreamEventType streamEventType = new(arg);
-        await streamEventType.CompletionTask;
+        await (Task)streamEventType.CompletionTask;
         return streamEventType;
     }
 

@@ -1,11 +1,10 @@
-namespace Neo.Domain.Models.StreamEventTypes;
-
 using Neo.Infrastructure.Framework.Domain;
 using Neo.Domain.Contracts.StreamEventTypes;
 
+namespace Neo.Domain.Models.StreamEventTypes;
+
 public record StreamEventTypeState : AggregateState<StreamEventTypeState>
 {
-
     public StreamEventTypeId Id { get; set; }
 
     public override StreamEventTypeState When(IDomainEvent eventToHandle)
