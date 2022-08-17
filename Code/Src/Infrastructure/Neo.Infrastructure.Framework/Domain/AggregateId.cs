@@ -5,7 +5,7 @@ public abstract class AggregateId
     protected AggregateId(string value)
     {
         if (string.IsNullOrEmpty(value))
-            throw new Exception("Invalida argument for aggregateId.");
+            throw new Exception("Invalid argument for aggregateId.");
         Value = value;
     }
 
@@ -15,6 +15,6 @@ public abstract class AggregateId
 
     public static implicit operator string(AggregateId? id)
     {
-        return id?.ToString();
+        return id?.ToString() ?? throw new Exception("");
     }
 }
