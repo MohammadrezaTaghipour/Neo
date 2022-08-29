@@ -20,7 +20,7 @@ public class InMemoryCommandBus : ICommandBus
         _logger.LogInformation($"Starting handling command of type: {command.GetType().Name}.");
 
         var handler = _serviceProvider
-            .GetService(typeof(ICommandHandler<T>)) as ICommandHandler<T>;
+            .GetService(typeof(IApplicationService<T>)) as IApplicationService<T>;
 
         if (handler == null)
             throw new Exception($"Could not resolve any handler for type: {command.GetType()}.");

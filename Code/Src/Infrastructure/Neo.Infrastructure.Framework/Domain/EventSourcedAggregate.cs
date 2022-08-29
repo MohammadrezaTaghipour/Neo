@@ -3,7 +3,7 @@ using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Infrastructure.Framework.Domain;
 
-public class EventSourcedAggregate<T> : Aggregate<T>
+public abstract class EventSourcedAggregate<T> : Aggregate<T>
     where T : AggregateState<T>, new()
 {
     readonly List<IDomainEvent> _pendingChanges = new();

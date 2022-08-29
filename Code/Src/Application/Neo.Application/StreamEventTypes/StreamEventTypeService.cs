@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 namespace Neo.Application.StreamEventTypes;
 
 public class StreamEventTypeService :
-    ICommandHandler<DefineStreamEventTypeCommand>,
-    ICommandHandler<ModifyStreamEventTypeCommand>,
-    ICommandHandler<RemoveStreamEventTypeCommand>
+    IApplicationService<DefineStreamEventTypeCommand>,
+    IApplicationService<ModifyStreamEventTypeCommand>,
+    IApplicationService<RemoveStreamEventTypeCommand>
 {
-
     private readonly IStreamEventTypeRepository _repository;
     private readonly IStreamEventTypeArgFactory _argFactory;
 
@@ -26,24 +25,26 @@ public class StreamEventTypeService :
     public async Task Handle(DefineStreamEventTypeCommand command)
     {
         var arg = _argFactory.CreateFrom(command);
-        var streamEventType = await StreamEventType.Create(arg);
-        await _repository.Add(streamEventType);
+        var streamEventType = await StreamEventType
+            .Create(arg).ConfigureAwait(false);
+        await _repository.Add(streamEventType).ConfigureAwait(false);
     }
 
     public async Task Handle(ModifyStreamEventTypeCommand command)
     {
         var arg = _argFactory.CreateFrom(command);
         var streamEventType = await _repository.GetBy(
-            arg.Id, command.Version);
-        streamEventType.Modify(arg);
-        await _repository.Add(streamEventType);
+            arg.Id, command.Version).ConfigureAwait(false);
+        await streamEventType.Modify(arg).ConfigureAwait(false);
+        await _repository.Add(streamEventType).ConfigureAwait(false);
     }
 
     public async Task Handle(RemoveStreamEventTypeCommand command)
     {
         var id = new StreamEventTypeId(command.Id);
-        var streamEventType = await _repository.GetBy(id, command.Version);
-        streamEventType.Remove();
-        await _repository.Add(streamEventType);
+        var streamEventType = await _repository
+            .GetBy(id, command.Version).ConfigureAwait(false);
+        await streamEventType.Remove().ConfigureAwait(false);
+        await _repository.Add(streamEventType).ConfigureAwait(false);
     }
 }

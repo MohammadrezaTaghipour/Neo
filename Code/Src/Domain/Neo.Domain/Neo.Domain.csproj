@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NBuilder" Version="6.1.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />
     <ProjectReference Include="..\Neo.Domain.Contracts\Neo.Domain.Contracts.csproj" />
   </ItemGroup>
