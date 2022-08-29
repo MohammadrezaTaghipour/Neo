@@ -1,6 +1,5 @@
 namespace Neo.Infrastructure.Framework.Domain;
 
-using System.Threading.Tasks;
 
 public abstract class Aggregate<T> where T : AggregateState<T>, new()
 {

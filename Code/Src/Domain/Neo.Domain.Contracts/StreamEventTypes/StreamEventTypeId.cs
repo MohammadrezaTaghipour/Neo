@@ -8,5 +8,5 @@ public class StreamEventTypeId : AggregateId
     {
     }
 
-    public static StreamEventTypeId New() => new StreamEventTypeId(Guid.NewGuid());
+    public static StreamEventTypeId New() => new(Guid.NewGuid());
 }

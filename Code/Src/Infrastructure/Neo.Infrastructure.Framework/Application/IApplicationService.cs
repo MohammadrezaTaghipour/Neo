@@ -4,5 +4,5 @@ namespace Neo.Infrastructure.Framework.Application;
 
 public interface IApplicationService<T> where T : ICommand
 {
-    Task Handle(T command);
+    Task Handle(T command, CancellationToken cancellationToken);
 }

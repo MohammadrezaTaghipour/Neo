@@ -22,29 +22,37 @@ public class StreamEventTypeService :
         _argFactory = argFactory;
     }
 
-    public async Task Handle(DefineStreamEventTypeCommand command)
+    public async Task Handle(DefineStreamEventTypeCommand command,
+        CancellationToken cancellationToken)
     {
         var arg = _argFactory.CreateFrom(command);
         var streamEventType = await StreamEventType
             .Create(arg).ConfigureAwait(false);
-        await _repository.Add(streamEventType).ConfigureAwait(false);
+        await _repository.Add(streamEventType, cancellationToken)
+            .ConfigureAwait(false);
     }
 
-    public async Task Handle(ModifyStreamEventTypeCommand command)
+    public async Task Handle(ModifyStreamEventTypeCommand command,
+        CancellationToken cancellationToken)
     {
         var arg = _argFactory.CreateFrom(command);
         var streamEventType = await _repository.GetBy(
-            arg.Id, command.Version).ConfigureAwait(false);
+                arg.Id, command.Version, cancellationToken)
+            .ConfigureAwait(false);
         await streamEventType.Modify(arg).ConfigureAwait(false);
-        await _repository.Add(streamEventType).ConfigureAwait(false);
+        await _repository.Add(streamEventType, cancellationToken)
+            .ConfigureAwait(false);
     }
 
-    public async Task Handle(RemoveStreamEventTypeCommand command)
+    public async Task Handle(RemoveStreamEventTypeCommand command,
+        CancellationToken cancellationToken)
     {
         var id = new StreamEventTypeId(command.Id);
         var streamEventType = await _repository
-            .GetBy(id, command.Version).ConfigureAwait(false);
+            .GetBy(id, command.Version, cancellationToken)
+            .ConfigureAwait(false);
         await streamEventType.Remove().ConfigureAwait(false);
-        await _repository.Add(streamEventType).ConfigureAwait(false);
+        await _repository.Add(streamEventType, cancellationToken)
+            .ConfigureAwait(false);
     }
 }

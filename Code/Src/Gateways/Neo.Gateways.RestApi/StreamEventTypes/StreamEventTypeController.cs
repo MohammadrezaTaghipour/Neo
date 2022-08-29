@@ -16,29 +16,35 @@ public class StreamEventTypeController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(DefineStreamEventTypeCommand command)
+    public async Task<IActionResult> Post(DefineStreamEventTypeCommand command,
+        CancellationToken cancellationToken)
     {
-        await _commandBus.Dispatch(command).ConfigureAwait(false);
+        await _commandBus.Dispatch(command, cancellationToken)
+            .ConfigureAwait(false);
         return Created("", command.Id);
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Put(Guid id, ModifyStreamEventTypeCommand command)
+    public async Task<IActionResult> Put(Guid id, ModifyStreamEventTypeCommand command,
+        CancellationToken cancellationToken)
     {
         command.Id = id;
-        await _commandBus.Dispatch(command).ConfigureAwait(false);
+        await _commandBus.Dispatch(command, cancellationToken)
+            .ConfigureAwait(false);
         return NoContent();
     }
 
     [HttpDelete("{id:guid}/{version:long}")]
-    public async Task<IActionResult> Delete(Guid id, int version)
+    public async Task<IActionResult> Delete(Guid id, int version,
+        CancellationToken cancellationToken)
     {
         var command = new RemoveStreamEventTypeCommand
         {
             Id = id,
             Version = version
         };
-        await _commandBus.Dispatch(command).ConfigureAwait(false);
+        await _commandBus.Dispatch(command, cancellationToken)
+            .ConfigureAwait(false);
         return NoContent();
     }
 }
