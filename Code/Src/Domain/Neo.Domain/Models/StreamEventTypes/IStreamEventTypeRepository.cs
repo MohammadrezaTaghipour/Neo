@@ -7,5 +7,5 @@ public interface IStreamEventTypeRepository : IDomainService
 {
     Task<StreamEventType> GetBy(StreamEventTypeId id, CancellationToken cancellationToken);
     Task<StreamEventType> GetBy(StreamEventTypeId id, int version, CancellationToken cancellationToken);
-    Task Add(StreamEventType streamEventType, CancellationToken cancellationToken);
+    Task Add(StreamEventTypeId id, StreamEventType streamEventType, CancellationToken cancellationToken);
 }

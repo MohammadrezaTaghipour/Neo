@@ -6,7 +6,7 @@ namespace Neo.Infrastructure.Persistence.ES;
 
 public class StreamEventTypeRepository : IStreamEventTypeRepository
 {
-    private IEventSourcedRepository<StreamEventType, StreamEventTypeState, StreamEventTypeId> _repository;
+    private readonly IEventSourcedRepository<StreamEventType, StreamEventTypeState, StreamEventTypeId> _repository;
 
     public StreamEventTypeRepository(
         IEventSourcedRepository<StreamEventType, StreamEventTypeState, StreamEventTypeId> repository)
@@ -16,16 +16,22 @@ public class StreamEventTypeRepository : IStreamEventTypeRepository
 
     public async Task<StreamEventType> GetBy(StreamEventTypeId id,
         CancellationToken cancellationToken)
-        => await _repository.GetById(id, cancellationToken)
+        => await _repository.GetById(GetStreamName(id), id, cancellationToken)
             .ConfigureAwait(false);
 
     public async Task<StreamEventType> GetBy(StreamEventTypeId id,
         int version, CancellationToken cancellationToken)
-        => await _repository.GetBy(id, version, cancellationToken)
+        => await _repository.GetBy(GetStreamName(id),
+                id, version, cancellationToken)
             .ConfigureAwait(false);
 
-    public async Task Add(StreamEventType streamEventType,
+    public async Task Add(StreamEventTypeId id,
+        StreamEventType streamEventType,
         CancellationToken cancellationToken)
-        => await _repository.Add(streamEventType, cancellationToken)
+        => await _repository.Add(GetStreamName(id),
+                streamEventType, cancellationToken)
             .ConfigureAwait(false);
+
+    static StreamName GetStreamName(StreamEventTypeId id) => StreamName
+        .For<StreamEventType, StreamEventTypeState, StreamEventTypeId>(id);
 }

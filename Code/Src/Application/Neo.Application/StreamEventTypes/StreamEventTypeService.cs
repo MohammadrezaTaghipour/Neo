@@ -28,7 +28,7 @@ public class StreamEventTypeService :
         var arg = _argFactory.CreateFrom(command);
         var streamEventType = await StreamEventType
             .Create(arg).ConfigureAwait(false);
-        await _repository.Add(streamEventType, cancellationToken)
+        await _repository.Add(arg.Id, streamEventType, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -40,7 +40,7 @@ public class StreamEventTypeService :
                 arg.Id, command.Version, cancellationToken)
             .ConfigureAwait(false);
         await streamEventType.Modify(arg).ConfigureAwait(false);
-        await _repository.Add(streamEventType, cancellationToken)
+        await _repository.Add(arg.Id, streamEventType, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -52,7 +52,7 @@ public class StreamEventTypeService :
             .GetBy(id, command.Version, cancellationToken)
             .ConfigureAwait(false);
         await streamEventType.Remove().ConfigureAwait(false);
-        await _repository.Add(streamEventType, cancellationToken)
+        await _repository.Add(id, streamEventType, cancellationToken)
             .ConfigureAwait(false);
     }
 }

@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Gateways.RestApi", "Gat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.Persistence.ES", "Infrastructure\Neo.Infrastructure.Persistence.ES\Neo.Infrastructure.Persistence.ES.csproj", "{8ECEA8C5-153D-45D9-9744-08EAB7801191}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.EventStore", "Infrastructure\Neo.Infrastructure.EventStore\Neo.Infrastructure.EventStore.csproj", "{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,7 @@ Global
 		{AFD1734B-317A-4E25-BE92-A38E1CC98268} = {F75980B4-7017-4FF5-9A9E-B6AAD234624C}
 		{53351143-344C-45DB-8E38-11AADD9BF17B} = {AFD1734B-317A-4E25-BE92-A38E1CC98268}
 		{8ECEA8C5-153D-45D9-9744-08EAB7801191} = {68DC6BC7-9F15-42D8-857A-0ACEC781B777}
+		{C9A76CE6-AA4D-4B40-9EE0-9585C4831008} = {68DC6BC7-9F15-42D8-857A-0ACEC781B777}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C420033B-F2DB-4328-8D69-06FEB21349D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -87,5 +90,9 @@ Global
 		{8ECEA8C5-153D-45D9-9744-08EAB7801191}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8ECEA8C5-153D-45D9-9744-08EAB7801191}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8ECEA8C5-153D-45D9-9744-08EAB7801191}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
