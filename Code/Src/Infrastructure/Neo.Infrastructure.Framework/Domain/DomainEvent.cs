@@ -6,11 +6,11 @@ public class DomainEvent : IDomainEvent
 {
     public DomainEvent()
     {
-        EventId = Guid.NewGuid().ToString();
+        EventId = Guid.NewGuid();
         PublishedOn = DateTime.UtcNow;
     }
 
-    public string EventId { get; }
+    public Guid EventId { get; }
     public DateTime PublishedOn { get; }
     public int Version { get; set; }
 }

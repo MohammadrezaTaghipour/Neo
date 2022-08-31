@@ -10,7 +10,7 @@ public abstract class Aggregate<T> where T : AggregateState<T>, new()
 
 
     public T State { get; private set; }
-    public int Version { get; set; }
+    public long Version { get; set; }
     protected readonly AggregateCompletionTask CompletionTask = new();
 
     protected virtual (T PreviousState, T CurrentState) Apply(IDomainEvent eventToHandle)

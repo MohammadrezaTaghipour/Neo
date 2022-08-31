@@ -6,10 +6,13 @@ namespace Neo.Infrastructure.Framework.Domain;
 public abstract class EventSourcedAggregate<T> : Aggregate<T>
     where T : AggregateState<T>, new()
 {
-    readonly List<IDomainEvent> _pendingChanges = new();
+    private IDomainEvent[] Original { get; set; } = Array.Empty<IDomainEvent>();
+    private readonly List<IDomainEvent> _pendingChanges = new();
+
+    public IReadOnlyCollection<object> Current => Original.Concat(_pendingChanges).ToList();
     public IReadOnlyCollection<IDomainEvent> Changes => _pendingChanges.AsReadOnly();
 
-
+    public int OriginalVersion => Original.Length - 1;
     protected void ClearChanges() => _pendingChanges.Clear();
 
     protected void AddChange(IDomainEvent evt) => _pendingChanges.Add(evt);
@@ -18,5 +21,14 @@ public abstract class EventSourcedAggregate<T> : Aggregate<T>
     {
         AddChange(eventToHandle);
         return base.Apply(eventToHandle);
+    }
+
+    public void Load(IReadOnlyCollection<IDomainEvent> events)
+    {
+        Original = events.ToArray();
+        foreach (var domainEvent in events)
+        {
+            base.Apply(domainEvent);
+        }
     }
 }

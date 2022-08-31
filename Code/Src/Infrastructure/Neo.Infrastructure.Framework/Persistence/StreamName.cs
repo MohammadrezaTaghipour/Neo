@@ -20,4 +20,6 @@ public class StreamName
         => new($"{typeof(T).Name}-{entityId}");
 
     public override string ToString() => Value;
+    
+    public static implicit operator string(StreamName streamName) => streamName.Value;
 }
