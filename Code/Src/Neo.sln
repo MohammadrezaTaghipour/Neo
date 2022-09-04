@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Gateways.RestApi", "Gat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.Persistence.ES", "Infrastructure\Neo.Infrastructure.Persistence.ES\Neo.Infrastructure.Persistence.ES.csproj", "{8ECEA8C5-153D-45D9-9744-08EAB7801191}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.EventStore", "Infrastructure\Neo.Infrastructure.EventStore\Neo.Infrastructure.EventStore.csproj", "{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.Framework.EventStore", "Infrastructure\Neo.Infrastructure.Framework.EventStore\Neo.Infrastructure.Framework.EventStore.csproj", "{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
