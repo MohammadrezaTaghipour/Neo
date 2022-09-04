@@ -1,6 +1,9 @@
-var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
+using ServiceHost;
+using Microsoft.AspNetCore;
 
-app.MapGet("/", () => "Hello World!");
 
-app.Run();
+await CreateWebHostBuilder(args).Build().RunAsync();
+
+static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+    WebHost.CreateDefaultBuilder(args)
+        .UseStartup<Startup>();

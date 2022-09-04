@@ -2,7 +2,6 @@ using Neo.Infrastructure.Framework.Application;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Domain.Models.StreamEventTypes;
 using Neo.Domain.Contracts.StreamEventTypes;
-using System.Threading.Tasks;
 
 namespace Neo.Application.StreamEventTypes;
 

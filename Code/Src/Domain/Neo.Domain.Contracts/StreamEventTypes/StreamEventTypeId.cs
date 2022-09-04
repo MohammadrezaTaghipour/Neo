@@ -4,7 +4,7 @@ using Neo.Infrastructure.Framework.Domain;
 
 public class StreamEventTypeId : AggregateId
 {
-    public StreamEventTypeId(Guid value) : base(value.ToString())
+    public StreamEventTypeId(Guid value) : base(value)
     {
     }
 
