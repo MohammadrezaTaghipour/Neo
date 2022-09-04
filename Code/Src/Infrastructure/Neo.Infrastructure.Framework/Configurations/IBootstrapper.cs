@@ -4,5 +4,5 @@ namespace Neo.Infrastructure.Framework.Configurations;
 
 public interface IBootstrapper
 {
-    void Bootstrap(IServiceCollection serviceRegistry);
+    void Bootstrap(IServiceCollection services);
 }

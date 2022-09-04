@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.Persiste
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.Framework.EventStore", "Infrastructure\Neo.Infrastructure.Framework.EventStore\Neo.Infrastructure.Framework.EventStore.csproj", "{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHost", "ServiceHost\ServiceHost.csproj", "{A68F4B6E-9793-4344-83D6-8B2BB453247C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,7 @@ Global
 		{53351143-344C-45DB-8E38-11AADD9BF17B} = {AFD1734B-317A-4E25-BE92-A38E1CC98268}
 		{8ECEA8C5-153D-45D9-9744-08EAB7801191} = {68DC6BC7-9F15-42D8-857A-0ACEC781B777}
 		{C9A76CE6-AA4D-4B40-9EE0-9585C4831008} = {68DC6BC7-9F15-42D8-857A-0ACEC781B777}
+		{A68F4B6E-9793-4344-83D6-8B2BB453247C} = {F75980B4-7017-4FF5-9A9E-B6AAD234624C}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C420033B-F2DB-4328-8D69-06FEB21349D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -94,5 +97,9 @@ Global
 		{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9A76CE6-AA4D-4B40-9EE0-9585C4831008}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A68F4B6E-9793-4344-83D6-8B2BB453247C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A68F4B6E-9793-4344-83D6-8B2BB453247C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A68F4B6E-9793-4344-83D6-8B2BB453247C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A68F4B6E-9793-4344-83D6-8B2BB453247C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
