@@ -10,7 +10,7 @@ public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>
     {
     }
 
-    protected StreamEventType(StreamEventTypeArg arg)
+    private StreamEventType(StreamEventTypeArg arg)
     {
         Apply(new StreamEventTypeDefined(arg.Id, arg.Title));
     }

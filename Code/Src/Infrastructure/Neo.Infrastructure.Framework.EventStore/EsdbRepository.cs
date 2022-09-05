@@ -26,7 +26,7 @@ public class EsdbRepository<TAggregate, TState, TId> :
         CancellationToken cancellationToken)
     {
         if (aggregate.Changes.Count == 0) return;
-        var expectedVersion = aggregate.Version;
+        var expectedVersion = aggregate.OriginalVersion;
         var proposedEvents = Create(aggregate);
         switch (expectedVersion)
         {
@@ -38,7 +38,7 @@ public class EsdbRepository<TAggregate, TState, TId> :
                     cancellationToken: cancellationToken
                 ).ConfigureAwait(false);
                 break;
-            case (int)ExpectedStreamVersion.Any:
+            default:
                 await _client.AppendToStreamAsync(
                     streamName,
                     StreamRevision.FromInt64(expectedVersion),
@@ -46,8 +46,6 @@ public class EsdbRepository<TAggregate, TState, TId> :
                     cancellationToken: cancellationToken
                 ).ConfigureAwait(false);
                 break;
-            default:
-                throw new Exception("Invalid expected stream version.");
         }
     }
 

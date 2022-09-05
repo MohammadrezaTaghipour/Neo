@@ -1,4 +1,4 @@
-namespace Neo.Infrastructure.EventStore.Configs;
+namespace Neo.Infrastructure.EventStore.Configurations;
 
 public class EsDbOption
 {

@@ -6,7 +6,7 @@ using Neo.Infrastructure.EventStore.Serializations;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Framework.Persistence;
 
-namespace Neo.Infrastructure.EventStore.Configs;
+namespace Neo.Infrastructure.EventStore.Configurations;
 
 public class EsDbBootstrapper : IBootstrapper
 {
