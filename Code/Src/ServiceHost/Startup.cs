@@ -26,4 +26,11 @@ public class Startup
             .With(new MvcBootstrapper())
             .Build();
     }
+
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseSwaggerDocs();
+        app.UseCors("CorsPolicy");
+        app.UseMvcWithDefaultRoute();
+    }
 }

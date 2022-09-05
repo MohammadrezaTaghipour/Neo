@@ -19,9 +19,10 @@ public class MvcBootstrapper : IBootstrapper
         AddAriusMvc(services);
     }
 
-    static void AddAriusMvc(IServiceCollection collection)
+    static void AddAriusMvc(IServiceCollection services)
     {
-        collection.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        collection.AddControllers();
+        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddControllers()
+            .AddMvcOptions(x => { x.EnableEndpointRouting = false; });
     }
 }

@@ -37,7 +37,7 @@ public class EsDbBootstrapper : IBootstrapper
             mapper.RegisterKnownEventTypes(_assembliesWithEvents);
             return mapper;
         });
-        services.AddScoped(typeof(IEventSourcedRepository<,,>), typeof(IEventSourcedRepository<,,>));
+        services.AddScoped(typeof(IEventSourcedRepository<,,>), typeof(EsdbRepository<,,>));
         services.AddScoped<IDomainEventFactory, DomainEventFactory>();
         services.AddScoped<IEventSerializer, EventSerializer>();
     }
