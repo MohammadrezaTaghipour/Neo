@@ -5,7 +5,7 @@ using Neo.Domain.Contracts.StreamEventTypes;
 
 namespace Neo.Application.StreamEventTypes;
 
-public class StreamEventTypeService :
+public class StreamEventTypeApplicationService :
     IApplicationService<DefineStreamEventTypeCommand>,
     IApplicationService<ModifyStreamEventTypeCommand>,
     IApplicationService<RemoveStreamEventTypeCommand>
@@ -13,7 +13,7 @@ public class StreamEventTypeService :
     private readonly IStreamEventTypeRepository _repository;
     private readonly IStreamEventTypeArgFactory _argFactory;
 
-    public StreamEventTypeService(
+    public StreamEventTypeApplicationService(
         IStreamEventTypeRepository repository,
         IStreamEventTypeArgFactory argFactory)
     {
