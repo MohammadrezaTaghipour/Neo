@@ -1,3 +1,4 @@
+using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.EventStore.Configurations;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Framework.Swagger;
@@ -22,7 +23,7 @@ public class Startup
             .With(new CoreBootstrapper())
             .With(new NeoBootstrapper())
             .With(new EsDbBootstrapper(Configuration,
-                typeof(StreamEventTypeRepository).Assembly))
+                typeof(StreamEventTypeDefined).Assembly))
             .With(new SwaggerBootstrapper(Configuration))
             .With(new MvcBootstrapper())
             .Build();

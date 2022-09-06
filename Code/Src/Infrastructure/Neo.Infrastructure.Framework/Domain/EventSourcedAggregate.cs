@@ -1,4 +1,3 @@
-
 namespace Neo.Infrastructure.Framework.Domain;
 
 public abstract class EventSourcedAggregate<T> : Aggregate<T>
@@ -13,7 +12,11 @@ public abstract class EventSourcedAggregate<T> : Aggregate<T>
     public long OriginalVersion => Original.Length - 1;
     protected void ClearChanges() => _pendingChanges.Clear();
 
-    protected void AddChange(IDomainEvent evt) => _pendingChanges.Add(evt);
+    private void AddChange(IDomainEvent evt)
+    {
+        evt.Version = Version + 1;
+        _pendingChanges.Add(evt);
+    }
 
     protected sealed override (T PreviousState, T CurrentState) Apply(IDomainEvent eventToHandle)
     {

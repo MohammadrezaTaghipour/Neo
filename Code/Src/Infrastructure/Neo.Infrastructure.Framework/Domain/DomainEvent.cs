@@ -4,7 +4,7 @@ using System;
 
 public class DomainEvent : IDomainEvent
 {
-    public DomainEvent()
+    protected DomainEvent()
     {
         EventId = Guid.NewGuid();
         PublishedOn = DateTime.UtcNow;
@@ -12,6 +12,5 @@ public class DomainEvent : IDomainEvent
 
     public Guid EventId { get; }
     public DateTime PublishedOn { get; }
-    public int Version { get; set; }
+    public long Version { get; set; }
 }
-

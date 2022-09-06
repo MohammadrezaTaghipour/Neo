@@ -20,7 +20,7 @@ public class StreamEventTypeRepository : IStreamEventTypeRepository
             .ConfigureAwait(false);
 
     public async Task<StreamEventType> GetBy(StreamEventTypeId id,
-        int version, CancellationToken cancellationToken)
+        long version, CancellationToken cancellationToken)
         => await _repository.GetBy(GetStreamName(id),
                 id, version, cancellationToken)
             .ConfigureAwait(false);

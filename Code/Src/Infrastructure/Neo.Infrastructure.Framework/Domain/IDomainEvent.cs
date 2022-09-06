@@ -4,6 +4,6 @@ public interface IDomainEvent
 {
     Guid EventId { get; }
     DateTime PublishedOn { get; }
-    int Version { get; set; }
+    long Version { get; set; }
 }
 
