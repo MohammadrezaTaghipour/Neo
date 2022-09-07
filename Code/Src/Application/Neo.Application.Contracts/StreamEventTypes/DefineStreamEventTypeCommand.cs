@@ -11,5 +11,5 @@ public class DefineStreamEventTypeCommand : BaseCommand
 
     public Guid Id { get; set; }
     public string Title { get; set; }
-    public IReadOnlyList<StreamEventTypeMetadataCommandItem> Metadata { get; set; }
+    public List<StreamEventTypeMetadataCommandItem> Metadata { get; set; }
 }

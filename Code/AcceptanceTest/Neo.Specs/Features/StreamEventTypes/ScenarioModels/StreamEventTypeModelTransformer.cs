@@ -15,7 +15,12 @@ public class StreamEventTypeModelTransformer
         {
             Id = default,
             Title = model.Title,
-            Metadata = null
+            Metadata = model.Metadata.Any()
+                ? model.Metadata.Select(a => new StreamEventTypeMetadataCommandItem
+                {
+                    Title = a.Title
+                }).ToList()
+                : new List<StreamEventTypeMetadataCommandItem>()
         };
     }
 }
