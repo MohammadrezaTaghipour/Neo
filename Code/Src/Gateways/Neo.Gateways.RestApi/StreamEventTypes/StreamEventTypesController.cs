@@ -6,11 +6,11 @@ namespace Neo.Gateways.RestApi.StreamEventTypes;
 
 [ApiController]
 [Route("api/[controller]")]
-public class StreamEventTypeController : ControllerBase
+public class StreamEventTypesController : ControllerBase
 {
     private readonly ICommandBus _commandBus;
 
-    public StreamEventTypeController(ICommandBus commandBus)
+    public StreamEventTypesController(ICommandBus commandBus)
     {
         _commandBus = commandBus;
     }

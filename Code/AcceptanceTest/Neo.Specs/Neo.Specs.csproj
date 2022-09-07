@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0-preview-20211130-02" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
@@ -15,54 +15,28 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
         <PackageReference Include="fluentassertions" Version="5.10.3" />
         <PackageReference Include="nbuilder" Version="6.1.0" />
-        <PackageReference Include="fluentassertions" Version="5.10.3" />
-        <PackageReference Include="specflow" Version="3.9.40" />
+        <PackageReference Include="specflow" Version="3.9.74" />
         <PackageReference Include="specflow.assist.Dynamic" Version="1.4.2" />
-        <PackageReference Include="specflow.tools.Msbuild.Generation" Version="3.9.40" />
-        <PackageReference Include="specflow.xunit" Version="3.9.40" />
+        <PackageReference Include="specflow.tools.Msbuild.Generation" Version="3.9.74" />
+        <PackageReference Include="specflow.xunit" Version="3.9.74" />
+        <PackageReference Include="SpecFlow.Autofac" Version="3.9.74" />
         <PackageReference Include="Suzianna.Core" Version="1.1.0" />
         <PackageReference Include="Suzianna.Rest" Version="1.1.0" />
-        <PackageReference Include="SpecFlow.Autofac" Version="3.9.40" />
-        <PackageReference Include="xunit" Version="2.4.1" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+        <PackageReference Include="xunit" Version="2.4.2" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Configs\Neo" />
-      <Folder Include="Hooks" />
+      <Folder Include="Configurations\Neo" />
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\..\Documents\Features\.idea\.idea.Features.dir\.idea\.gitignore">
-        <Link>Features\.idea\.idea.Features.dir\.idea\.gitignore</Link>
-      </Content>
-      <Content Include="..\..\..\Documents\Features\.idea\.idea.Features.dir\.idea\indexLayout.xml">
-        <Link>Features\.idea\.idea.Features.dir\.idea\indexLayout.xml</Link>
-      </Content>
-      <Content Include="..\..\..\Documents\Features\.idea\.idea.Features.dir\.idea\misc.xml">
-        <Link>Features\.idea\.idea.Features.dir\.idea\misc.xml</Link>
-      </Content>
-      <Content Include="..\..\..\Documents\Features\.idea\.idea.Features.dir\.idea\projectSettingsUpdater.xml">
-        <Link>Features\.idea\.idea.Features.dir\.idea\projectSettingsUpdater.xml</Link>
-      </Content>
-      <Content Include="..\..\..\Documents\Features\.idea\.idea.Features.dir\.idea\vcs.xml">
-        <Link>Features\.idea\.idea.Features.dir\.idea\vcs.xml</Link>
-      </Content>
-      <Content Include="..\..\..\Documents\Features\.idea\.idea.Features.dir\.idea\workspace.xml">
-        <Link>Features\.idea\.idea.Features.dir\.idea\workspace.xml</Link>
-      </Content>
-      <Content Include="..\..\..\Documents\Features\StreamEventTypes\DefiningStreamEventType.feature">
-        <Link>Features\StreamEventTypes\DefiningStreamEventType.feature</Link>
-      </Content>
-      <Content Include="..\..\..\Documents\Features\StreamEventTypes\ModifyingStreamEventType.feature">
-        <Link>Features\StreamEventTypes\ModifyingStreamEventType.feature</Link>
-      </Content>
-      <Content Include="..\..\..\Documents\Features\StreamEventTypes\RemovingStreamEventType.feature">
-        <Link>Features\StreamEventTypes\RemovingStreamEventType.feature</Link>
-      </Content>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

@@ -6,7 +6,8 @@ namespace Neo.Specs.Hooks
     {
         private static IConfigurationRoot _configuration;
 
-        public static IConfigurationRoot GetConfiguration() => _configuration ??= CreateConfiguration();
+        public static IConfigurationRoot GetConfiguration()
+            => _configuration ??= CreateConfiguration();
 
         private static IConfigurationRoot CreateConfiguration()
         {

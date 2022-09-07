@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace Neo.Specs.Configs;
+namespace Neo.Specs.Configurations;
 
 public static class ConfigurationExtensions
 {

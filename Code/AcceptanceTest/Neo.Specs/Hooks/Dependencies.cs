@@ -1,5 +1,8 @@
 using Autofac;
-using Neo.Specs.Configs.Neo;
+using Neo.Specs.Configurations.Neo;
+using Neo.Specs.Framework;
+using Neo.Specs.ScreenPlay.StreamEventTypes.Commands;
+using Neo.Specs.ScreenPlay.StreamEventTypes.Tasks;
 using Neo.Specs.Utils;
 using Suzianna.Core.Screenplay;
 using Suzianna.Rest.Screenplay.Abilities;
@@ -27,13 +30,13 @@ namespace Neo.Specs.Hooks
                 });
 
                 var stage = new Stage(cast);
-                stage.ShineSpotlightOn("Ashly");
+                stage.ShineSpotlightOn("Dave");
                 return stage;
             }).InstancePerLifetimeScope();
 
-            // builder.RegisterType(typeof(CommandBus))
-            //     .As<ICommandBus>()
-            //     .InstancePerLifetimeScope();
+            builder.RegisterType(typeof(CommandBus))
+                .As<ICommandBus>()
+                .InstancePerLifetimeScope();
 
             builder.RegisterStreamEventTypeHandlers();
 
@@ -43,17 +46,17 @@ namespace Neo.Specs.Hooks
 
         static void RegisterStreamEventTypeHandlers(this ContainerBuilder builder)
         {
-            // builder.RegisterType<StreamEventTypeRestApiCommandHandler>()
-            //     .As<ICommandHandler<DefineStreamEventTypeCommand>>()
-            //     .InstancePerLifetimeScope();
-            //
-            // builder.RegisterType<StreamEventTypeRestApiCommandHandler>()
-            //     .As<ICommandHandler<ModifyStreamEventTypeCommand>>()
-            //     .InstancePerLifetimeScope();
-            //
-            // builder.RegisterType<StreamEventTypeRestApiCommandHandler>()
-            //     .As<ICommandHandler<RemoveStreamEventTypeCommand>>()
-            //     .InstancePerLifetimeScope();
+            builder.RegisterType<StreamEventTypeRestApiCommandHandler>()
+                .As<ICommandHandler<DefineStreamEventTypeCommand>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<StreamEventTypeRestApiCommandHandler>()
+                .As<ICommandHandler<ModifyStreamEventTypeCommand>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<StreamEventTypeRestApiCommandHandler>()
+                .As<ICommandHandler<RemoveStreamEventTypeCommand>>()
+                .InstancePerLifetimeScope();
         }
     }
 }

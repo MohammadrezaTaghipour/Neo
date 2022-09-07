@@ -1,7 +1,7 @@
 using Autofac;
 using Microsoft.Extensions.Configuration;
 
-namespace Neo.Specs.Configs.Neo
+namespace Neo.Specs.Configurations.Neo
 {
     public static class Extension
     {
