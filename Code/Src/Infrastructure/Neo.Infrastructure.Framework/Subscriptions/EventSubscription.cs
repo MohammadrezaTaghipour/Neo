@@ -1,3 +1,6 @@
+using Neo.Infrastructure.Framework.Subscriptions.Consumers;
+using Neo.Infrastructure.Framework.Subscriptions.Contexts;
+
 namespace Neo.Infrastructure.Framework.Subscriptions;
 
 public abstract class EventSubscription<T> : IMessageSubscription
@@ -6,17 +9,19 @@ public abstract class EventSubscription<T> : IMessageSubscription
     public string SubscriptionId => Options.SubscriptionId;
     public bool IsDropped { get; set; }
     public bool IsRunning { get; set; }
-
     protected internal T Options { get; }
+    protected IMessageConsumer MessageConsumer;
+
     protected CancellationTokenSource Stopping { get; } = new();
 
     private OnSubscribed? _onSubscribed;
     private OnDropped? _onDropped;
 
 
-    public EventSubscription(T options)
+    public EventSubscription(T options, IMessageConsumer messageConsumer)
     {
         Options = options;
+        MessageConsumer = messageConsumer;
     }
 
     public async Task Subscribe(OnSubscribed onSubscribed,
@@ -44,9 +49,9 @@ public abstract class EventSubscription<T> : IMessageSubscription
         await Finalize(cancellationToken);
     }
 
-    protected abstract ValueTask Subscribe(CancellationToken cancellationToken);
+    protected abstract Task Subscribe(CancellationToken cancellationToken);
 
-    protected abstract ValueTask Unsubscribe(CancellationToken cancellationToken);
+    protected abstract Task Unsubscribe(CancellationToken cancellationToken);
 
     protected virtual async Task Resubscribe(TimeSpan delay,
         CancellationToken cancellationToken)
@@ -105,6 +110,11 @@ public abstract class EventSubscription<T> : IMessageSubscription
             }
         );
     }
+    
+    protected virtual Task Finalize(CancellationToken cancellationToken) => default;
 
-    protected virtual ValueTask Finalize(CancellationToken cancellationToken) => default;
+    protected async Task Handler(IMessageConsumeContext context)
+    {
+        await MessageConsumer.Consume(context).ConfigureAwait(false);
+    }
 }

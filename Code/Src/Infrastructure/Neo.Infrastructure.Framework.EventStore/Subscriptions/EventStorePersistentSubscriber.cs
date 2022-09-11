@@ -1,4 +1,5 @@
 using EventStore.Client;
+using Neo.Infrastructure.Framework.Subscriptions.Consumers;
 
 namespace Neo.Infrastructure.EventStore.Subscriptions;
 
@@ -8,8 +9,9 @@ public class EventStorePersistentSubscriber :
     public EventStorePersistentSubscriber(
         EventStoreClient eventStoreClient,
         PersistentSubscriptionOptions options,
-        DomainEventTypeMapper mapper)
-        : base(eventStoreClient, options, mapper)
+        DomainEventTypeMapper mapper,
+        IMessageConsumer messageConsumer)
+        : base(eventStoreClient, options, mapper, messageConsumer)
     {
     }
 
@@ -17,17 +19,19 @@ public class EventStorePersistentSubscriber :
         EventStoreClient eventStoreClient,
         string subscriptionId,
         PersistentSubscriptionOptions options,
-        DomainEventTypeMapper mapper)
+        DomainEventTypeMapper mapper,
+        IMessageConsumer messageConsumer)
         : this(eventStoreClient,
             new PersistentSubscriptionOptions
             {
                 SubscriptionId = subscriptionId
-            }, mapper)
+            }, mapper, messageConsumer)
     {
     }
 
-    protected override ulong GetContextStreamPosition(ResolvedEvent re) => re.Event.Position.CommitPosition;
-    
+    protected override ulong GetContextStreamPosition(ResolvedEvent re)
+        => re.Event.Position.CommitPosition;
+
     protected override async Task CreatePersistentSubscription(
         PersistentSubscriptionSettings settings,
         CancellationToken cancellationToken)

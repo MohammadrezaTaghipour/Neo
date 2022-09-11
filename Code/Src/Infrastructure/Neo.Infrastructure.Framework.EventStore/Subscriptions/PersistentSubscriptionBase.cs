@@ -4,6 +4,7 @@ using EventStore.Client;
 using Neo.Infrastructure.EventStore.Extensions;
 using Neo.Infrastructure.EventStore.Serializations;
 using Neo.Infrastructure.Framework.Subscriptions;
+using Neo.Infrastructure.Framework.Subscriptions.Consumers;
 using Neo.Infrastructure.Framework.Subscriptions.Contexts;
 
 namespace Neo.Infrastructure.EventStore.Subscriptions;
@@ -21,7 +22,8 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
     const string SubscriptionKey = "subscription";
 
     protected PersistentSubscriptionBase(EventStoreClient eventStoreClient,
-        T options, DomainEventTypeMapper mapper) : base(options)
+        T options, DomainEventTypeMapper mapper, IMessageConsumer messageConsumer)
+        : base(options, messageConsumer)
     {
         var settings = eventStoreClient.GetSettings().Copy();
         var opSettings = settings.OperationOptions.Clone();
@@ -32,7 +34,7 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
         Mapper = mapper;
     }
 
-    protected override async ValueTask Subscribe(CancellationToken cancellationToken)
+    protected override async Task Subscribe(CancellationToken cancellationToken)
     {
         var settings = Options.SubscriptionSettings ??
                        new PersistentSubscriptionSettings(Options.ResolveLinkTos);
@@ -49,7 +51,7 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
         }
     }
 
-    protected override async ValueTask Unsubscribe(CancellationToken cancellationToken)
+    protected override async Task Unsubscribe(CancellationToken cancellationToken)
     {
         try
         {
@@ -72,7 +74,7 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
         var context = CreateContext(re, ct)
             .WithItem(ResolvedEventKey, re)
             .WithItem(SubscriptionKey, subscription);
-        
+
         try
         {
             await Handler(context).ConfigureAwait(false);
@@ -124,10 +126,9 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
         Dropped(EsdbMappings.AsDropReason(reason), exception);
     }
 
-
     private ConcurrentQueue<ResolvedEvent> AckQueue { get; } = new();
 
-    async ValueTask Ack(IMessageConsumeContext ctx)
+    async Task Ack(IMessageConsumeContext ctx)
     {
         var re = ctx.Items.GetItem<ResolvedEvent>(ResolvedEventKey);
         AckQueue.Enqueue(re);
@@ -193,11 +194,7 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
 
     protected EventPosition? LastProcessed { get; set; }
 
-    protected async Task Handler(IMessageConsumeContext context)
-    {
-        
-    }
-    
+
     protected abstract Task CreatePersistentSubscription(
         PersistentSubscriptionSettings settings,
         CancellationToken cancellationToken
