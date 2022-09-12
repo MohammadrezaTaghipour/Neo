@@ -24,19 +24,20 @@ public class EsDbBootstrapper : IBootstrapper
     {
         var esDbOption = _configuration.GetSection("esDb").Get<EsDbOption>();
 
-        services.AddScoped(_ =>
-        {
-            var settings = EventStoreClientSettings
-                .Create(esDbOption.DbConnectionString);
-            var client = new EventStoreClient(settings);
-            return client;
-        });
         services.AddSingleton(_ =>
         {
             var mapper = new DomainEventTypeMapper();
             mapper.RegisterKnownEventTypes(_assembliesWithEvents);
             return mapper;
         });
+        services.AddSingleton(_ =>
+        {
+            var settings = EventStoreClientSettings
+                .Create(esDbOption.DbConnectionString);
+            var client = new EventStoreClient(settings);
+            return client;
+        });
+
         services.AddScoped(typeof(IEventSourcedRepository<,,>), typeof(EsdbRepository<,,>));
         services.AddScoped<IDomainEventFactory, DomainEventFactory>();
         services.AddScoped<IEventSerializer, EventSerializer>();

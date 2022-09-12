@@ -4,6 +4,7 @@ using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Framework.Swagger;
 using Neo.Infrastructure.Persistence.ES;
 using ServiceHost.Configurations;
+using ServiceHost.Handlers;
 
 namespace ServiceHost;
 
@@ -24,6 +25,8 @@ public class Startup
             .With(new NeoBootstrapper())
             .With(new EsDbBootstrapper(Configuration,
                 typeof(StreamEventTypeDefined).Assembly))
+            .With(new EsDbSubscriptionBootstrapper(Configuration,
+                typeof(TestEventHandler).Assembly))
             .With(new SwaggerBootstrapper(Configuration))
             .With(new MvcBootstrapper())
             .Build();

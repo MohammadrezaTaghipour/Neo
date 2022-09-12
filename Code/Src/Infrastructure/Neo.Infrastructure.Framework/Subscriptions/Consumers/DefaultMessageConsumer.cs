@@ -3,11 +3,12 @@ using Neo.Infrastructure.Framework.Subscriptions.Handlers;
 
 namespace Neo.Infrastructure.Framework.Subscriptions.Consumers;
 
-public class DefaultConsumer : IMessageConsumer
+public class DefaultMessageConsumer : IMessageConsumer
 {
-    private readonly IEventHandler[] _eventHandlers;
+    private readonly IEnumerable<IEventHandler> _eventHandlers;
 
-    public DefaultConsumer(IEventHandler[] eventHandlers) => _eventHandlers = eventHandlers;
+    public DefaultMessageConsumer(IEnumerable<IEventHandler> eventHandlers)
+        => _eventHandlers = eventHandlers;
 
     public async Task Consume(IMessageConsumeContext context)
     {

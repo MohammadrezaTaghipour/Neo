@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Text;
 using EventStore.Client;
-using Neo.Infrastructure.EventStore.Extensions;
 using Neo.Infrastructure.EventStore.Serializations;
 using Neo.Infrastructure.Framework.Subscriptions;
 using Neo.Infrastructure.Framework.Subscriptions.Consumers;
@@ -12,7 +11,6 @@ namespace Neo.Infrastructure.EventStore.Subscriptions;
 public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
     where T : PersistentSubscriptionOptions
 {
-    protected EventStoreClient EventStoreClient { get; }
     protected EventStorePersistentSubscriptionsClient SubscriptionClient { get; }
     protected PersistentSubscription Subscription;
     protected IEventSerializer EventSerializer { get; }
@@ -21,16 +19,12 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
     const string ResolvedEventKey = "resolvedEvent";
     const string SubscriptionKey = "subscription";
 
-    protected PersistentSubscriptionBase(EventStoreClient eventStoreClient,
+    protected PersistentSubscriptionBase(
+        EventStorePersistentSubscriptionsClient subscriptionClient,
         T options, DomainEventTypeMapper mapper, IMessageConsumer messageConsumer)
         : base(options, messageConsumer)
     {
-        var settings = eventStoreClient.GetSettings().Copy();
-        var opSettings = settings.OperationOptions.Clone();
-        settings.OperationOptions = opSettings;
-
-        EventStoreClient = eventStoreClient;
-        SubscriptionClient = new EventStorePersistentSubscriptionsClient(settings);
+        SubscriptionClient = subscriptionClient;
         Mapper = mapper;
     }
 
@@ -90,7 +84,6 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
     IMessageConsumeContext CreateContext(ResolvedEvent re, CancellationToken cancellationToken)
     {
         var evt = DeserializeData(
-            re.Event.ContentType,
             re.Event.EventType,
             re.Event.Data,
             re.OriginalStreamId,
@@ -153,12 +146,11 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
 
         var re = ctx.Items.GetItem<ResolvedEvent>(ResolvedEventKey);
         var subscription = ctx.Items.GetItem<PersistentSubscription>(SubscriptionKey)!;
-        await DefaultEventProcessingFailureHandler(EventStoreClient, subscription, re, exception)
+        await DefaultEventProcessingFailureHandler(subscription, re, exception)
             .ConfigureAwait(false);
     }
 
     static Task DefaultEventProcessingFailureHandler(
-        EventStoreClient client,
         PersistentSubscription subscription,
         ResolvedEvent resolvedEvent,
         Exception exception
@@ -170,7 +162,6 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
         );
 
     protected object DeserializeData(
-        string eventContentType,
         string eventType,
         ReadOnlyMemory<byte> data,
         string stream,

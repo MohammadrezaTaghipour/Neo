@@ -5,6 +5,11 @@ namespace Neo.Infrastructure.EventStore.Subscriptions;
 
 public record PersistentSubscriptionOptions : SubscriptionOptions
 {
+    public PersistentSubscriptionOptions(string subscriptionId)
+        : base(subscriptionId)
+    {
+    }
+
     public UserCredentials Credentials { get; set; }
     public bool ResolveLinkTos { get; set; }
     public PersistentSubscriptionSettings SubscriptionSettings { get; set; }

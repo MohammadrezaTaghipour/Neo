@@ -7,25 +7,23 @@ public class EventStorePersistentSubscriber :
     PersistentSubscriptionBase<PersistentSubscriptionOptions>
 {
     public EventStorePersistentSubscriber(
-        EventStoreClient eventStoreClient,
+        EventStorePersistentSubscriptionsClient subscriptionClient,
         PersistentSubscriptionOptions options,
         DomainEventTypeMapper mapper,
         IMessageConsumer messageConsumer)
-        : base(eventStoreClient, options, mapper, messageConsumer)
+        : base(subscriptionClient, options, mapper, messageConsumer)
     {
     }
 
     public EventStorePersistentSubscriber(
-        EventStoreClient eventStoreClient,
+        EventStorePersistentSubscriptionsClient subscriptionClient,
         string subscriptionId,
         PersistentSubscriptionOptions options,
         DomainEventTypeMapper mapper,
         IMessageConsumer messageConsumer)
-        : this(eventStoreClient,
-            new PersistentSubscriptionOptions
-            {
-                SubscriptionId = subscriptionId
-            }, mapper, messageConsumer)
+        : this(subscriptionClient,
+            new PersistentSubscriptionOptions(subscriptionId),
+            mapper, messageConsumer)
     {
     }
 
