@@ -1,4 +1,5 @@
 using EventStore.Client;
+using Microsoft.Extensions.Logging;
 using Neo.Infrastructure.Framework.Subscriptions.Consumers;
 
 namespace Neo.Infrastructure.EventStore.Subscriptions;
@@ -10,8 +11,9 @@ public class EventStorePersistentSubscriber :
         EventStorePersistentSubscriptionsClient subscriptionClient,
         PersistentSubscriptionOptions options,
         DomainEventTypeMapper mapper,
-        IMessageConsumer messageConsumer)
-        : base(subscriptionClient, options, mapper, messageConsumer)
+        IMessageConsumer messageConsumer,
+        ILoggerFactory loggerFactory)
+        : base(subscriptionClient, options, mapper, messageConsumer, loggerFactory)
     {
     }
 
@@ -20,10 +22,14 @@ public class EventStorePersistentSubscriber :
         string subscriptionId,
         PersistentSubscriptionOptions options,
         DomainEventTypeMapper mapper,
-        IMessageConsumer messageConsumer)
+        IMessageConsumer messageConsumer,
+        ILoggerFactory loggerFactory)
         : this(subscriptionClient,
-            new PersistentSubscriptionOptions(subscriptionId),
-            mapper, messageConsumer)
+            new PersistentSubscriptionOptions(subscriptionId)
+            {
+                ResolveLinkTos = true,
+            },
+            mapper, messageConsumer, loggerFactory)
     {
     }
 

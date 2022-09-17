@@ -39,6 +39,7 @@ public class EsDbSubscriptionBootstrapper : IBootstrapper
             var settings = esDbClient.GetSettings().Copy();
             var opSettings = settings.OperationOptions.Clone();
             settings.OperationOptions = opSettings;
+            
             return new EventStorePersistentSubscriptionsClient(settings);
         });
 

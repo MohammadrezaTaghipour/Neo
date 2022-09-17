@@ -18,7 +18,7 @@ public class SubscriptionHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogDebug("Starting subscription {SubscriptionId}", _subscription.SubscriptionId);
+        _logger.LogInformation($"Starting subscription: {_subscription.SubscriptionId}");
 
         var cts = CancellationTokenSource.CreateLinkedTokenSource(
             cancellationToken,
@@ -31,7 +31,7 @@ public class SubscriptionHostedService : IHostedService
             cts.Token
         ).ConfigureAwait(false);
 
-        _logger.LogInformation("Started subscription {SubscriptionId}", _subscription.SubscriptionId);
+        _logger.LogInformation($"Started subscription {_subscription.SubscriptionId}");
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
@@ -43,6 +43,6 @@ public class SubscriptionHostedService : IHostedService
 
         await _subscription.Unsubscribe(_ => { }, cts.Token).ConfigureAwait(false);
 
-        _logger.LogInformation("Stopped subscription {SubscriptionId}", _subscription.SubscriptionId);
+        _logger.LogInformation($"Stopped subscription {_subscription.SubscriptionId}");
     }
 }

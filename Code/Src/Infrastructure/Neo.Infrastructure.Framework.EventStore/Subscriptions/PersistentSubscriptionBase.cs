@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text;
 using EventStore.Client;
+using Microsoft.Extensions.Logging;
 using Neo.Infrastructure.EventStore.Serializations;
 using Neo.Infrastructure.Framework.Subscriptions;
 using Neo.Infrastructure.Framework.Subscriptions.Consumers;
@@ -21,8 +22,10 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
 
     protected PersistentSubscriptionBase(
         EventStorePersistentSubscriptionsClient subscriptionClient,
-        T options, DomainEventTypeMapper mapper, IMessageConsumer messageConsumer)
-        : base(options, messageConsumer)
+        T options, DomainEventTypeMapper mapper,
+        IMessageConsumer messageConsumer,
+        ILoggerFactory loggerFactory)
+        : base(options, messageConsumer, loggerFactory)
     {
         SubscriptionClient = subscriptionClient;
         Mapper = mapper;
@@ -142,7 +145,7 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
 
     async Task Nack(IMessageConsumeContext ctx, Exception exception)
     {
-        // _logger.MessageHandlingFailed(Options.SubscriptionId, ctx, exception);
+        _logger.LogError($"Message Handling Failed: {Options.SubscriptionId}", ctx, exception);
 
         var re = ctx.Items.GetItem<ResolvedEvent>(ResolvedEventKey);
         var subscription = ctx.Items.GetItem<PersistentSubscription>(SubscriptionKey)!;
