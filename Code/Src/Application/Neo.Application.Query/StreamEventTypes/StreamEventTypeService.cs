@@ -10,11 +10,11 @@ namespace Neo.Application.Query.StreamEventTypes
         Task<StreamEventTypeState> Get(Guid id, CancellationToken cancellationToken);
     }
 
-    public class StreamEventTypeService : IStreamEventTypeQueryService
+    public class StreamEventTypeQueryService : IStreamEventTypeQueryService
     {
         private readonly IAggregateReader _aggregateReader;
 
-        public StreamEventTypeService(IAggregateReader aggregateReader)
+        public StreamEventTypeQueryService(IAggregateReader aggregateReader)
         {
             _aggregateReader = aggregateReader;
         }
@@ -24,12 +24,12 @@ namespace Neo.Application.Query.StreamEventTypes
         {
             var streamEventType = await _aggregateReader
                 .Load<StreamEventType, StreamEventTypeState>(
-                GetStreamName(new StreamEventTypeId(id)), cancellationToken)
+                    GetStreamName(new StreamEventTypeId(id)), cancellationToken)
                 .ConfigureAwait(false);
             return streamEventType.State;
         }
 
-        static StreamName GetStreamName(StreamEventTypeId id) => StreamName
-        .For<StreamEventType, StreamEventTypeState, StreamEventTypeId>(id);
+        static StreamName GetStreamName(StreamEventTypeId id) =>
+            StreamName.For<StreamEventType, StreamEventTypeState, StreamEventTypeId>(id);
     }
 }

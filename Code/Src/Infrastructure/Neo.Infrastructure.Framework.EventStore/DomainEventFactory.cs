@@ -20,16 +20,13 @@ public class DomainEventFactory : IDomainEventFactory
     {
         return events.Select(e =>
         {
-            //TODO: ?? e.ContentType
-            var type = _mapper.GetType(e.ContentType);
-            return Create(e, type, _serializer);
+            var type = _mapper.GetType(e.eventType);
+            return Create(e, _serializer);
         }).ToList();
     }
 
-    static DomainEvent Create(StreamEvent @event,
-        Type eventType, IEventSerializer serializer)
+    static DomainEvent Create(StreamEvent @event, IEventSerializer serializer)
     {
-        var instance = serializer.Deserialize(@event.Payload.ToString(), eventType);
-        return instance as DomainEvent;
+        return @event.Payload as DomainEvent;
     }
 }

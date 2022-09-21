@@ -63,7 +63,7 @@ public class EsDbEventReader : IEventReader
                     resolvedEvent.Event.Metadata,
                     resolvedEvent.OriginalStreamId,
                     resolvedEvent.Event.EventNumber),
-                resolvedEvent.Event.ContentType,
+                resolvedEvent.Event.EventType,
                 resolvedEvent.OriginalEventNumber.ToInt64()
             );
     }

@@ -14,7 +14,7 @@ public class NeoBootstrapper : IBootstrapper
         AddDomainRepository(services, typeof(StreamEventTypeRepository).Assembly);
         AddArgFactories(services, typeof(StreamEventTypeArgFactory).Assembly);
         AddApplicationServices(services, typeof(StreamEventTypeApplicationService).Assembly);
-        AddQueryServices(services, typeof(StreamEventTypeService).Assembly);
+        AddQueryServices(services, typeof(StreamEventTypeQueryService).Assembly);
     }
 
     static void AddDomainRepository(IServiceCollection services,

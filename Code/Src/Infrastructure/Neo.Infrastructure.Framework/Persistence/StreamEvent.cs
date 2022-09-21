@@ -2,4 +2,4 @@
 
 namespace Neo.Infrastructure.Framework.Persistence;
 
-public record StreamEvent(Guid Id, object Payload, Metadata Metadata, string ContentType, long Position);
+public record StreamEvent(Guid Id, object Payload, Metadata Metadata, string eventType, long Position);
