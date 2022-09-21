@@ -1,5 +1,9 @@
+using FluentAssertions;
+using Neo.Specs.ScreenPlay.StreamEventTypes.Commands;
+using Neo.Specs.ScreenPlay.StreamEventTypes.Questions;
 using Suzianna.Core.Screenplay;
 using Suzianna.Core.Screenplay.Actors;
+using Suzianna.Rest.Screenplay.Questions;
 using TechTalk.SpecFlow;
 
 namespace Neo.Specs.Features.StreamEventTypes.Then;
@@ -20,5 +24,12 @@ public class ICanFindStreamEventTypeWithAboveProperties
     [Then("I can find stream event type '(.*)' with above properties")]
     public void Func(string title)
     {
+        var expected = _context.Get<DefineStreamEventTypeCommand>();
+        expected.Id = _actor.AsksFor(LastResponse.Content<Guid>());
+        var actual = _actor.AsksFor(new GetStreamEventTypeByIdQuestion(expected.Id));
+
+        actual.Should().BeEquivalentTo(expected, opt => opt
+            .Excluding(_ => _.Id)
+            .Excluding(_ => _.Metadata));
     }
 }
