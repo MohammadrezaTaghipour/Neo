@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Neo.Domain\Neo.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />
+  </ItemGroup>
+
+</Project>

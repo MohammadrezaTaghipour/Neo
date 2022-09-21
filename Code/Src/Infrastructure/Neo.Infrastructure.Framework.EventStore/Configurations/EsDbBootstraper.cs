@@ -41,5 +41,6 @@ public class EsDbBootstrapper : IBootstrapper
         services.AddScoped(typeof(IEventSourcedRepository<,,>), typeof(EsdbRepository<,,>));
         services.AddSingleton<IDomainEventFactory, DomainEventFactory>();
         services.AddSingleton<IEventSerializer, EventSerializer>();
+        services.AddSingleton<IEventReader, EsDbEventReader>();
     }
 }
