@@ -39,7 +39,7 @@ public class EsDbBootstrapper : IBootstrapper
         });
 
         services.AddScoped(typeof(IEventSourcedRepository<,,>), typeof(EsdbRepository<,,>));
-        services.AddScoped<IDomainEventFactory, DomainEventFactory>();
-        services.AddScoped<IEventSerializer, EventSerializer>();
+        services.AddSingleton<IDomainEventFactory, DomainEventFactory>();
+        services.AddSingleton<IEventSerializer, EventSerializer>();
     }
 }

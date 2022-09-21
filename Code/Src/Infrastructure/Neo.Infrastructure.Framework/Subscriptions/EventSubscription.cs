@@ -51,7 +51,6 @@ public abstract class EventSubscription<T> : IMessageSubscription
         await Unsubscribe(cancellationToken).ConfigureAwait(false);
         _logger.LogWarning($"Subscription Stopped: {Options.SubscriptionId}");
         onUnsubscribed(Options.SubscriptionId);
-        await Finalize(cancellationToken);
     }
 
     protected abstract Task Subscribe(CancellationToken cancellationToken);
@@ -82,7 +81,7 @@ public abstract class EventSubscription<T> : IMessageSubscription
             }
             catch (Exception e)
             {
-                _logger.LogWarning($"Resubscribe Failed: {Options.SubscriptionId}");
+                _logger.LogWarning(e, $"Resubscribe Failed: {Options.SubscriptionId}");
                 await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
             }
         }
@@ -91,7 +90,7 @@ public abstract class EventSubscription<T> : IMessageSubscription
     protected void Dropped(DropReason reason, Exception? exception)
     {
         if (!IsRunning) return;
-        _logger.LogWarning($"SubscriptionDropped: {Options.SubscriptionId}", reason, exception);
+        _logger.LogWarning(exception, $"SubscriptionDropped: {Options.SubscriptionId}", reason);
 
         IsDropped = true;
         _onDropped?.Invoke(Options.SubscriptionId, reason, exception);
@@ -118,10 +117,6 @@ public abstract class EventSubscription<T> : IMessageSubscription
         );
     }
 
-    protected virtual Task Finalize(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
 
     protected async Task Handler(IMessageConsumeContext context)
     {
