@@ -1,14 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Domain\Neo.Domain\Neo.Domain.csproj" />
-    <ProjectReference Include="..\Neo.Application.Contracts\Neo.Application.Contracts.csproj" />
-  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentValidation" Version="11.2.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Domain\Neo.Domain\Neo.Domain.csproj" />
+		<ProjectReference Include="..\Neo.Application.Contracts\Neo.Application.Contracts.csproj" />
+	</ItemGroup>
 
 </Project>

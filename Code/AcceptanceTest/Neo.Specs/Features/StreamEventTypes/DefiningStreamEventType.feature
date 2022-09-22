@@ -49,17 +49,19 @@ Scenario Outline: Stream event type is not allowed to get defined with invalid p
 		| Title            |
 		| <metadataTitle1> |
 		| <metadataTitle2> |
-	When I define a new stream event type with follwoing properties
+	When I define a new stream event type with following properties
 		| Title   | Metadata |
 		| <title> |          |
 	Then I get error with code '<errorCode>' and message '<errorMessage>' within the system'
 
 Examples:
 	| errorCode        | errorMessage                                                        | title                                                                                                                             | metadataTitle1                                                                                                                     | metadataTitle2 |
-	| NEO-LSE-BR-10002 | Stream event type title can not include invalid character           | $Init                                                                                                                             | Init Date                                                                                                                          | X              |
-	| NEO-LSE-BR-10003 | Stream event type metadata title can not include special character  | Init                                                                                                                              | Init%Date                                                                                                                          | X              |
-	| NEO-LSE-BR-10004 | Stream event type title length can not be greater than 128          | sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss | Init Date                                                                                                                          | X              |
-	| NEO-LSE-BR-10005 | Stream event type metadata title length can not be greater than 128 | Feeling                                                                                                                           | ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss s | X              |
+	| NEO-SET-BR-10002 | Stream event type title is required                                 |                                                                                                                                   | Init Date                                                                                                                          | X              |
+	| NEO-SET-BR-10003 | Stream event type title can not include invalid character           | $Init                                                                                                                             | Init Date                                                                                                                          | X              |
+	| NEO-SET-BR-10004 | Stream event type title length can not be greater than 128          | Init                                                                                                                              | Init%Date                                                                                                                          | X              |
+	| NEO-SET-BR-10005 | Stream event type metadata title is required                        | sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss | Init Date                                                                                                                          | X              |
+	| NEO-SET-BR-10006 | Stream event type metadata title can not include special character  | sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss | Init Date                                                                                                                          | X              |
+	| NEO-SET-BR-10007 | Stream event type metadata title length can not be greater than 128 | Feeling                                                                                                                           | ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss s | X              |
 
 Scenario Outline: Stream event type is not allowed to get defined with duplicated matadata
 	Given There are some provided Stream event type metadata with following properties
