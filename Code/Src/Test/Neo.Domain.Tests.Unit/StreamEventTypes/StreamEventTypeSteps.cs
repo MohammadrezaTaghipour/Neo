@@ -23,17 +23,22 @@ public class StreamEventTypeSteps : BaseStep
         }
     }
 
-    public void ICanFindStreamEventTypeWithAboveProperties(StreamEventTypeArg properties)
+    public void ICanFindStreamEventTypeWithAboveProperties(
+        StreamEventTypeArg properties)
     {
         if (IsStreamEventTypeModified(properties.Title))
         {
-            var expected = new StreamEventTypeModified(properties.Id, properties.Title);
-            _streamEventTypes[properties.Title].ShouldContainsEquivalencyOfDomainEvent(expected);
+            var expected = new StreamEventTypeModified(properties.Id,
+                properties.Title, properties.Metadata);
+            _streamEventTypes[properties.Title]
+                .ShouldContainsEquivalencyOfDomainEvent(expected);
         }
         else
         {
-            var expected = new StreamEventTypeDefined(properties.Id, properties.Title);
-            _streamEventTypes[properties.Title].ShouldContainsEquivalencyOfDomainEvent(expected);
+            var expected = new StreamEventTypeDefined(properties.Id,
+                properties.Title, properties.Metadata);
+            _streamEventTypes[properties.Title]
+                .ShouldContainsEquivalencyOfDomainEvent(expected);
         }
     }
 

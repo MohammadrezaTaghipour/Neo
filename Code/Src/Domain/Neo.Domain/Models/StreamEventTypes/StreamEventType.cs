@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Neo.Infrastructure.Framework.Domain;
 using Neo.Domain.Contracts.StreamEventTypes;
 
@@ -12,7 +11,7 @@ public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>
 
     private StreamEventType(StreamEventTypeArg arg)
     {
-        Apply(new StreamEventTypeDefined(arg.Id, arg.Title));
+        Apply(new StreamEventTypeDefined(arg.Id, arg.Title, arg.Metadata));
     }
 
     public static async Task<StreamEventType> Create(
@@ -25,7 +24,7 @@ public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>
 
     public async Task Modify(StreamEventTypeArg arg)
     {
-        Apply(new StreamEventTypeModified(arg.Id, arg.Title));
+        Apply(new StreamEventTypeModified(arg.Id, arg.Title, arg.Metadata));
     }
 
     public async Task Remove()

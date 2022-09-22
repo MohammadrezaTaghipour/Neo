@@ -7,6 +7,13 @@ namespace Neo.Specs.Features.StreamEventTypes.ScenarioModels;
 [Binding]
 public class StreamEventTypeModelTransformer
 {
+    private readonly ScenarioContext _context;
+
+    public StreamEventTypeModelTransformer(ScenarioContext context)
+    {
+        _context = context;
+    }
+
     [StepArgumentTransformation]
     public DefineStreamEventTypeCommand ConvertToDefineCommand(Table table)
     {
@@ -15,12 +22,19 @@ public class StreamEventTypeModelTransformer
         {
             Id = default,
             Title = model.Title,
-            Metadata = model.Metadata.Any()
-                ? model.Metadata.Select(a => new StreamEventTypeMetadataCommandItem
-                {
-                    Title = a.Title
-                }).ToList()
+            Metadata = _context.ContainsKey(typeof(IReadOnlyCollection<StreamEventTypeMetadataCommandItem>).FullName)
+                ? _context.Get<IReadOnlyCollection<StreamEventTypeMetadataCommandItem>>()
                 : new List<StreamEventTypeMetadataCommandItem>()
         };
+    }
+
+    [StepArgumentTransformation]
+    public IReadOnlyCollection<StreamEventTypeMetadataCommandItem> ConvertToMetadaCommandItem(Table table)
+    {
+        var models = table.CreateSet<StreamEventTypeMetadataModel>();
+        return models.Select(model => new StreamEventTypeMetadataCommandItem
+        {
+            Title = model.Title
+        }).ToList();
     }
 }

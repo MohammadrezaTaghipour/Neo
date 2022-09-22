@@ -31,5 +31,10 @@ public class ICanFindStreamEventTypeWithAboveProperties
         actual.Should().BeEquivalentTo(expected, opt => opt
             .Excluding(_ => _.Id)
             .Excluding(_ => _.Metadata));
+
+        if (expected.Metadata.Any())
+            actual.Metadata.OrderBy(_ => _.Title)
+                .Should()
+                .BeEquivalentTo(expected.Metadata.OrderBy(_ => _.Title));
     }
 }
