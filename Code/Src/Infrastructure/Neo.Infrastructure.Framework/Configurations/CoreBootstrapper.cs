@@ -10,5 +10,7 @@ public class CoreBootstrapper : IBootstrapper
     {
         services.AddScoped<ICommandBus, InMemoryCommandBus>();
         services.AddScoped<IAggregateReader, AggregateReader>();
+
+        services.Decorate(typeof(IApplicationService<>), typeof(ApplicationServiceCommandValidationDecorator<>));
     }
 }

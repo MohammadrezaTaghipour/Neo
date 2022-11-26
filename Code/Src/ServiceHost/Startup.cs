@@ -2,7 +2,6 @@ using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.EventStore.Configurations;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Framework.Swagger;
-using Neo.Infrastructure.Persistence.ES;
 using ServiceHost.Configurations;
 using ServiceHost.Handlers;
 
@@ -21,8 +20,8 @@ public class Startup
     {
         BootstrapBuilder
             .GetInstance(services)
-            .With(new CoreBootstrapper())
             .With(new NeoBootstrapper())
+            .With(new CoreBootstrapper())
             .With(new EsDbBootstrapper(Configuration,
                 typeof(StreamEventTypeDefined).Assembly))
             .With(new EsDbSubscriptionBootstrapper(Configuration,

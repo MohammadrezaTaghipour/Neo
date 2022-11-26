@@ -66,8 +66,8 @@ public class NeoBootstrapper : IBootstrapper
             });
     }
 
-    static void AddApplicationServices(
-        IServiceCollection services, Assembly assembly)
+    static void AddApplicationServices(IServiceCollection services,
+        Assembly assembly)
     {
         assembly.GetTypes()
              .Where(t => t.GetTypeInfo()
@@ -83,8 +83,8 @@ public class NeoBootstrapper : IBootstrapper
              });
     }
 
-    static void AddCommandValidators(
-      IServiceCollection services, Assembly assembly)
+    static void AddCommandValidators(IServiceCollection services,
+        Assembly assembly)
     {
         assembly.GetTypes()
              .Where(t => t.GetTypeInfo()
