@@ -32,6 +32,9 @@ public class ModifyPartyGroupCommandValidator :
 
             if (value.Any(a => a.Title.Length > 128))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10007);
+
+            if (value.GroupBy(a => a.Title).Any(c => c.Count() > 1))
+                throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10008);
         });
     }
 }

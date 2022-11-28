@@ -36,10 +36,7 @@ public class DefinePartyGroupCommandValidator :
 
             if (value.Any(a => a.Title.Length > 128))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10007);
-        });
 
-        RuleFor(x => x.Metadata).Custom((value, _) =>
-        {
             if (value.GroupBy(a => a.Title).Any(c => c.Count() > 1))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10008);
         });
