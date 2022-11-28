@@ -42,7 +42,7 @@ Scenario: Stream event type gets defined with its unique properties
 	When I define a new stream event type with follwoing properties
 		| Title | Metadata |
 		| Init  |          |
-	Then I get error with code 'NEO-LSE-BR-10001' and message 'There is already a registered Stream event type with title "Init"' within the system
+	Then I get error with code 'NEO-LSE-BR-10001' and message 'There is already a registered stream event type with title "Init"' within the system
 
 Scenario Outline: Stream event type is not allowed to get defined with invalid properties
 	Given There are some provided stream event type metadata with following properties
@@ -64,11 +64,11 @@ Examples:
 	| NEO-SET-BR-10007 | Stream event type metadata title length can not be greater than 128 | Feeling                                                                                                                           | ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss s | X              |
 
 Scenario Outline: Stream event type is not allowed to get defined with duplicated matadata
-	Given There are some provided Stream event type metadata with following properties
+	Given There are some provided stream event type metadata with following properties
 		| Title    |
 		| Duration |
 		| Duration |
-	When I define a new stream event type with follwoing properties
+	When I define a new stream event type with following properties
 		| Title        | Metadata |
 		| Conversation |          |
-	Then I get error with code 'NEO-LSE-BR-10007' and message 'There are duplicated metadata' within the system
+	Then I get error with code 'NEO-SET-BR-10008' and message 'There are duplicated metadata' from the system

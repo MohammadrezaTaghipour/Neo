@@ -2,6 +2,7 @@
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
+using System.Collections.Generic;
 
 namespace Neo.Application.StreamEventTypes.Validators;
 
@@ -24,7 +25,8 @@ public class DefinePartyGroupCommandValidator :
 
         RuleFor(x => x.Metadata).Custom((value, _) =>
         {
-            if (value == null || !value.Any()) return;
+            if (value == null || !value.Any())
+                return;
 
             if (value.Any(a => string.IsNullOrWhiteSpace(a.Title)))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10005);
@@ -34,6 +36,12 @@ public class DefinePartyGroupCommandValidator :
 
             if (value.Any(a => a.Title.Length > 128))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10007);
+        });
+
+        RuleFor(x => x.Metadata).Custom((value, _) =>
+        {
+            if (value.GroupBy(a => a.Title).Any(c => c.Count() > 1))
+                throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10008);
         });
     }
 }
