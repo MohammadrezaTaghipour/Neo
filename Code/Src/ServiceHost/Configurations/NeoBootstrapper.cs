@@ -1,6 +1,7 @@
 using System.Reflection;
 using Neo.Application.Query.StreamEventTypes;
 using Neo.Application.StreamEventTypes;
+using Neo.Application.StreamEventTypes.Validators;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Persistence.ES;
