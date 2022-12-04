@@ -37,4 +37,19 @@ public class StreamEventTypeModelTransformer
             Title = model.Title
         }).ToList();
     }
+
+    [StepArgumentTransformation]
+    public ModifyStreamEventTypeCommand ConvertToModifyCommand(Table table)
+    {
+        var model = table.CreateInstance<StreamEventTypeModel>();
+        return new ModifyStreamEventTypeCommand
+        {
+            Id = _context.Get<DefineStreamEventTypeCommand>().Id,
+            Title = model.Title,
+            Metadata = _context.ContainsKey(typeof(IReadOnlyCollection<StreamEventTypeMetadataCommandItem>).FullName)
+                ? _context.Get<IReadOnlyCollection<StreamEventTypeMetadataCommandItem>>()
+                : new List<StreamEventTypeMetadataCommandItem>(),
+            Version = 0
+        };
+    }
 }

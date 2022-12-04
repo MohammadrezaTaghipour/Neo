@@ -22,7 +22,7 @@ public class ThereIsADefinedStreamEventTypeWithTitleWithFollowingProperties
         _actor = stage.ActorInTheSpotlight;
     }
 
-    [Given("There is a defined stream event type with title with following properties")]
+    [Given("There is a defined stream event type with following properties")]
     public void Func(DefineStreamEventTypeCommand command)
     {
         _commandBus.Dispatch(command);

@@ -8,7 +8,7 @@ Feature: Removing Stream event type
         Given There are some provided stream event type metadata with following properties
             | Title     |
             | Init Date |
-        And There is a defined stream event type with title with following properties
+        And There is a defined stream event type with following properties
             | Title | Metadata |
             | Init  |          |
         When I Remove stream event type 'Init'

@@ -22,13 +22,16 @@ public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>
         return streamEventType;
     }
 
-    public async Task Modify(StreamEventTypeArg arg)
+    public Task Modify(StreamEventTypeArg arg)
     {
         Apply(new StreamEventTypeModified(arg.Id, arg.Title, arg.Metadata));
+        return Task.CompletedTask;
     }
 
-    public async Task Remove()
+    public Task Remove()
     {
+        //Todo: add invariants here :)
         Apply(new StreamEventTypeRemoved(State.Id));
+        return Task.CompletedTask;
     }
 }

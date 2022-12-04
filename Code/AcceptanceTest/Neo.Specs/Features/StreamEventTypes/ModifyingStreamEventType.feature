@@ -8,7 +8,7 @@ I want to configure Stream event types
         Given There are some provided stream event type metadata with following properties
           | Title     |
           | Init Date |
-        And There is a defined stream event type with title with following properties
+        And There is a defined stream event type with following properties
           | Title | Metadata |
           | Init  |          |
         And I have reprovided some stream event type metadata with following properties
