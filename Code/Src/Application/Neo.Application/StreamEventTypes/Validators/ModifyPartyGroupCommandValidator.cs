@@ -24,6 +24,9 @@ public class ModifyPartyGroupCommandValidator :
 
         RuleFor(x => x.Metadata).Custom((value, _) =>
         {
+            if (value == null || !value.Any())
+                return;
+
             if (value.Any(a => string.IsNullOrWhiteSpace(a.Title)))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10005);
 
