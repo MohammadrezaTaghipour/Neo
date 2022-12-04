@@ -35,15 +35,6 @@ Examples:
 	| Init    | Init Date                                                                                                                        | X              |
 	| Feeling | ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss | X              |
 
-Scenario: Stream event type gets defined with its unique properties
-	Given There is a defined stream event type with following properties
-		| Title | Metadata |
-		| Init  |          |
-	When I define a new stream event type with follwoing properties
-		| Title | Metadata |
-		| Init  |          |
-	Then I get error with code 'NEO-LSE-BR-10001' and message 'There is already a registered stream event type with title "Init"' within the system
-
 Scenario Outline: Stream event type is not allowed to get defined with invalid properties
 	Given There are some provided stream event type metadata with following properties
 		| Title            |
