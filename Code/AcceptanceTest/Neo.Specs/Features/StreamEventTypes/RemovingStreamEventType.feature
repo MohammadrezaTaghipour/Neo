@@ -12,7 +12,7 @@ Feature: Removing Stream event type
             | Title | Metadata |
             | Init  |          |
         When I Remove stream event type 'Init'
-        Then Then I can not find Stream event type 'Init' with above properties
+        Then I can not find stream event type 'Init' with above properties
 
     #TODO: comming soon
     Scenario Outline: Stream event type is not allowed to get removed when it is used by any life stream

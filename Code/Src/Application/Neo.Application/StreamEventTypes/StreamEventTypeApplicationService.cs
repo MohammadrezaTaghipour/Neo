@@ -48,8 +48,8 @@ public class StreamEventTypeApplicationService :
     {
         var id = new StreamEventTypeId(command.Id);
         var streamEventType = await _repository
-            .GetBy(id, command.Version, cancellationToken)
-            .ConfigureAwait(false);
+           .GetBy(id, cancellationToken)
+           .ConfigureAwait(false);
         await streamEventType.Remove().ConfigureAwait(false);
         await _repository.Add(id, streamEventType, cancellationToken)
             .ConfigureAwait(false);
