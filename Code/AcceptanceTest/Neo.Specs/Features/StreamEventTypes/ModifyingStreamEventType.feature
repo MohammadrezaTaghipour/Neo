@@ -63,7 +63,7 @@ Examples:
 	| NEO-SET-BR-10007 | Stream event type metadata title length can not be greater than 128 | Feeling                                                                                                                           | ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss s | X              |
 
 Scenario Outline: Stream event type is not allowed to get modified with duplicated matadata
-	Given There is a defined stream event type with title with following properties
+	Given There is a defined stream event type with following properties
 		| Title        | Metadata |
 		| Conversation |          |
 	And I have reprovided some stream event type metadata with following properties
@@ -73,4 +73,4 @@ Scenario Outline: Stream event type is not allowed to get modified with duplicat
 	When I modify stream event type 'Duration' with follwoing properties
 		| Title        | Metadata |
 		| Conversation |          |
-	Then I get error with code 'NEO-LSE-BR-10007' and message 'There are duplicated metadata' from the system
+	Then I get error with code 'NEO-SET-BR-10008' and message 'There are duplicated metadata' from the system
