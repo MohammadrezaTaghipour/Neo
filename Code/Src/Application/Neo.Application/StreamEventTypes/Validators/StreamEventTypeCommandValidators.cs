@@ -12,12 +12,12 @@ public class StreamEventTypeCommandValidators :
 
     public void Validate(DefineStreamEventTypeCommand command)
     {
-        new DefinePartyGroupCommandValidator().ValidateAndThrow(command);
+        new DefineStreamEventTypeCommandValidator().ValidateAndThrow(command);
     }
 
     public void Validate(ModifyStreamEventTypeCommand command)
     {
-        new ModifyPartyGroupCommandValidator().ValidateAndThrow(command);
+        new ModifyStreamEventTypeCommandValidator().ValidateAndThrow(command);
     }
 
     public void Validate(RemoveStreamEventTypeCommand command)

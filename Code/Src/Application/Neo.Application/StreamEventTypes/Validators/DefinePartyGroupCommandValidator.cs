@@ -2,14 +2,13 @@
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
-using System.Collections.Generic;
 
 namespace Neo.Application.StreamEventTypes.Validators;
 
-public class DefinePartyGroupCommandValidator :
+public class DefineStreamEventTypeCommandValidator :
     AbstractValidator<DefineStreamEventTypeCommand>
 {
-    public DefinePartyGroupCommandValidator()
+    public DefineStreamEventTypeCommandValidator()
     {
         RuleFor(x => x.Title).Custom((value, _) =>
         {

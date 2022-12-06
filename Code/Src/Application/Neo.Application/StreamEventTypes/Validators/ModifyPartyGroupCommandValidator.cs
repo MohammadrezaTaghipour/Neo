@@ -5,10 +5,10 @@ using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Application.StreamEventTypes.Validators;
 
-public class ModifyPartyGroupCommandValidator :
+public class ModifyStreamEventTypeCommandValidator :
     AbstractValidator<ModifyStreamEventTypeCommand>
 {
-    public ModifyPartyGroupCommandValidator()
+    public ModifyStreamEventTypeCommandValidator()
     {
         RuleFor(x => x.Title).Custom((value, _) =>
         {
