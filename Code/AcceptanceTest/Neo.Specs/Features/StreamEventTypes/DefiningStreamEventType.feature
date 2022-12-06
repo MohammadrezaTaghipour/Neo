@@ -1,4 +1,4 @@
-Feature: Defining Stream event type
+Feature: Defining stream event type
 
 In order to registering and tracking life strams online
 As me

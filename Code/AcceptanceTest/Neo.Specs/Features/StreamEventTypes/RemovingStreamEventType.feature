@@ -1,4 +1,4 @@
-Feature: Removing Stream event type
+Feature: Removing stream event type
 
     In order to registering and tracking life strams online
     As me

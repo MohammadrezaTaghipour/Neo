@@ -1,4 +1,4 @@
-Feature: Modifying Stream event type
+Feature: Modifying stream event type
 
 In order to registering and tracking life strams online
 As me
