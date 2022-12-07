@@ -34,6 +34,7 @@ public record LifeStreamState : AggregateState<LifeStreamState>
         {
             Id = eventToHandle.Id,
             Title = eventToHandle.Title,
+            Description = eventToHandle.Description,
         };
     }
 

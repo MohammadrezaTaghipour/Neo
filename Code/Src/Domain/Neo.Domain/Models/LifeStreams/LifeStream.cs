@@ -20,4 +20,11 @@ public class LifeStream : EventSourcedAggregate<LifeStreamState>
         await (Task)lifeStream.CompletionTask;
         return lifeStream;
     }
+
+    public Task Modify(LifeStreamArg arg)
+    {
+        Apply(new LifeStreamModified(arg.Id,
+            arg.Title, arg.Description, arg.ParentStreams));
+        return Task.CompletedTask;
+    }
 }

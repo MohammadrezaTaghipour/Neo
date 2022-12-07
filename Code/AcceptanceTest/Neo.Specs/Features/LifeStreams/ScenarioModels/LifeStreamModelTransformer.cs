@@ -37,7 +37,7 @@ namespace Neo.Specs.Features.LifeStreams.ScenarioModels
                 Id = _context.Get<DefineLifeStreamCommand>().Id,
                 Title = model.Title,
                 Description = model.Description,
-                ParentStreams = null,
+                ParentStreams = new List<ParentStreamCommandItem>(),
                 Version = 0
             };
         }

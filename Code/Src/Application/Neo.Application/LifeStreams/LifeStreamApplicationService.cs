@@ -30,10 +30,15 @@ public class LifeStreamApplicationService :
             .ConfigureAwait(false);
     }
 
-    public Task Handle(ModifyLifeStreamCommand command,
+    public async Task Handle(ModifyLifeStreamCommand command,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var arg = _argFactory.CreateFrom(command);
+        var lifestream = await _repository.GetBy(arg.Id, cancellationToken)
+            .ConfigureAwait(false);
+        await lifestream.Modify(arg).ConfigureAwait(false);
+        await _repository.Add(arg.Id, lifestream, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public Task Handle(RemoveLifeStreamCommand command,
