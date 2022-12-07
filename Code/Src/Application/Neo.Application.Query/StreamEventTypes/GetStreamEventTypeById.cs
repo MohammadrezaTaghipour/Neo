@@ -1,12 +1,11 @@
-﻿namespace Neo.Application.Query.StreamEventTypes
-{
-    public class GetStreamEventTypeByIdQuery
-    {
-        public Guid Id { get; }
+﻿namespace Neo.Application.Query.StreamEventTypes;
 
-        public GetStreamEventTypeByIdQuery(Guid id)
-        {
-            Id = id;
-        }
+public class GetStreamEventTypeByIdQuery
+{
+    public Guid Id { get; }
+
+    public GetStreamEventTypeByIdQuery(Guid id)
+    {
+        Id = id;
     }
 }
