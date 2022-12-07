@@ -10,3 +10,5 @@ public class StreamEventTypeId : AggregateId
 
     public static StreamEventTypeId New() => new(Guid.NewGuid());
 }
+
+public record StreamEventTypeMetadata(string Title);

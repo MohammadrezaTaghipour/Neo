@@ -17,6 +17,7 @@ public static class MetadataSerializer
         string stream,
         ulong position = 0)
     {
+        if (meta.IsEmpty) return null;
         try
         {
             return JsonSerializer.Deserialize<Metadata>(meta.Span, Options);

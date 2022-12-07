@@ -1,4 +1,6 @@
 using EventStore.Client;
+using Microsoft.Extensions.Logging;
+using Neo.Infrastructure.EventStore.Serializations;
 using Neo.Infrastructure.Framework.Subscriptions.Consumers;
 
 namespace Neo.Infrastructure.EventStore.Subscriptions;
@@ -10,20 +12,11 @@ public class EventStorePersistentSubscriber :
         EventStorePersistentSubscriptionsClient subscriptionClient,
         PersistentSubscriptionOptions options,
         DomainEventTypeMapper mapper,
-        IMessageConsumer messageConsumer)
-        : base(subscriptionClient, options, mapper, messageConsumer)
-    {
-    }
-
-    public EventStorePersistentSubscriber(
-        EventStorePersistentSubscriptionsClient subscriptionClient,
-        string subscriptionId,
-        PersistentSubscriptionOptions options,
-        DomainEventTypeMapper mapper,
-        IMessageConsumer messageConsumer)
-        : this(subscriptionClient,
-            new PersistentSubscriptionOptions(subscriptionId),
-            mapper, messageConsumer)
+        IMessageConsumer messageConsumer,
+        IEventSerializer eventSerializer,
+        ILoggerFactory loggerFactory)
+        : base(subscriptionClient, options, mapper,
+            messageConsumer, eventSerializer, loggerFactory)
     {
     }
 
@@ -36,6 +29,7 @@ public class EventStorePersistentSubscriber :
     {
         await SubscriptionClient.CreateToAllAsync(
             Options.SubscriptionId,
+            EventTypeFilter.ExcludeSystemEvents(),
             settings,
             Options.Deadline,
             Options.Credentials,

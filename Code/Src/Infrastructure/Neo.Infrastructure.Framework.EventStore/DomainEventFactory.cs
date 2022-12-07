@@ -1,7 +1,6 @@
-using System.Text;
-using EventStore.Client;
 using Neo.Infrastructure.EventStore.Serializations;
 using Neo.Infrastructure.Framework.Domain;
+using Neo.Infrastructure.Framework.Persistence;
 
 namespace Neo.Infrastructure.EventStore;
 
@@ -17,20 +16,17 @@ public class DomainEventFactory : IDomainEventFactory
         _serializer = serializer;
     }
 
-    public IReadOnlyList<DomainEvent> Create(ResolvedEvent[] events)
+    public IReadOnlyList<DomainEvent> Create(StreamEvent[] events)
     {
         return events.Select(e =>
         {
-            var type = _mapper.GetType(e.Event.EventType);
-            return Create(e, type, _serializer);
+            var type = _mapper.GetType(e.eventType);
+            return Create(e, _serializer);
         }).ToList();
     }
 
-    static DomainEvent Create(ResolvedEvent @event,
-        Type eventType, IEventSerializer serializer)
+    static DomainEvent Create(StreamEvent @event, IEventSerializer serializer)
     {
-        var data = Encoding.UTF8.GetString(@event.Event.Data.Span);
-        var instance = serializer.Deserialize(data, eventType);
-        return instance as DomainEvent;
+        return @event.Payload as DomainEvent;
     }
 }

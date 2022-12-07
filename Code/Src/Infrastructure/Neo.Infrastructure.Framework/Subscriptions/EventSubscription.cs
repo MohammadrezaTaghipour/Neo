@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Neo.Infrastructure.Framework.Subscriptions.Consumers;
 using Neo.Infrastructure.Framework.Subscriptions.Contexts;
 
@@ -11,17 +12,20 @@ public abstract class EventSubscription<T> : IMessageSubscription
     public bool IsRunning { get; set; }
     protected internal T Options { get; }
     protected IMessageConsumer MessageConsumer;
-
+    protected readonly ILogger<EventSubscription<T>> _logger;
     protected CancellationTokenSource Stopping { get; } = new();
 
     private OnSubscribed? _onSubscribed;
     private OnDropped? _onDropped;
 
 
-    public EventSubscription(T options, IMessageConsumer messageConsumer)
+
+    public EventSubscription(T options, IMessageConsumer messageConsumer,
+        ILoggerFactory loggerFactory)
     {
         Options = options;
         MessageConsumer = messageConsumer;
+        _logger = loggerFactory.CreateLogger<EventSubscription<T>>();
     }
 
     public async Task Subscribe(OnSubscribed onSubscribed,
@@ -36,6 +40,7 @@ public abstract class EventSubscription<T> : IMessageSubscription
         _onDropped = onDropped;
         await Subscribe(cts.Token).ConfigureAwait(false);
         IsRunning = true;
+        _logger.LogInformation($"Subscription Started: {Options.SubscriptionId}.");
         onSubscribed(Options.SubscriptionId);
     }
 
@@ -44,9 +49,8 @@ public abstract class EventSubscription<T> : IMessageSubscription
     {
         IsRunning = false;
         await Unsubscribe(cancellationToken).ConfigureAwait(false);
-        // _logger.Info(Options.SubscriptionId);
+        _logger.LogWarning($"Subscription Stopped: {Options.SubscriptionId}");
         onUnsubscribed(Options.SubscriptionId);
-        await Finalize(cancellationToken);
     }
 
     protected abstract Task Subscribe(CancellationToken cancellationToken);
@@ -62,21 +66,22 @@ public abstract class EventSubscription<T> : IMessageSubscription
         {
             try
             {
-                // _logger.Info(Options.SubscriptionId);
+                _logger.LogWarning($"Subscription Resubscribing: {Options.SubscriptionId}");
 
                 await Subscribe(cancellationToken).ConfigureAwait(false);
 
                 IsDropped = false;
                 _onSubscribed?.Invoke(Options.SubscriptionId);
 
-                // _logger.Info(Options.SubscriptionId);
+                _logger.LogWarning($"Subscription Restored: {Options.SubscriptionId}");
+
             }
             catch (OperationCanceledException)
             {
             }
             catch (Exception e)
             {
-                // _logger.Info(Options.SubscriptionId, e.Message);
+                _logger.LogWarning(e, $"Resubscribe Failed: {Options.SubscriptionId}");
                 await Task.Delay(1000, cancellationToken).ConfigureAwait(false);
             }
         }
@@ -85,6 +90,7 @@ public abstract class EventSubscription<T> : IMessageSubscription
     protected void Dropped(DropReason reason, Exception? exception)
     {
         if (!IsRunning) return;
+        _logger.LogWarning(exception, $"SubscriptionDropped: {Options.SubscriptionId}", reason);
 
         IsDropped = true;
         _onDropped?.Invoke(Options.SubscriptionId, reason, exception);
@@ -96,7 +102,7 @@ public abstract class EventSubscription<T> : IMessageSubscription
                     ? TimeSpan.FromSeconds(10)
                     : TimeSpan.FromSeconds(2);
 
-                // _logger.Warn($"Will resubscribe after {delay}");
+                _logger.LogWarning($"Will resubscribe after {delay}");
 
                 try
                 {
@@ -104,17 +110,17 @@ public abstract class EventSubscription<T> : IMessageSubscription
                 }
                 catch (Exception e)
                 {
-                    // _logger.Warn(e.Message);
+                    _logger.LogWarning(e.Message);
                     throw;
                 }
             }
         );
     }
-    
-    protected virtual Task Finalize(CancellationToken cancellationToken) => default;
+
 
     protected async Task Handler(IMessageConsumeContext context)
     {
+        _logger.LogDebug($"Message Received: {context.MessageType}");
         await MessageConsumer.Consume(context).ConfigureAwait(false);
     }
 }

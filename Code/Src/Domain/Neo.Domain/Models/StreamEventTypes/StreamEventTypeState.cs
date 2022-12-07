@@ -5,7 +5,13 @@ namespace Neo.Domain.Models.StreamEventTypes;
 
 public record StreamEventTypeState : AggregateState<StreamEventTypeState>
 {
-    public StreamEventTypeId Id { get; set; }
+    private List<StreamEventTypeMetadata> _metadata = new();
+
+    public StreamEventTypeId Id { get; private set; }
+    public string Title { get; private set; }
+    public bool Deleted { get; private set; }
+    public IReadOnlyCollection<StreamEventTypeMetadata> Metadata => _metadata.AsReadOnly();
+
 
     public override StreamEventTypeState When(IDomainEvent eventToHandle)
     {
@@ -16,7 +22,9 @@ public record StreamEventTypeState : AggregateState<StreamEventTypeState>
     {
         return this with
         {
-            Id = eventToHandle.Id
+            Id = eventToHandle.Id,
+            Title = eventToHandle.Title,
+            _metadata = eventToHandle.Metadata?.ToList(),
         };
     }
 
@@ -24,7 +32,9 @@ public record StreamEventTypeState : AggregateState<StreamEventTypeState>
     {
         return this with
         {
-            Id = eventToHandle.Id
+            Id = eventToHandle.Id,
+            Title = eventToHandle.Title,
+            _metadata = eventToHandle.Metadata?.ToList()
         };
     }
 
@@ -32,7 +42,8 @@ public record StreamEventTypeState : AggregateState<StreamEventTypeState>
     {
         return this with
         {
-            Id = eventToHandle.Id
+            Id = eventToHandle.Id,
+            Deleted = true
         };
     }
 }

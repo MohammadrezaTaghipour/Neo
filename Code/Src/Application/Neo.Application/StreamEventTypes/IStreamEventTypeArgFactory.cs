@@ -18,8 +18,10 @@ public class StreamEventTypeArgFactory : IStreamEventTypeArgFactory
     {
         command.Id = StreamEventTypeId.New().Value;
         return StreamEventTypeArg.Builder
-            .With(a => a.Id, new StreamEventTypeId(command.Id))
-            .With(a => a.Title = command.Title)
+            .With(_ => _.Id, new StreamEventTypeId(command.Id))
+            .With(_ => _.Title = command.Title)
+            .With(_ => _.Metadata, command.Metadata
+                .Select(a => new StreamEventTypeMetadata(a.Title))?.ToList())
             .Build();
     }
 
@@ -28,6 +30,8 @@ public class StreamEventTypeArgFactory : IStreamEventTypeArgFactory
         return StreamEventTypeArg.Builder
             .With(a => a.Id, new StreamEventTypeId(command.Id))
             .With(a => a.Title = command.Title)
+            .With(_ => _.Metadata, command.Metadata
+                .Select(a => new StreamEventTypeMetadata(a.Title))?.ToList())
             .Build();
     }
 }

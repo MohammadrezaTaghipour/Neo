@@ -28,7 +28,12 @@ public class EsDbSubscriptionBootstrapper : IBootstrapper
     {
         var esDbOption = _configuration.GetSection("esDb").Get<EsDbOption>();
 
-        services.AddSingleton(_ => new PersistentSubscriptionOptions(esDbOption.SubscriptionId));
+        services.AddSingleton(_ => new PersistentSubscriptionOptions(esDbOption.SubscriptionId)
+        {
+            ResolveLinkTos = true,
+            BufferSize = 1,
+            SubscriptionSettings = new PersistentSubscriptionSettings(true, Position.Start)
+        });
         services.AddSingleton<IMessageSubscription, EventStorePersistentSubscriber>();
         services.AddSingleton<IMessageConsumer, DefaultMessageConsumer>();
         AddEventHandlers(services, _assemblyWithEventHandlers);
@@ -39,6 +44,7 @@ public class EsDbSubscriptionBootstrapper : IBootstrapper
             var settings = esDbClient.GetSettings().Copy();
             var opSettings = settings.OperationOptions.Clone();
             settings.OperationOptions = opSettings;
+
             return new EventStorePersistentSubscriptionsClient(settings);
         });
 

@@ -13,12 +13,16 @@ public class EsdbRepository<TAggregate, TState, TId> :
     where TId : AggregateId
 {
     private readonly EventStoreClient _client;
+    private readonly IEventReader _eventReader;
     private readonly IDomainEventFactory _domainEventFactory;
 
+
     public EsdbRepository(EventStoreClient client,
+        IEventReader eventReader,
         IDomainEventFactory domainEventFactory)
     {
         _client = client;
+        _eventReader = eventReader;
         _domainEventFactory = domainEventFactory;
     }
 
@@ -52,22 +56,11 @@ public class EsdbRepository<TAggregate, TState, TId> :
     public async Task<TAggregate> GetById(StreamName streamName, TId id,
         CancellationToken cancellationToken)
     {
-        var stream = _client.ReadStreamAsync(Direction.Forwards,
-            streamName,
-            StreamPosition.Start,
-            4096,
-            cancellationToken: cancellationToken);
-
-        if (await stream.ReadState != ReadState.Ok)
-            throw new Exception($"{stream.ReadState}");
-
-        var resolvedEvents = await stream
-            .ToArrayAsync(cancellationToken: cancellationToken)
+        var resolvedEvents = await _eventReader.ReadEvents(
+            streamName, 4096, cancellationToken)
             .ConfigureAwait(false);
-
         var domainEvents = _domainEventFactory.Create(resolvedEvents);
-
-        return AggregateFactory.Create<TAggregate, TState, TId>(domainEvents);
+        return AggregateFactory.Create<TAggregate, TState>(domainEvents);
     }
 
     public async Task<TAggregate> GetBy(StreamName streamName, TId id,

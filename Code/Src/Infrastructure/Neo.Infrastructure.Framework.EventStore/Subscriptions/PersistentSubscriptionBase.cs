@@ -1,6 +1,8 @@
+
 using System.Collections.Concurrent;
 using System.Text;
 using EventStore.Client;
+using Microsoft.Extensions.Logging;
 using Neo.Infrastructure.EventStore.Serializations;
 using Neo.Infrastructure.Framework.Subscriptions;
 using Neo.Infrastructure.Framework.Subscriptions.Consumers;
@@ -21,11 +23,16 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
 
     protected PersistentSubscriptionBase(
         EventStorePersistentSubscriptionsClient subscriptionClient,
-        T options, DomainEventTypeMapper mapper, IMessageConsumer messageConsumer)
-        : base(options, messageConsumer)
+        T options, 
+        DomainEventTypeMapper mapper,
+        IMessageConsumer messageConsumer,
+        IEventSerializer eventSerializer,
+        ILoggerFactory loggerFactory)
+        : base(options, messageConsumer, loggerFactory)
     {
         SubscriptionClient = subscriptionClient;
         Mapper = mapper;
+        EventSerializer = eventSerializer;
     }
 
     protected override async Task Subscribe(CancellationToken cancellationToken)
@@ -65,6 +72,9 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
         CancellationToken ct
     )
     {
+        if (re.OriginalEvent.EventStreamId.StartsWith("$"))
+            await subscription.Ack(re);
+
         var context = CreateContext(re, ct)
             .WithItem(ResolvedEventKey, re)
             .WithItem(SubscriptionKey, subscription);
@@ -79,6 +89,15 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
         {
             await Nack(context, e).ConfigureAwait(false);
         }
+    }
+
+    private void HandleDrop(
+       PersistentSubscription __,
+       SubscriptionDroppedReason reason,
+       Exception exception
+   )
+    {
+        Dropped(EsdbMappings.AsDropReason(reason), exception);
     }
 
     IMessageConsumeContext CreateContext(ResolvedEvent re, CancellationToken cancellationToken)
@@ -110,14 +129,6 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
         );
     }
 
-    private void HandleDrop(
-        PersistentSubscription __,
-        SubscriptionDroppedReason reason,
-        Exception exception
-    )
-    {
-        Dropped(EsdbMappings.AsDropReason(reason), exception);
-    }
 
     private ConcurrentQueue<ResolvedEvent> AckQueue { get; } = new();
 
@@ -142,7 +153,7 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
 
     async Task Nack(IMessageConsumeContext ctx, Exception exception)
     {
-        // _logger.MessageHandlingFailed(Options.SubscriptionId, ctx, exception);
+        _logger.LogError($"Message Handling Failed: {Options.SubscriptionId}", ctx, exception);
 
         var re = ctx.Items.GetItem<ResolvedEvent>(ResolvedEventKey);
         var subscription = ctx.Items.GetItem<PersistentSubscription>(SubscriptionKey)!;

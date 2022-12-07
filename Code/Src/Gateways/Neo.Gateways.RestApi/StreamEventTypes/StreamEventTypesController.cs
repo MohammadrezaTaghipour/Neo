@@ -16,7 +16,8 @@ public class StreamEventTypesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(DefineStreamEventTypeCommand command,
+    public async Task<IActionResult> Post(
+        DefineStreamEventTypeCommand command,
         CancellationToken cancellationToken)
     {
         await _commandBus.Dispatch(command, cancellationToken)
@@ -25,7 +26,8 @@ public class StreamEventTypesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Put(Guid id, ModifyStreamEventTypeCommand command,
+    public async Task<IActionResult> Put(Guid id,
+        ModifyStreamEventTypeCommand command,
         CancellationToken cancellationToken)
     {
         command.Id = id;
