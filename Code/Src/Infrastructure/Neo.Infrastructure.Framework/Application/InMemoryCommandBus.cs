@@ -34,6 +34,7 @@ public class InMemoryCommandBus : ICommandBus
         catch (Exception e)
         {
             _logger.LogError(e, e.Message);
+            throw;
         }
     }
 }
