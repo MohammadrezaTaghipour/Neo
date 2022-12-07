@@ -1,4 +1,5 @@
 ﻿using Neo.Application.Contracts.LifeStreams;
+using Neo.Domain.Contracts.LifeStreams;
 using Neo.Domain.Models.LifeStreams;
 using Neo.Infrastructure.Framework.Application;
 
@@ -41,9 +42,15 @@ public class LifeStreamApplicationService :
             .ConfigureAwait(false);
     }
 
-    public Task Handle(RemoveLifeStreamCommand command,
+    public async Task Handle(RemoveLifeStreamCommand command,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var id = new LifeStreamId(command.Id);
+        var lifeStream = await _repository
+           .GetBy(id, cancellationToken)
+           .ConfigureAwait(false);
+        await lifeStream.Remove().ConfigureAwait(false);
+        await _repository.Add(id, lifeStream, cancellationToken)
+            .ConfigureAwait(false);
     }
 }

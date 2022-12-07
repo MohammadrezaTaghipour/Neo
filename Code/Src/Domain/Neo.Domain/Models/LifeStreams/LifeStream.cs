@@ -27,4 +27,11 @@ public class LifeStream : EventSourcedAggregate<LifeStreamState>
             arg.Title, arg.Description, arg.ParentStreams));
         return Task.CompletedTask;
     }
+
+    public Task Remove()
+    {
+        //TODO: check invarinats here :)
+        Apply(new LifeStreamRemoved(State.Id));
+        return Task.CompletedTask;
+    }
 }
