@@ -11,7 +11,7 @@ Scenario Outline: Life stream gets modified with its valid properties
 	When I modify life stream 'Friendship with Souzan' with follwoing properties
 		| Title               | Description                         | ParentStream |
 		| Friendship with Ali | our friendship started at July 2022 |              |
-	Then I can find life stream '<title>' with above properties
+	Then I can find life stream 'Friendship with Souzan' with above properties
 
 Scenario Outline: Life stream is not allowed to get modified with invalid properties
 	Given There is a defined life stream with following properties

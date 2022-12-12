@@ -8,7 +8,7 @@ Scenario Outline: Life stream gets removed when no any events has registered for
 	Given There is a defined life stream with following properties
 		| Title                  | Description | ParentStream |
 		| Friendship with Souzan |             |              |
-	When I Remove life stream 'Friendship with Souzan'
+	When I remove life stream 'Friendship with Souzan'
 	Then I can not find life stream 'Friendship with Souzan' with above properties
 
 	#TODO: comming soon

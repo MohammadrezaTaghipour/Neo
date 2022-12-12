@@ -31,7 +31,6 @@
 
     <ItemGroup>
       <Folder Include="Configurations\Neo" />
-      <Folder Include="Features\LifeStreams\" />
     </ItemGroup>
 
     <ItemGroup>

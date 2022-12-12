@@ -17,16 +17,24 @@ public class InMemoryCommandBus : ICommandBus
     public async Task Dispatch<T>(T command, CancellationToken cancellationToken) 
         where T : ICommand
     {
-        _logger.LogInformation($"Starting handling command of type: {command.GetType().Name}.");
+        try
+        {
+            _logger.LogInformation($"Starting handling command of type: {command.GetType().Name}.");
 
-        var handler = _serviceProvider
-            .GetService(typeof(IApplicationService<T>)) as IApplicationService<T>;
+            var handler = _serviceProvider
+                .GetService(typeof(IApplicationService<T>)) as IApplicationService<T>;
 
-        if (handler == null)
-            throw new Exception($"Could not resolve any handler for type: {command.GetType()}.");
+            if (handler == null)
+                throw new Exception($"Could not resolve any handler for type: {command.GetType()}.");
 
-        await handler.Handle(command, cancellationToken).ConfigureAwait(false);
+            await handler.Handle(command, cancellationToken).ConfigureAwait(false);
 
-        _logger.LogInformation($"Handling command of type: {command.GetType().Name} finished successfully");
+            _logger.LogInformation($"Handling command of type: {command.GetType().Name} finished successfully");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, e.Message);
+            throw;
+        }
     }
 }
