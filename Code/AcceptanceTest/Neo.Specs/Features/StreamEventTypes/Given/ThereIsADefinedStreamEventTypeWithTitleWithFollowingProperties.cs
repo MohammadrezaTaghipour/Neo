@@ -30,4 +30,16 @@ public class ThereIsADefinedStreamEventTypeWithTitleWithFollowingProperties
         _context.Set(command);
         _context.Set(command.Id, command.Title);
     }
+
+    [Given("There are some defined stream event type with following properties")]
+    public void Func(IReadOnlyCollection<DefineStreamEventTypeCommand> commands)
+    {
+        foreach (var command in commands)
+        {
+            _commandBus.Dispatch(command);
+            command.Id = _actor.AsksFor(LastResponse.Content<Guid>());
+            _context.Set(command);
+            _context.Set(command.Id, command.Title);
+        }
+    }
 }

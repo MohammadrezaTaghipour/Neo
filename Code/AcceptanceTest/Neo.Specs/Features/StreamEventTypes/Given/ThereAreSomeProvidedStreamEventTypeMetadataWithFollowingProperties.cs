@@ -15,7 +15,6 @@ public class ThereAreSomeProvidedStreamEventTypeMetadataWithFollowingProperties
     }
 
     [Given("There are some provided stream event type metadata with following properties")]
-    [Given("There is a provided stream event type with following properties")]
     [Given("I have reprovided some stream event type metadata with following properties")]
     public void Func(IReadOnlyCollection<StreamEventTypeMetadataCommandItem> commandItems)
     {
