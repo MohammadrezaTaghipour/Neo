@@ -13,8 +13,8 @@ Scenario Outline: Stream context gets removed when no any events has registered 
 		| Title       | Description |
 		| Career path |             |
 	And With following stream event type
-		| StreamEventType |
-		| Conversation    |
+		| StreamEventTypes |
+		| Conversation     |
 	And There is a defined stream context 'Career path'
 	When I Remove stream context 'Career path'
 	Then I can not find stream context 'Career path' with above properties
