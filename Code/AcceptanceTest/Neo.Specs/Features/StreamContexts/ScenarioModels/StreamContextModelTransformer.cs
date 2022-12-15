@@ -22,7 +22,8 @@ public class StreamContextModelTransformer
         {
             Id = default,
             Title = model.Title,
-            StreamEventTypes = default
+            Description = model.Description,
+            StreamEventTypes = new List<StreamEventTypeCommandItem>()
         };
     }
 

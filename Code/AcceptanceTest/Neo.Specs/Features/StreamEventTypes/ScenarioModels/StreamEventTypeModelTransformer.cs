@@ -29,6 +29,20 @@ public class StreamEventTypeModelTransformer
     }
 
     [StepArgumentTransformation]
+    public IReadOnlyCollection<DefineStreamEventTypeCommand> ConvertToDefineCommands(Table table)
+    {
+        var models = table.CreateSet<StreamEventTypeModel>();
+        return models.Select(model => new DefineStreamEventTypeCommand
+        {
+            Id = default,
+            Title = model.Title,
+            Metadata = _context.ContainsKey(typeof(IReadOnlyCollection<StreamEventTypeMetadataCommandItem>).FullName)
+                ? _context.Get<IReadOnlyCollection<StreamEventTypeMetadataCommandItem>>()
+                : new List<StreamEventTypeMetadataCommandItem>()
+        }).ToList();
+    }
+
+    [StepArgumentTransformation]
     public IReadOnlyCollection<StreamEventTypeMetadataCommandItem> ConvertToMetadaCommandItem(Table table)
     {
         var models = table.CreateSet<StreamEventTypeMetadataModel>();

@@ -40,10 +40,11 @@ public class ICanFindStreamContextWithAboveProperties
             .Excluding(_ => _.Id)
             .Excluding(_ => _.StreamEventTypes));
 
-        //if (expected.StreamEventTypes.Any())
-        //    actual.StreamEventTypes.OrderBy(_ => _.StreamEventTypeId)
-        //        .Should()
-        //        .BeEquivalentTo(expected.StreamEventTypes.OrderBy(_ => _.StreamEventTypeId));
+        if (expected.StreamEventTypes.Any())
+            actual.StreamEventTypes.OrderBy(streamEventTypeId => streamEventTypeId)
+                .Should()
+                .BeEquivalentTo(expected.StreamEventTypes.Select(_ => _.StreamEventTypeId)
+                .OrderBy(streamEventTypeId => streamEventTypeId));
     }
 
     private void AssertModification(string expectedTitle)
@@ -57,9 +58,10 @@ public class ICanFindStreamContextWithAboveProperties
             .Excluding(_ => _.StreamEventTypes)
             .Excluding(_ => _.Version));
 
-        //if (expected.StreamEventTypes.Any())
-        //    actual.StreamEventTypes.OrderBy(_ => _.StreamEventTypeId)
-        //        .Should()
-        //        .BeEquivalentTo(expected.StreamEventTypes.OrderBy(_ => _.StreamEventTypeId));
+        if (expected.StreamEventTypes.Any())
+            actual.StreamEventTypes.OrderBy(streamEventTypeId => streamEventTypeId)
+                .Should()
+                .BeEquivalentTo(expected.StreamEventTypes.Select(_ => _.StreamEventTypeId)
+                .OrderBy(streamEventTypeId => streamEventTypeId));
     }
 }
