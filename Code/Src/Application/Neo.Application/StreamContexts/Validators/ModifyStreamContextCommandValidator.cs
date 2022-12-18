@@ -35,6 +35,9 @@ public class ModifyStreamContextCommandValidator :
 
             if (value.Any(_ => _.StreamEventTypeId == Guid.Empty))
                 throw new BusinessException(StreamContextErrorCodes.SC_BR_10006);
+
+            if (value.GroupBy(a => a.StreamEventTypeId).Any(c => c.Count() > 1))
+                throw new BusinessException(StreamContextErrorCodes.SC_BR_10008);
         });
     }
 }
