@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -30,19 +30,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Configurations\Neo" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <SpecFlowFeatureFiles Update="Features\LifeStreams\ModifyingLifeStream.feature">
-        <Generator Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">SpecFlow.Tools.MsBuild.Generation</Generator>
-      </SpecFlowFeatureFiles>
     </ItemGroup>
 
 </Project>

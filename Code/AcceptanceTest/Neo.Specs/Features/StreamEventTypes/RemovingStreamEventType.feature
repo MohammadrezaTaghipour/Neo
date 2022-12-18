@@ -5,7 +5,7 @@ Feature: Removing stream event type
     I want to configure Stream event types
 
     Scenario Outline: Stream event type gets removed when it is not used by any life stream
-        Given There are some provided stream event type metadata with following properties
+        Given There are some provided stream event types metadata with following properties
             | Title     |
             | Init Date |
         And There is a defined stream event type with following properties

@@ -24,7 +24,7 @@ public class IProvideANewStreamContextWithFollowingProperties
         _context.Set(command);
     }
 
-    [When("With following stream event type")]
+    [When("With following stream event types")]
     public void Func(IReadOnlyCollection<StreamEventTypeCommandItem> items)
     {
         var command = _context.Get<DefineStreamContextCommand>();

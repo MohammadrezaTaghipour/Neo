@@ -8,13 +8,13 @@ using TechTalk.SpecFlow;
 namespace Neo.Specs.Features.StreamEventTypes.Given;
 
 [Binding]
-public class ThereIsADefinedStreamEventTypeWithTitleWithFollowingProperties
+public class ThereIsADefinedStreamEventTypeWithFollowingProperties
 {
     private readonly ScenarioContext _context;
     private readonly ICommandBus _commandBus;
     private readonly Actor _actor;
 
-    public ThereIsADefinedStreamEventTypeWithTitleWithFollowingProperties(
+    public ThereIsADefinedStreamEventTypeWithFollowingProperties(
         ScenarioContext context, ICommandBus commandBus, Stage stage)
     {
         _context = context;
@@ -31,7 +31,7 @@ public class ThereIsADefinedStreamEventTypeWithTitleWithFollowingProperties
         _context.Set(command.Id, command.Title);
     }
 
-    [Given("There are some defined stream event type with following properties")]
+    [Given("There are some defined stream event types with following properties")]
     public void Func(IReadOnlyCollection<DefineStreamEventTypeCommand> commands)
     {
         foreach (var command in commands)
