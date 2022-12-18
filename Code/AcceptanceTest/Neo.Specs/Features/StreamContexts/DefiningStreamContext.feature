@@ -53,12 +53,12 @@ Scenario: Stream context can not be created when stream event type is not found
 	And Stream event type 'Conversation' has been removed
 	When I provide a new stream context with following properties
 		| Title       | Description |
-		| Carrer path |             |
+		| Career path |             |
 	And With following stream event types
 		| StreamEventType |
 		| Conversation    |
-	And I define stream context 'Carrer path'
-	Then I get error with code 'NEO-SC-BR-10006' and message 'Stream context can not be created due to invalid stream event type' from the system
+	And I define stream context 'Career path'
+	Then I get error with code 'NEO-SC-BR-10007' and message 'Stream context can not be created due to invalid stream event type' from the system
 
 Scenario Outline: Stream context is not allowed to get defined with duplicated stream event type
 	Given There are some defined stream event types with following properties
@@ -73,4 +73,4 @@ Scenario Outline: Stream context is not allowed to get defined with duplicated s
 		| Conversation    |
 		| Conversation    |
 	And I define stream context 'Career path'
-	Then I get error with code 'NEO-SC-BR-10007' and message 'There are duplicated strean event types' from the system
+	Then I get error with code 'NEO-SC-BR-10008' and message 'There are duplicated strean event types' from the system

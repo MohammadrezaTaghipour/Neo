@@ -9,7 +9,7 @@ public record StreamEventTypeState : AggregateState<StreamEventTypeState>
 
     public StreamEventTypeId Id { get; private set; }
     public string Title { get; private set; }
-    public bool Deleted { get; private set; }
+    public bool Removed { get; private set; }
     public IReadOnlyCollection<StreamEventTypeMetadata> Metadata => _metadata.AsReadOnly();
 
 
@@ -43,7 +43,7 @@ public record StreamEventTypeState : AggregateState<StreamEventTypeState>
         return this with
         {
             Id = eventToHandle.Id,
-            Deleted = true
+            Removed = true
         };
     }
 }
