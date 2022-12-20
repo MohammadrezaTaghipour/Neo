@@ -64,15 +64,22 @@ Scenario: Stream context can not be modified when stream event type is not found
 	Given There is a defined stream event type with following properties
 		| Title        | Metadata |
 		| Conversation |          |
+	And there is a provided stream context with following properties
+		| Title       | Description |
+		| Career path |             |
+	And With following stream event types
+		| StreamEventType |
+		| Conversation    |
+	And There is a defined stream context 'Career path'
 	And Stream event type 'Conversation' has been removed
 	When I reprovide stream context 'Career path' with following properties
 		| Title      | Description |
 		| My Familiy |             |
-	And With following stream event type
+	And I reprovide the following stream event types
 		| StreamEventType |
 		| Conversation    |
 	And I modify stream context 'Career path'
-	Then I get error with code 'NEO-SC-BR-10006' and message 'Stream context can not be created due to invalid stream event type' from the system
+	Then I get error with code 'NEO-SC-BR-10007' and message 'Stream context can not be created due to invalid stream event type' from the system
 
 Scenario Outline: Stream context is not allowed to get modified with duplicated stream event type
 	Given There are some defined stream event type with following properties
@@ -87,4 +94,4 @@ Scenario Outline: Stream context is not allowed to get modified with duplicated 
 		| Conversation    |
 		| Conclusion      |
 	And I modify stream context 'Career path'
-	Then I get error with code 'NEO-SC-BR-10007' and message 'There are duplicated strean event types' from the system
+	Then I get error with code 'NEO-SC-BR-10008' and message 'There are duplicated strean event types' from the system
