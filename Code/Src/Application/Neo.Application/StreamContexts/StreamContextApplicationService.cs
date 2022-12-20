@@ -33,7 +33,12 @@ public class StreamContextApplicationService :
     public async Task Handle(ModifyStreamContextCommand command,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var arg = await _argFactory.CreateFrom(command, cancellationToken);
+        var lifestream = await _repository.GetBy(arg.Id, cancellationToken)
+            .ConfigureAwait(false);
+        await lifestream.Modify(arg).ConfigureAwait(false);
+        await _repository.Add(arg.Id, lifestream, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public async Task Handle(RemoveStreamContextCommand command,

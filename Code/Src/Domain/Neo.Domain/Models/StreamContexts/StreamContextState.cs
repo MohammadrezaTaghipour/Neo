@@ -1,5 +1,4 @@
 ﻿using Neo.Domain.Contracts.StreamContexts;
-using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Domain.Models.StreamContexts;
@@ -20,6 +19,17 @@ public record StreamContextState : AggregateState<StreamContextState>
     }
 
     private StreamContextState When(StreamContextDefined eventToHandle)
+    {
+        return this with
+        {
+            Id = eventToHandle.Id,
+            Title = eventToHandle.Title,
+            Description = eventToHandle.Description,
+            _streamEventTypes = eventToHandle.StreamEventTypes.Select(_ => _.Value).ToList(),
+        };
+    }
+    
+    private StreamContextState When(StreamContextModified eventToHandle)
     {
         return this with
         {

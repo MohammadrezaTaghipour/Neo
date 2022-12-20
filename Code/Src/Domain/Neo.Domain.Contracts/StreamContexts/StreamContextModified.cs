@@ -3,9 +3,9 @@ using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Domain.Contracts.StreamContexts;
 
-public class StreamContextDefined : DomainEvent
+public class StreamContextModified: DomainEvent
 {
-    public StreamContextDefined(StreamContextId id,
+    public StreamContextModified(StreamContextId id,
     string title, string description,
     IReadOnlyCollection<StreamEventTypeId> streamEventTypes)
     {

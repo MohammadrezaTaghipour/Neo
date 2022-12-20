@@ -24,7 +24,7 @@ public class ModifyStreamContextCommandValidator :
 
         RuleFor(x => x.Description).Custom((value, _) =>
         {
-            if (value.Length > 256)
+            if (value?.Length > 256)
                 throw new BusinessException(StreamContextErrorCodes.SC_BR_10005);
         });
 

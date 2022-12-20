@@ -35,18 +35,20 @@ public class StreamContextModelTransformer
         {
             Id = _context.Get<DefineStreamContextCommand>().Id,
             Title = model.Title,
-            StreamEventTypes = default,
+            Description = model.Description,
+            StreamEventTypes = new List<StreamEventTypeCommandItem>(),
             Version = 0
         };
     }
-    
+
     [StepArgumentTransformation]
     public IReadOnlyCollection<StreamEventTypeCommandItem> ConvertToCommandItems(Table table)
     {
         var models = table.CreateSet<StreamContextStreamEventTypeModel>();
         return models.Select(model =>
-        new StreamEventTypeCommandItem {
-            StreamEventTypeId = ! string.IsNullOrEmpty(model.StreamEventType)
+        new StreamEventTypeCommandItem
+        {
+            StreamEventTypeId = !string.IsNullOrEmpty(model.StreamEventType)
             ? _context.Get<Guid>(model.StreamEventType)
             : Guid.Empty
         }).ToList();

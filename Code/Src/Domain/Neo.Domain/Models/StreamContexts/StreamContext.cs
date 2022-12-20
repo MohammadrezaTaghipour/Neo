@@ -25,6 +25,16 @@ public class StreamContext : EventSourcedAggregate<StreamContextState>
         return streamContext;
     }
 
+    public Task Modify(StreamContextArg arg)
+    {
+        GuardAgainstRemovedStreamEventTypes(arg.StreamEventTypes);
+
+        Apply(new StreamContextModified(arg.Id,
+            arg.Title, arg.Description,
+            arg.StreamEventTypes.Select(_ => _.GetId()).ToList()));
+        return Task.CompletedTask;
+    }
+
     static void GuardAgainstRemovedStreamEventTypes(
         IReadOnlyCollection<IStreamEventType> streamEventTypes)
     {

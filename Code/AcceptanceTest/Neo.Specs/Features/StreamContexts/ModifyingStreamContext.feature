@@ -5,23 +5,23 @@ As me
 I want to configure stream contexts
 
 Scenario Outline: Stream context gets modified with its valid properties
-	Given There are some defined stream event type with following properties
+	Given There are some defined stream event types with following properties
 		| Title        | Metadata |
 		| Conversation |          |
 		| Conclusion   |          |
 	And there is a provided stream context with following properties
 		| Title       | Description                                                                                            |
 		| Career path | this stream context includes all career-related stuffs such as my colleges and companies I worked for. |
-	And With following stream event type
-		| StreamEventTypes |
-		| Conversation     |
+	And With following stream event types
+		| StreamEventType |
+		| Conversation    |
 	And There is a defined stream context 'Career path'
 	When I reprovide stream context 'Career path' with following properties
 		| Title      | Description |
 		| My Familiy |             |
-	And With following stream event type
-		| StreamEventTypes |
-		| Conclusion       |
+	And I reprovide the following stream event types
+		| StreamEventType |
+		| Conclusion      |
 	And I modify stream context 'Career path'
 	Then I can find stream context 'Career path' with above properties
 
@@ -33,14 +33,14 @@ Scenario Outline: Stream context is not allowed to get modified with invalid pro
 		| Title       | Description |
 		| Career path |             |
 	And With following stream event type
-		| StreamEventTypes |
-		| Conversation     |
+		| StreamEventType |
+		| Conversation    |
 	And There is a defined stream context 'Career path'
 	When I reprovide stream context 'Career path' with following properties
 		| Title   | Description   |
 		| <title> | <description> |
 	And With following stream event type
-		| StreamEventTypes  |
+		| StreamEventType   |
 		| <streamEventType> |
 	And I modify stream context 'Career path'
 	Then I get error with code '<errorCode>' and message '<errorMessage>' from the system
@@ -69,8 +69,8 @@ Scenario: Stream context can not be modified when stream event type is not found
 		| Title      | Description |
 		| My Familiy |             |
 	And With following stream event type
-		| StreamEventTypes |
-		| Conversation     |
+		| StreamEventType |
+		| Conversation    |
 	And I modify stream context 'Career path'
 	Then I get error with code 'NEO-SC-BR-10006' and message 'Stream context can not be created due to invalid stream event type' from the system
 
@@ -83,8 +83,8 @@ Scenario Outline: Stream context is not allowed to get modified with duplicated 
 		| Title      | Description |
 		| My Familiy |             |
 	And With following stream event type
-		| StreamEventTypes |
-		| Conversation     |
-		| Conclusion       |
+		| StreamEventType |
+		| Conversation    |
+		| Conclusion      |
 	And I modify stream context 'Career path'
 	Then I get error with code 'NEO-SC-BR-10007' and message 'There are duplicated strean event types' from the system
