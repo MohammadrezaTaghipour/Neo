@@ -73,4 +73,4 @@ Scenario Outline: Stream context is not allowed to get defined with duplicated s
 		| Conversation    |
 		| Conversation    |
 	And I define stream context 'Career path'
-	Then I get error with code 'NEO-SC-BR-10008' and message 'There are duplicated strean event types' from the system
+	Then I get error with code 'NEO-SC-BR-10008' and message 'There are duplicated stream event types' from the system
