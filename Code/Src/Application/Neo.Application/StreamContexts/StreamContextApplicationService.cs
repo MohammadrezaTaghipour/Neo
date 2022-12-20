@@ -1,4 +1,5 @@
 ﻿using Neo.Application.Contracts.StreamContexts;
+using Neo.Domain.Contracts.StreamContexts;
 using Neo.Domain.Models.StreamContexts;
 using Neo.Infrastructure.Framework.Application;
 
@@ -34,16 +35,22 @@ public class StreamContextApplicationService :
         CancellationToken cancellationToken)
     {
         var arg = await _argFactory.CreateFrom(command, cancellationToken);
-        var lifestream = await _repository.GetBy(arg.Id, cancellationToken)
+        var streamContext = await _repository.GetBy(arg.Id, cancellationToken)
             .ConfigureAwait(false);
-        await lifestream.Modify(arg).ConfigureAwait(false);
-        await _repository.Add(arg.Id, lifestream, cancellationToken)
+        await streamContext.Modify(arg).ConfigureAwait(false);
+        await _repository.Add(arg.Id, streamContext, cancellationToken)
             .ConfigureAwait(false);
     }
 
     public async Task Handle(RemoveStreamContextCommand command,
         CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var id = new StreamContextId(command.Id);
+        var streamContext = await _repository
+           .GetBy(id, cancellationToken)
+           .ConfigureAwait(false);
+        await streamContext.Remove().ConfigureAwait(false);
+        await _repository.Add(id, streamContext, cancellationToken)
+            .ConfigureAwait(false);
     }
 }

@@ -25,6 +25,6 @@ public class ICanNotFindStreamEventTypeWithAboveProperties
         var expectedId = _context.Get<Guid>(title);
         var actual = _actor.AsksFor(new GetStreamEventTypeByIdQuestion(expectedId));
 
-        actual.Deleted.Should().BeTrue();
+        actual.Removed.Should().BeTrue();
     }
 }

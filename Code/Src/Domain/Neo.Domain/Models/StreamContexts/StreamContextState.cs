@@ -10,7 +10,7 @@ public record StreamContextState : AggregateState<StreamContextState>
     public StreamContextId Id { get; private set; }
     public string Title { get; private set; }
     public string Description { get; private set; }
-    public bool Deleted { get; private set; }
+    public bool Removed { get; private set; }
     public IReadOnlyCollection<Guid> StreamEventTypes => _streamEventTypes.AsReadOnly();
 
     public override StreamContextState When(IDomainEvent eventToHandle)
@@ -37,6 +37,15 @@ public record StreamContextState : AggregateState<StreamContextState>
             Title = eventToHandle.Title,
             Description = eventToHandle.Description,
             _streamEventTypes = eventToHandle.StreamEventTypes.Select(_ => _.Value).ToList(),
+        };
+    }
+    
+    private StreamContextState When(StreamContextRemoved eventToHandle)
+    {
+        return this with
+        {
+            Id = eventToHandle.Id,
+            Removed = true
         };
     }
 }

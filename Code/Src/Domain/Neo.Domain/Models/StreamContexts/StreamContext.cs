@@ -35,6 +35,13 @@ public class StreamContext : EventSourcedAggregate<StreamContextState>
         return Task.CompletedTask;
     }
 
+    public Task Remove()
+    {
+        //Todo: add invariants here :)
+        Apply(new StreamContextRemoved(State.Id));
+        return Task.CompletedTask;
+    }
+
     static void GuardAgainstRemovedStreamEventTypes(
         IReadOnlyCollection<IStreamEventType> streamEventTypes)
     {
