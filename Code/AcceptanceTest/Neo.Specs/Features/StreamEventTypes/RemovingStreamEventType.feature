@@ -11,7 +11,7 @@ Feature: Removing stream event type
         And There is a defined stream event type with following properties
             | Title | Metadata |
             | Init  |          |
-        When I Remove stream event type 'Init'
+        When I remove stream event type 'Init'
         Then I can not find stream event type 'Init' with above properties
 
     #TODO: comming soon

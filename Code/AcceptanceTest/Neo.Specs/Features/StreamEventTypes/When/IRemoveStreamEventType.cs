@@ -19,7 +19,7 @@ public class IRemoveStreamEventType
         _commandBus = commandBus;
     }
 
-    [When("I Remove stream event type '(.*)'")]
+    [When("I remove stream event type '(.*)'")]
     public void Func(string title)
     {
         var command = new RemoveStreamEventTypeCommand
