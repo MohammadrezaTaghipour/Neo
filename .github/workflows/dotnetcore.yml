@@ -3,16 +3,17 @@ name: CI WorkFlow
 on: [push]
 
 jobs:
-  build_and_test:
-    runs-on: ${{ matrix.os }}
+  build:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [macOS-latest, ubuntu-latest]
+        dotnet: [ '6.0.x' ]
+    name: Dotnet ${{ matrix.dotnet }} sample
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-    - name: Build with dotnet
-      run: dotnet build ./Code/Src/Neo.sln --configuration Release
+      - uses: actions/checkout@v3
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+      - name: Execute dotnet
+        run: dotnet build ./Code/Src/Neo.sln --configuration Release
