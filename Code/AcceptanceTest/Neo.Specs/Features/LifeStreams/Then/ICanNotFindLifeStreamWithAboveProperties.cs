@@ -25,6 +25,6 @@ public class ICanNotFindLifeStreamWithAboveProperties
         var expectedId = _context.Get<Guid>(title);
         var actual = _actor.AsksFor(new GetLifeStreamByIdQuestion(expectedId));
 
-        actual.Deleted.Should().BeTrue();
+        actual.Removed.Should().BeTrue();
     }
 }

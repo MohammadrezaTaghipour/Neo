@@ -3,7 +3,14 @@ using Neo.Domain.Contracts.StreamEventTypes;
 
 namespace Neo.Domain.Models.StreamEventTypes;
 
-public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>
+public interface IStreamEventType
+{
+    StreamEventTypeId GetId();
+    bool IsRemoved();
+}
+
+public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>,
+    IStreamEventType
 {
     private StreamEventType()
     {
@@ -20,6 +27,16 @@ public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>
         StreamEventType streamEventType = new(arg);
         await (Task)streamEventType.CompletionTask;
         return streamEventType;
+    }
+
+    public StreamEventTypeId GetId()
+    {
+        return State.Id;
+    }
+
+    public bool IsRemoved()
+    {
+        return State.Removed;
     }
 
     public Task Modify(StreamEventTypeArg arg)

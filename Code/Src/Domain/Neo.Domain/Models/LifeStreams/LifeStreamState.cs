@@ -10,7 +10,7 @@ public record LifeStreamState : AggregateState<LifeStreamState>
     public LifeStreamId Id { get; private set; }
     public string Title { get; private set; }
     public string Description { get; private set; }
-    public bool Deleted { get; private set; }
+    public bool Removed { get; private set; }
     public IReadOnlyCollection<ParentLifeStream> PanrentStreams => _parentStream.AsReadOnly();
 
     public override LifeStreamState When(IDomainEvent eventToHandle)
@@ -43,7 +43,7 @@ public record LifeStreamState : AggregateState<LifeStreamState>
         return this with
         {
             Id = eventToHandle.Id,
-            Deleted = true
+            Removed = true
         };
     }
 }

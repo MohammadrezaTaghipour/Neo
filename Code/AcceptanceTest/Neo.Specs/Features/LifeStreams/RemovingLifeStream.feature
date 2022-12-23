@@ -1,4 +1,4 @@
-﻿Feature: Removing Life Stream
+﻿Feature: Removing life stream
 
 In order to registering and tracking life strams online
 As me

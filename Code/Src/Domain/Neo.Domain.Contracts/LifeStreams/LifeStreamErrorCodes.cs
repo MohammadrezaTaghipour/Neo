@@ -6,4 +6,5 @@ public enum LifeStreamErrorCodes
     LS_BR_10003,
     LS_BR_10004,
     LS_BR_10005,
+    LS_BR_10006,
 }

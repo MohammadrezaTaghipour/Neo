@@ -1,5 +1,4 @@
 ﻿using Neo.Specs.ScreenPlay.LifeStreams.Commands;
-using Neo.Specs.ScreenPlay.StreamEventTypes.Commands;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 

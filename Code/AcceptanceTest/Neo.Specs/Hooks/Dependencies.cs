@@ -3,6 +3,8 @@ using Neo.Specs.Configurations.Neo;
 using Neo.Specs.Framework;
 using Neo.Specs.ScreenPlay.LifeStreams.Commands;
 using Neo.Specs.ScreenPlay.LifeStreams.Tasks;
+using Neo.Specs.ScreenPlay.StreamContexts.Commands;
+using Neo.Specs.ScreenPlay.StreamContexts.Tasks;
 using Neo.Specs.ScreenPlay.StreamEventTypes.Commands;
 using Neo.Specs.ScreenPlay.StreamEventTypes.Tasks;
 using Neo.Specs.Utils;
@@ -42,6 +44,7 @@ public static class Dependencies
 
         builder.RegisterStreamEventTypeCommandHandlers();
         builder.RegisterLifeStreamCommandHandlers();
+        builder.RegisterStreamContextCommandHandlers();
 
 
         return builder;
@@ -74,6 +77,21 @@ public static class Dependencies
 
         builder.RegisterType<LifeStreamRestApiCommandHandler>()
             .As<ICommandHandler<RemoveLifeStreamCommand>>()
+            .InstancePerLifetimeScope();
+    }
+
+    static void RegisterStreamContextCommandHandlers(this ContainerBuilder builder)
+    {
+        builder.RegisterType<StreamContextRestApiCommandHandler>()
+            .As<ICommandHandler<DefineStreamContextCommand>>()
+            .InstancePerLifetimeScope();
+
+        builder.RegisterType<StreamContextRestApiCommandHandler>()
+            .As<ICommandHandler<ModifyStreamContextCommand>>()
+            .InstancePerLifetimeScope();
+
+        builder.RegisterType<StreamContextRestApiCommandHandler>()
+            .As<ICommandHandler<RemoveStreamContextCommand>>()
             .InstancePerLifetimeScope();
     }
 }
