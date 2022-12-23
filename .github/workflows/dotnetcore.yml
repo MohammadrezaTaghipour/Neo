@@ -1,0 +1,20 @@
+name: CI WorkFlow
+
+on: [push]
+
+jobs:
+  build_and_test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-latest, ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0
+    - name: Build with dotnet
+      run: dotnet build ./Code/Src/Neo.sln --configuration Release
+    - name: Test with dotnet
+      run: dotnet test ./Code/Src/MeasureUnitManagement.sln --configuration Release
