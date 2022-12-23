@@ -17,3 +17,5 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
       - name: Execute dotnet
         run: dotnet build ./Code/Src/Neo.sln --configuration Release
+      - name: Test with dotnet
+        run: dotnet test ./Code/Src/Neo.sln --configuration Release
