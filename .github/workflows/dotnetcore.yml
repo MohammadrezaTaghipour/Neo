@@ -16,5 +16,3 @@ jobs:
         dotnet-version: 6.0.x
     - name: Build with dotnet
       run: dotnet build ./Code/Src/Neo.sln --configuration Release
-    - name: Test with dotnet
-      run: dotnet test ./Code/Src/Neo.sln --configuration Release
