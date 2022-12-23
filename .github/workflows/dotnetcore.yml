@@ -17,4 +17,4 @@ jobs:
     - name: Build with dotnet
       run: dotnet build ./Code/Src/Neo.sln --configuration Release
     - name: Test with dotnet
-      run: dotnet test ./Code/Src/MeasureUnitManagement.sln --configuration Release
+      run: dotnet test ./Code/Src/Neo.sln --configuration Release
