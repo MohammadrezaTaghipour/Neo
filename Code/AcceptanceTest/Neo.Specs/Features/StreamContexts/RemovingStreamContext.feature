@@ -17,6 +17,6 @@ Background:
 		| Conversation    |
 	And There is a defined stream context 'Career path'
 
-Scenario Outline: Stream context gets removed when no any events has registered for it
+Scenario: Stream context gets removed when no any events has registered for it
 	When I remove stream context 'Career path'
 	Then I can not find stream context 'Career path' with above properties

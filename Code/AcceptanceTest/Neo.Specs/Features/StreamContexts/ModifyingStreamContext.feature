@@ -17,7 +17,7 @@ Background:
 		| Conversation    |
 	And There is a defined stream context 'Career path'
 
-Scenario Outline: Stream context gets modified with its valid properties
+Scenario: Stream context gets modified with its valid properties
 	When I reprovide stream context 'Career path' with following properties
 		| Title      | Description |
 		| My Familiy |             |
@@ -63,7 +63,7 @@ Scenario: Stream context can not be modified when stream event type is not found
 	And I modify stream context 'Career path'
 	Then I get error with code 'NEO-SC-BR-10007' and message 'Stream context can not be created due to invalid stream event type' from the system
 
-Scenario Outline: Stream context is not allowed to get modified with duplicated stream event type
+Scenario: Stream context is not allowed to get modified with duplicated stream event type
 	When I reprovide stream context 'Career path' with following properties
 		| Title      | Description |
 		| My Familiy |             |

@@ -4,7 +4,7 @@ In order to registering and tracking life strams online
 As me
 I want to configure stream contexts
 
-Scenario Outline: Stream context gets defined with its valid properties
+Scenario: Stream context gets defined with its valid properties
 	Given There are some defined stream event types with following properties
 		| Title        | Metadata |
 		| Conversation |          |
@@ -60,7 +60,7 @@ Scenario: Stream context can not be created when stream event type is not found
 	And I define stream context 'Career path'
 	Then I get error with code 'NEO-SC-BR-10007' and message 'Stream context can not be created due to invalid stream event type' from the system
 
-Scenario Outline: Stream context is not allowed to get defined with duplicated stream event types
+Scenario: Stream context is not allowed to get defined with duplicated stream event types
 	Given There are some defined stream event types with following properties
 		| Title        | Metadata |
 		| Conversation |          |
