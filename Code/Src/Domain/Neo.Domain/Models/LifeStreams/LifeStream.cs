@@ -10,7 +10,7 @@ public class LifeStream : EventSourcedAggregate<LifeStreamState>
     private LifeStream(LifeStreamArg arg)
     {
         Apply(new LifeStreamDefined(arg.Id,
-            arg.Title, arg.Description, arg.ParentStreams));
+            arg.Title, arg.Description));
     }
 
     public static async Task<LifeStream> Create(
@@ -24,7 +24,7 @@ public class LifeStream : EventSourcedAggregate<LifeStreamState>
     public Task Modify(LifeStreamArg arg)
     {
         Apply(new LifeStreamModified(arg.Id,
-            arg.Title, arg.Description, arg.ParentStreams));
+            arg.Title, arg.Description));
         return Task.CompletedTask;
     }
 

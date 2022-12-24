@@ -15,7 +15,8 @@ namespace Neo.Gateways.RestApi.LifeStreams
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(Guid id, 
+            CancellationToken cancellationToken)
         {
             var result = await _queryService.Get(id, cancellationToken);
             return Ok(result);

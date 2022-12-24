@@ -20,8 +20,6 @@ public class LifeStreamArgFactory : ILifeStreamArgFactory
             .With(_ => _.Id, new LifeStreamId(command.Id))
             .With(_ => _.Title = command.Title)
             .With(_ => _.Description = command.Description)
-            //.With(_ => _.ParentStreams, command.ParentStreams
-            //    .Select(a => new StreamMetadata(a.Title))?.ToList())
             .Build();
     }
 
@@ -31,8 +29,6 @@ public class LifeStreamArgFactory : ILifeStreamArgFactory
             .With(_ => _.Id, new LifeStreamId(command.Id))
             .With(_ => _.Title = command.Title)
             .With(_ => _.Description = command.Description)
-            //.With(_ => _.ParentStreams, command.ParentStreams
-            //    .Select(a => new StreamMetadata(a.Title))?.ToList())
             .Build();
     }
 }

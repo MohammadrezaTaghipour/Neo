@@ -12,7 +12,6 @@ public class LifeStreamArg
     public LifeStreamId Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
-    public IReadOnlyCollection<ParentLifeStream> ParentStreams { get; set; }
 
 
     public static ISingleObjectBuilder<LifeStreamArg> Builder
