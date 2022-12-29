@@ -5,9 +5,7 @@ namespace Neo.Domain.Models.LifeStreams;
 
 public class LifeStreamArg
 {
-    private LifeStreamArg()
-    {
-    }
+    private LifeStreamArg() { }
 
     public LifeStreamId Id { get; set; }
     public string Title { get; set; }

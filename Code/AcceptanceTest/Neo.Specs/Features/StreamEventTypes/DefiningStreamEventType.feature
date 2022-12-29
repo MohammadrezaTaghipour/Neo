@@ -2,7 +2,7 @@ Feature: Defining stream event type
 
 In order to registering and tracking life strams online
 As me
-I want to configure stream event types
+I want to configure stream event type
 
 Scenario Outline: Stream event type gets defined with its valid properties
 	When I define a new stream event type with following properties
@@ -21,7 +21,7 @@ Examples:
 	| ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss |
 
 Scenario Outline: Stream event type gets defined with matadata and valid properties
-	Given There are some provided stream event types metadata with following properties
+	Given There are some provided stream event type metadata with following properties
 		| Title            |
 		| <metadataTitle1> |
 		| <metadataTitle2> |
@@ -36,7 +36,7 @@ Examples:
 	| Feeling | ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss | X              |
 
 Scenario Outline: Stream event type is not allowed to get defined with invalid properties
-	Given There are some provided stream event types metadata with following properties
+	Given There are some provided stream event type metadata with following properties
 		| Title            |
 		| <metadataTitle1> |
 		| <metadataTitle2> |
@@ -55,7 +55,7 @@ Examples:
 	| NEO-SET-BR-10007 | Stream event type metadata title length can not be greater than 128 | Feeling                                                                                                                           | ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss s | X              |
 
 Scenario Outline: Stream event type is not allowed to get defined with duplicated matadata
-	Given There are some provided stream event types metadata with following properties
+	Given There are some provided stream event type metadata with following properties
 		| Title    |
 		| Duration |
 		| Duration |

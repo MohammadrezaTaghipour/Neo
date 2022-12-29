@@ -6,8 +6,8 @@ I want to configure life stream
 
 Scenario Outline: Life stream gets removed when no any events has registered for it
 	Given There is a defined life stream with following properties
-		| Title                  | Description | ParentStream |
-		| Friendship with Souzan |             |              |
+		| Title                  | Description |
+		| Friendship with Souzan |             |
 	When I remove life stream 'Friendship with Souzan'
 	Then I can not find life stream 'Friendship with Souzan' with above properties
 

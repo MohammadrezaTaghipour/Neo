@@ -7,7 +7,7 @@ namespace Neo.Application.Query.LifeStreams;
 
 public interface ILifeStreamQueryService : IQueryService
 {
-    Task<LifeStreamState> Get(Guid id, CancellationToken cancellationToken);
+    Task<LifeStreamResponse> Get(Guid id, CancellationToken cancellationToken);
 }
 
 public class LifeStreamQueryService : ILifeStreamQueryService
@@ -19,14 +19,23 @@ public class LifeStreamQueryService : ILifeStreamQueryService
         _aggregateReader = aggregateReader;
     }
 
-    public async Task<LifeStreamState> Get(Guid id,
+    public async Task<LifeStreamResponse> Get(Guid id,
         CancellationToken cancellationToken)
     {
         var stream = await _aggregateReader
             .Load<LifeStream, LifeStreamState>(
                 GetStreamName(new LifeStreamId(id)), cancellationToken)
             .ConfigureAwait(false);
-        return stream.State;
+
+        return new LifeStreamResponse(stream.State.Id.Value,
+            stream.State.Title, stream.State.Description,
+            stream.State.Removed,
+            stream.State.StreamEvents.Select(_ => new LifeStreamEventResponse(_.Id,
+                _.lifeStreamId.Value, _.StreamContextId.Value,
+                _.streamEventTypeId.Value,
+                _.Metadata.Select(meta => new LifeStreamEventMetadaResponse(meta.Key, meta.Value))
+                .ToList()))
+            .ToList());
     }
 
     static StreamName GetStreamName(LifeStreamId id) =>

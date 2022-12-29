@@ -13,8 +13,8 @@ namespace Neo.Specs.Features.LifeStreams.Then
     {
         private readonly ScenarioContext _context;
         private readonly Actor _actor;
-        public ICanFindLifeStreamWithAboveProperties(ScenarioContext context,
-            Stage stage)
+        public ICanFindLifeStreamWithAboveProperties(
+            ScenarioContext context, Stage stage)
         {
             _context = context;
             _actor = stage.ActorInTheSpotlight;

@@ -10,6 +10,10 @@ public record LifeStreamState : AggregateState<LifeStreamState>
     public string Description { get; private set; }
     public bool Removed { get; private set; }
 
+    public IReadOnlyCollection<LifeStreamEvent> StreamEvents => _streamEvents.AsReadOnly();
+    private List<LifeStreamEvent> _streamEvents = new();
+
+
     public override LifeStreamState When(IDomainEvent eventToHandle)
     {
         return When((dynamic)eventToHandle);
@@ -42,5 +46,14 @@ public record LifeStreamState : AggregateState<LifeStreamState>
             Id = eventToHandle.Id,
             Removed = true
         };
+    }
+
+    private LifeStreamState When(LifeStreamEventAppended eventToHandle)
+    {
+        _streamEvents.Add(new LifeStreamEvent(eventToHandle.Id,
+            eventToHandle.LifeStreamId, eventToHandle.StreamContextId,
+            eventToHandle.StreamEventTypeId, eventToHandle.Metadata));
+
+        return this;
     }
 }

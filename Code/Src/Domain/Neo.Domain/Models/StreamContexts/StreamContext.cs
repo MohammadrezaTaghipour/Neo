@@ -4,7 +4,14 @@ using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Domain.Models.StreamContexts;
 
-public class StreamContext : EventSourcedAggregate<StreamContextState>
+public interface IStreamContext
+{
+    StreamContextId GetId();
+    bool IsRemoved();
+}
+
+public class StreamContext : EventSourcedAggregate<StreamContextState>,
+    IStreamContext
 {
     private StreamContext() { }
 
@@ -47,5 +54,15 @@ public class StreamContext : EventSourcedAggregate<StreamContextState>
     {
         if (streamEventTypes.Any(_ => _.IsRemoved()))
             throw new BusinessException(StreamContextErrorCodes.SC_BR_10007);
+    }
+
+    public StreamContextId GetId()
+    {
+        return State.Id;
+    }
+
+    public bool IsRemoved()
+    {
+        return State.Removed;
     }
 }

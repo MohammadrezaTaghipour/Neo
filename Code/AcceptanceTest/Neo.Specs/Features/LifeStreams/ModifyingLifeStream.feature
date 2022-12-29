@@ -6,20 +6,20 @@ I want to configure life stream
 
 Scenario Outline: Life stream gets modified with its valid properties
 	Given There is a defined life stream with following properties
-		| Title                  | Description | ParentStream |
-		| Friendship with Souzan |             |              |
+		| Title                  | Description |
+		| Friendship with Souzan |             |
 	When I modify life stream 'Friendship with Souzan' with follwoing properties
-		| Title               | Description                         | ParentStream |
-		| Friendship with Ali | our friendship started at July 2022 |              |
+		| Title               | Description                         |
+		| Friendship with Ali | our friendship started at July 2022 |
 	Then I can find life stream 'Friendship with Souzan' with above properties
 
 Scenario Outline: Life stream is not allowed to get modified with invalid properties
 	Given There is a defined life stream with following properties
-		| Title                  | Description | ParentStream |
-		| Friendship with Souzan |             |              |
+		| Title                  | Description |
+		| Friendship with Souzan |             |
 	When I modify life stream 'Friendship with Souzan' with follwoing properties
-		| Title   | Description   | ParentStream |
-		| <title> | <description> |              |
+		| Title   | Description   |
+		| <title> | <description> |
 	Then I get error with code '<errorCode>' and message '<errorMessage>' from the system
 
 Examples:

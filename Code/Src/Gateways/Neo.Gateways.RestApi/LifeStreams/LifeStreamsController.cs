@@ -37,14 +37,25 @@ public class LifeStreamsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}/{version:long}")]
-    public async Task<IActionResult> Delete(Guid id, int version,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(Guid id,
+        int version, CancellationToken cancellationToken)
     {
         var command = new RemoveLifeStreamCommand
         {
             Id = id,
             Version = version
         };
+        await _commandBus.Dispatch(command, cancellationToken)
+            .ConfigureAwait(false);
+        return NoContent();
+    }
+
+    [HttpPatch("{id:guid}")]
+    public async Task<IActionResult> Patch(Guid id,
+        PartialModifyLifeStreamCommand command,
+        CancellationToken cancellationToken)
+    {
+        command.LifeStreamId = id;
         await _commandBus.Dispatch(command, cancellationToken)
             .ConfigureAwait(false);
         return NoContent();

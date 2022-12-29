@@ -34,4 +34,12 @@ public class LifeStream : EventSourcedAggregate<LifeStreamState>
         Apply(new LifeStreamRemoved(State.Id));
         return Task.CompletedTask;
     }
+
+    public Task AppendStreamEvent(StreamEventArg arg)
+    {
+        Apply(new LifeStreamEventAppended(arg.Id,
+            State.Id, arg.StreamContext.GetId(), arg.StreamEventType.GetId(),
+            arg.Metadata));
+        return Task.CompletedTask;
+    }
 }

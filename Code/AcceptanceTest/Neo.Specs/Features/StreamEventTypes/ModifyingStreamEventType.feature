@@ -2,10 +2,10 @@ Feature: Modifying stream event type
 
 In order to registering and tracking life strams online
 As me
-I want to configure Stream event types
+I want to configure Stream event type
 
 Scenario Outline: Stream event type gets modified with its valid properties
-	Given There are some provided stream event types metadata with following properties
+	Given There are some provided stream event type metadata with following properties
 		| Title     |
 		| Init Date |
 	And There is a defined stream event type with following properties
