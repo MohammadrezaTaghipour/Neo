@@ -8,7 +8,7 @@ Scenario: Stream event gets appended with its valid properties
 	Given There are some provided stream event type metadata with following properties
 		| Title       |
 		| Description |
-		| HappendOn   |
+		| HappenedOn   |
 	And There is a defined stream event type with following properties
 		| Title        | Metadata |
 		| Conversation |          |
@@ -28,6 +28,6 @@ Scenario: Stream event gets appended with its valid properties
 	And With the following stream event metadata
 		| Key         | Value                                                              |
 		| Description | We talked about the importance of Design Patterns in code quality. |
-		| HappendOn   | 2022-01-01                                                         |
+		| HappenedOn   | 2022-01-01                                                         |
 	And I append stream event 'Discussion with Souzan'
 	Then I can find stream event 'Discussion with Souzan' with above properties
