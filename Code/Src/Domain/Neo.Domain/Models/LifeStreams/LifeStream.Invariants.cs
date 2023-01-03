@@ -35,7 +35,9 @@ public partial class LifeStream
         if (arg.Metadata.Count != arg.StreamEventTypeMetadata.Count)
             throw new BusinessException(LifeStreamErrorCodes.SE_BR_10009);
 
-        if (arg.StreamEventTypeMetadata.Any(_ => arg.Metadata.Any(m => m.Key != _.Title)))
+        if (arg.StreamEventTypeMetadata.Select(_ => _.Title)
+                .Intersect(arg.Metadata.Select(_ => _.Key))
+                .Count() != arg.StreamEventTypeMetadata.Count)
             throw new BusinessException(LifeStreamErrorCodes.SE_BR_10009);
     }
 }
