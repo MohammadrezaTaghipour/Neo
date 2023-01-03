@@ -28,6 +28,6 @@ public class LifeStreamCommandValidators :
 
     public void Validate(PartialModifyLifeStreamCommand command)
     {
-
+        new PartialModifyLifeStreamCommandValidator().ValidateAndThrow(command);
     }
 }
