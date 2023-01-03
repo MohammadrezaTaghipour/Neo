@@ -56,7 +56,7 @@ public class LifeStreamArgFactory : ILifeStreamArgFactory
                     .ConfigureAwait(false);
 
         return StreamEventArg.Builder
-            .With(_ => _.Id, DateTime.Now.Ticks)
+            .With(_ => _.Id, new StreamEventId(DateTime.Now.Ticks))
             .With(_ => _.StreamEventType, streamEventType)
             .With(_ => _.StreamContext, await _streamContextRepository
                 .GetBy(new StreamContextId(command.StreamContextId), cancellationToken)

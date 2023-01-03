@@ -56,4 +56,12 @@ public record LifeStreamState : AggregateState<LifeStreamState>
 
         return this;
     }
+
+    private LifeStreamState When(LifeStreamEventRemoved eventToHandled)
+    {
+        var streamEvent = _streamEvents.Find(_ => _.Id == eventToHandled.Id);
+        _streamEvents.Remove(streamEvent);
+
+        return this;
+    }
 }

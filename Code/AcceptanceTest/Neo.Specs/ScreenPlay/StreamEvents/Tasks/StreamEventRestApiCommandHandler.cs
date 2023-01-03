@@ -9,10 +9,8 @@ public class StreamEventRestApiCommandHandler :
     ICommandHandler<RemoveStreamEventCommand>
 {
     public ITask Handle(AppendStreamEventCommand command)
-        => new AppendStreamEventByApiTask(command);
+        => new PartialModifyLifeStreamByApiTask(command);
 
     public ITask Handle(RemoveStreamEventCommand command)
-    {
-        throw new NotImplementedException();
-    }
+         => new PartialModifyLifeStreamByApiTask(command);
 }

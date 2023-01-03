@@ -6,7 +6,7 @@ namespace Neo.Domain.Contracts.LifeStreams;
 
 public class LifeStreamEventAppended : DomainEvent
 {
-    public LifeStreamEventAppended(long id,
+    public LifeStreamEventAppended(StreamEventId id,
         LifeStreamId lifeStreamId, StreamContextId streamContextId,
         StreamEventTypeId streamEventTypeId,
        IReadOnlyCollection<LifeStreamEventMetada> metadata)
@@ -18,7 +18,7 @@ public class LifeStreamEventAppended : DomainEvent
         Metadata = metadata;
     }
 
-    public long Id { get; }
+    public StreamEventId Id { get; }
     public LifeStreamId LifeStreamId { get; }
     public StreamContextId StreamContextId { get; }
     public StreamEventTypeId StreamEventTypeId { get; }

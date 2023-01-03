@@ -10,7 +10,7 @@ public class StreamEventArg
 {
     private StreamEventArg() { }
 
-    public long Id { get; set; }
+    public StreamEventId Id { get; set; }
     public IStreamContext StreamContext { get; set; }
     public IStreamEventType StreamEventType { get; set; }
     public IReadOnlyCollection<LifeStreamEventMetada> Metadata { get; set; }

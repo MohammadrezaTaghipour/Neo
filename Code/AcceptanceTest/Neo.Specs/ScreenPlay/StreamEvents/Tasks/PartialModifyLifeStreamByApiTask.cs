@@ -5,11 +5,11 @@ using Suzianna.Rest.Screenplay.Interactions;
 
 namespace Neo.Specs.ScreenPlay.StreamEvents.Tasks;
 
-public class AppendStreamEventByApiTask : ITask
+public class PartialModifyLifeStreamByApiTask : ITask
 {
-    private readonly AppendStreamEventCommand _command;
+    private readonly PartialModifyLifeStreamCommand _command;
 
-    public AppendStreamEventByApiTask(AppendStreamEventCommand command)
+    public PartialModifyLifeStreamByApiTask(PartialModifyLifeStreamCommand command)
     {
         _command = command;
     }

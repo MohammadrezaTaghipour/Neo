@@ -40,6 +40,6 @@ Background:
 	And There is a appended stream event 'Conversation with Souzan'
 
 Scenario: Stream event gets removed properly
-	When I Remove stream event 'Conversation with Souzan'
+	When I remove stream event 'Conversation with Souzan'
 	Then I can not find stream event 'Conversation with Souzan' with above properties
 	

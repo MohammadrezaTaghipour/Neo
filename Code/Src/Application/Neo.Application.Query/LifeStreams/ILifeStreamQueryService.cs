@@ -30,7 +30,7 @@ public class LifeStreamQueryService : ILifeStreamQueryService
         return new LifeStreamResponse(stream.State.Id.Value,
             stream.State.Title, stream.State.Description,
             stream.State.Removed,
-            stream.State.StreamEvents.Select(_ => new LifeStreamEventResponse(_.Id,
+            stream.State.StreamEvents.Select(_ => new LifeStreamEventResponse(_.Id.Value,
                 _.lifeStreamId.Value, _.StreamContextId.Value,
                 _.streamEventTypeId.Value,
                 _.Metadata.Select(meta => new LifeStreamEventMetadaResponse(meta.Key, meta.Value))

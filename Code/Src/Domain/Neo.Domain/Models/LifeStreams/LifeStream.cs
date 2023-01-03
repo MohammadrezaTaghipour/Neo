@@ -47,4 +47,10 @@ public partial class LifeStream : EventSourcedAggregate<LifeStreamState>
             arg.Metadata));
         return Task.CompletedTask;
     }
+
+    public Task RemoveStreamEvent(StreamEventId id)
+    {
+        Apply(new LifeStreamEventRemoved(id, State.Id));
+        return Task.CompletedTask;
+    }
 }

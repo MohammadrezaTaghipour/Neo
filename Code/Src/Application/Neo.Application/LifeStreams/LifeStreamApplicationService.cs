@@ -98,6 +98,13 @@ public class LifeStreamApplicationService :
     public async Task Handle(RemoveStreamEventCommand command,
         CancellationToken cancellationToken)
     {
-
+        var id = new LifeStreamId(command.LifeStreamId);
+        var lifeStream = await _repository
+           .GetBy(id, cancellationToken)
+           .ConfigureAwait(false);
+        await lifeStream.RemoveStreamEvent(new StreamEventId(command.Id))
+            .ConfigureAwait(false);
+        await _repository.Add(id, lifeStream, cancellationToken)
+          .ConfigureAwait(false);
     }
 }
