@@ -99,3 +99,14 @@ Scenario: Stream event metadata is based on what has been configured in stream e
 		| Description | We talked about the importance of Design Patterns in code quality. |
 	And I append stream event 'Conversation'
 	Then I get error with code 'NEO-SE-BR-10009' and message 'Stream event metadata should be provided based on what has been configured in stream event type' from the system
+
+Scenario: Stream event metadata is based on what has been configured in stream event type(metadata key mismatch)
+	When I provide a new stream event with following properties
+		| LifeStream             | StreamContext | StreamEventType |
+		| Friendship with Souzan | Career Path   | Conversation    |
+	And With the following stream event metadata
+		| Key         | Value                                                              |
+		| Description | We talked about the importance of Design Patterns in code quality. |
+		| Rate        | 8.2                                                                |
+	And I append stream event 'Conversation'
+	Then I get error with code 'NEO-SE-BR-10009' and message 'Stream event metadata should be provided based on what has been configured in stream event type' from the system

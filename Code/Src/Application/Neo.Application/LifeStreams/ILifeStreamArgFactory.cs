@@ -51,16 +51,19 @@ public class LifeStreamArgFactory : ILifeStreamArgFactory
     public async Task<StreamEventArg> CreateFrom(AppendStreamEventCommand command,
         CancellationToken cancellationToken)
     {
+        var streamEventType = await _streamEventTypeRepository
+                .GetBy(new StreamEventTypeId(command.StreamEventTypeId), cancellationToken)
+                    .ConfigureAwait(false);
+
         return StreamEventArg.Builder
             .With(_ => _.Id, DateTime.Now.Ticks)
-            .With(_ => _.StreamEventType, await _streamEventTypeRepository
-                .GetBy(new StreamEventTypeId(command.StreamEventTypeId), cancellationToken)
-                    .ConfigureAwait(false))
+            .With(_ => _.StreamEventType, streamEventType)
             .With(_ => _.StreamContext, await _streamContextRepository
                 .GetBy(new StreamContextId(command.StreamContextId), cancellationToken)
                     .ConfigureAwait(false))
             .With(_ => _.Metadata, command.Metadata
                 .Select(m => new LifeStreamEventMetada(m.Key, m.Value)).ToList())
+            .With(_ => _.StreamEventTypeMetadata, streamEventType.State.Metadata)
             .Build();
     }
 }
