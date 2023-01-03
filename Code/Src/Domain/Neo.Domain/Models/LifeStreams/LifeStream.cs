@@ -1,4 +1,5 @@
 ﻿using Neo.Domain.Contracts.LifeStreams;
+using Neo.Domain.Models.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Domain.Models.LifeStreams;
@@ -37,9 +38,18 @@ public class LifeStream : EventSourcedAggregate<LifeStreamState>
 
     public Task AppendStreamEvent(StreamEventArg arg)
     {
+        GuardAgainstRemovedLifeStream(this);
+
         Apply(new LifeStreamEventAppended(arg.Id,
             State.Id, arg.StreamContext.GetId(), arg.StreamEventType.GetId(),
             arg.Metadata));
         return Task.CompletedTask;
     }
+
+    static void GuardAgainstRemovedLifeStream(LifeStream lifeStream)
+    {
+        if (lifeStream.State.Removed)
+            throw new BusinessException(LifeStreamErrorCodes.SE_BR_10006);
+    }
+
 }

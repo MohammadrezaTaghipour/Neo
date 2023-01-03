@@ -13,25 +13,25 @@ public class PartialModifyLifeStreamCommandValidator :
         RuleFor(x => x.LifeStreamId).Custom((value, _) =>
         {
             if (value == Guid.Empty)
-                throw new BusinessException(StreamEventErrorCodes.SE_BR_10002);
+                throw new BusinessException(LifeStreamErrorCodes.SE_BR_10002);
         });
         
         RuleFor(x => x.StreamContextId).Custom((value, _) =>
         {
             if (value == Guid.Empty)
-                throw new BusinessException(StreamEventErrorCodes.SE_BR_10003);
+                throw new BusinessException(LifeStreamErrorCodes.SE_BR_10003);
         });
         
         RuleFor(x => x.StreamEventTypeId).Custom((value, _) =>
         {
             if (value == Guid.Empty)
-                throw new BusinessException(StreamEventErrorCodes.SE_BR_10004);
+                throw new BusinessException(LifeStreamErrorCodes.SE_BR_10004);
         });
         
         RuleFor(x => x.Metadata).Custom((value, _) =>
         {
             if (value.Any(_ => string.IsNullOrEmpty(_.Value)))
-                throw new BusinessException(StreamEventErrorCodes.SE_BR_10005);
+                throw new BusinessException(LifeStreamErrorCodes.SE_BR_10005);
         });
     }
 }
