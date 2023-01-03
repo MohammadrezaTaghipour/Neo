@@ -41,7 +41,7 @@ public class LifeStream : EventSourcedAggregate<LifeStreamState>
     {
         GuardAgainstRemovedLifeStream(this);
         GuardAgainstRemovedStreamContext(arg.StreamContext);
-
+        GuardAgainstRemovedStreamEventType(arg.StreamEventType);
 
         Apply(new LifeStreamEventAppended(arg.Id,
             State.Id, arg.StreamContext.GetId(), arg.StreamEventType.GetId(),
@@ -60,5 +60,12 @@ public class LifeStream : EventSourcedAggregate<LifeStreamState>
     {
         if (streamContext.IsRemoved())
             throw new BusinessException(LifeStreamErrorCodes.SE_BR_10007);
+    }
+
+    static void GuardAgainstRemovedStreamEventType(
+        IStreamEventType streamEventTypes)
+    {
+        if (streamEventTypes.IsRemoved())
+            throw new BusinessException(LifeStreamErrorCodes.SE_BR_10008);
     }
 }
