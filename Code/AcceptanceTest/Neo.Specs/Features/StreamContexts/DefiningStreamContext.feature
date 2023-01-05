@@ -5,7 +5,11 @@ As me
 I want to configure stream contexts
 
 Scenario: Stream context gets defined with its valid properties
-	Given There are some defined stream event types with following properties
+	Given There are some provided stream event type metadata with following properties
+		| Title       |
+		| Description |
+		| HappenedOn  |
+	And There are some defined stream event types with following properties
 		| Title        | Metadata |
 		| Conversation |          |
 		| Conclusion   |          |
@@ -19,7 +23,11 @@ Scenario: Stream context gets defined with its valid properties
 	Then I can find stream context 'Career path' with above properties
 
 Scenario Outline: Stream context is not allowed to get defined with invalid properties
-	Given There is a defined stream event type with following properties
+	Given There are some provided stream event type metadata with following properties
+		| Title       |
+		| Description |
+		| HappenedOn  |
+	And There is a defined stream event type with following properties
 		| Title        | Metadata |
 		| Conversation |          |
 	When I provide a new stream context with following properties
@@ -47,6 +55,10 @@ Examples:
 	| NEO-SC-BR-10006 | Stream context can not be created due to empty stream event types | Career                                                                                                                            |                                                                                                                                                                                                                                                                   |                 |
 	
 Scenario: Stream context can not be created when stream event type is not found
+	Given There are some provided stream event type metadata with following properties
+		| Title       |
+		| Description |
+		| HappenedOn  |
 	Given There is a defined stream event type with following properties
 		| Title        | Metadata |
 		| Conversation |          |
@@ -61,7 +73,11 @@ Scenario: Stream context can not be created when stream event type is not found
 	Then I get error with code 'NEO-SC-BR-10007' and message 'Stream context can not be created due to invalid stream event type' from the system
 
 Scenario: Stream context is not allowed to get defined with duplicated stream event types
-	Given There are some defined stream event types with following properties
+	Given There are some provided stream event type metadata with following properties
+		| Title       |
+		| Description |
+		| HappenedOn  |
+	And There are some defined stream event types with following properties
 		| Title        | Metadata |
 		| Conversation |          |
 		| Conclusion   |          |

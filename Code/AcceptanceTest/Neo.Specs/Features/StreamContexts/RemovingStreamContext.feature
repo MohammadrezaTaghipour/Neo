@@ -5,7 +5,11 @@ As me
 I want to configure stream contexts
 
 Background:
-	Given There are some defined stream event types with following properties
+	Given There are some provided stream event type metadata with following properties
+		| Title       |
+		| Description |
+		| HappenedOn  |
+	And There are some defined stream event types with following properties
 		| Title        | Metadata |
 		| Conversation |          |
 		| Conclusion   |          |
