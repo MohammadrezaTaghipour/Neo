@@ -8,7 +8,8 @@ namespace Neo.Application.LifeStreams;
 public class LifeStreamApplicationService :
      IApplicationService<DefineLifeStreamCommand>,
      IApplicationService<ModifyLifeStreamCommand>,
-     IApplicationService<RemoveLifeStreamCommand>
+     IApplicationService<RemoveLifeStreamCommand>,
+     IApplicationService<PartialModifyLifeStreamCommand>
 {
     private readonly ILifeStreamRepository _repository;
     private readonly ILifeStreamArgFactory _argFactory;
@@ -52,5 +53,58 @@ public class LifeStreamApplicationService :
         await lifeStream.Remove().ConfigureAwait(false);
         await _repository.Add(id, lifeStream, cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    public async Task Handle(PartialModifyLifeStreamCommand command,
+        CancellationToken cancellationToken)
+    {
+        switch (command.OperationType)
+        {
+            case LifeStreamPartialModificationOperationType.AppendStreamEvent:
+                await Handle(new AppendStreamEventCommand
+                {
+                    LifeStreamId = command.LifeStreamId,
+                    StreamContextId = command.StreamContextId,
+                    StreamEventTypeId = command.StreamEventTypeId,
+                    Metadata = command.Metadata,
+                }, cancellationToken).ConfigureAwait(false);
+                break;
+            case LifeStreamPartialModificationOperationType.RemoveStreamEvent:
+                await Handle(new RemoveStreamEventCommand
+                {
+                    Id = command.Id,
+                    LifeStreamId = command.LifeStreamId,
+                }, cancellationToken).ConfigureAwait(false);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public async Task Handle(AppendStreamEventCommand command,
+        CancellationToken cancellationToken)
+    {
+        var id = new LifeStreamId(command.LifeStreamId);
+        var lifeStream = await _repository
+           .GetBy(id, cancellationToken)
+           .ConfigureAwait(false);
+        var arg = await _argFactory.CreateFrom(command, cancellationToken)
+            .ConfigureAwait(false);
+        await lifeStream.AppendStreamEvent(arg).ConfigureAwait(false);
+        await _repository.Add(id, lifeStream, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    public async Task Handle(RemoveStreamEventCommand command,
+        CancellationToken cancellationToken)
+    {
+        var id = new LifeStreamId(command.LifeStreamId);
+        var lifeStream = await _repository
+           .GetBy(id, cancellationToken)
+           .ConfigureAwait(false);
+        await lifeStream.RemoveStreamEvent(new StreamEventId(command.Id))
+            .ConfigureAwait(false);
+        await _repository.Add(id, lifeStream, cancellationToken)
+          .ConfigureAwait(false);
     }
 }

@@ -5,7 +5,11 @@ As me
 I want to configure stream contexts
 
 Background:
-	Given There are some defined stream event types with following properties
+	Given There are some provided stream event type metadata with following properties
+		| Title       |
+		| Description |
+		| HappenedOn  |
+	And There are some defined stream event types with following properties
 		| Title        | Metadata |
 		| Conversation |          |
 		| Conclusion   |          |
@@ -17,6 +21,10 @@ Background:
 		| Conversation    |
 	And There is a defined stream context 'Career path'
 
-Scenario Outline: Stream context gets removed when no any events has registered for it
+Scenario: Stream context gets removed when no any events has registered for it
 	When I remove stream context 'Career path'
 	Then I can not find stream context 'Career path' with above properties
+
+
+	#TODO: comming soon
+Scenario: Stream context is not allowed to get removed when an stream event is appended in

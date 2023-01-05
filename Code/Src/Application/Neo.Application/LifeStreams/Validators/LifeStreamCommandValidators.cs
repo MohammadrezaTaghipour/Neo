@@ -7,7 +7,8 @@ namespace Neo.Application.LifeStreams.Validators;
 public class LifeStreamCommandValidators :
     ICommandValidator<DefineLifeStreamCommand>,
     ICommandValidator<ModifyLifeStreamCommand>,
-    ICommandValidator<RemoveLifeStreamCommand>
+    ICommandValidator<RemoveLifeStreamCommand>,
+    ICommandValidator<PartialModifyLifeStreamCommand>
 {
 
     public void Validate(DefineLifeStreamCommand command)
@@ -23,5 +24,10 @@ public class LifeStreamCommandValidators :
     public void Validate(RemoveLifeStreamCommand command)
     {
 
+    }
+
+    public void Validate(PartialModifyLifeStreamCommand command)
+    {
+        new PartialModifyLifeStreamCommandValidator().ValidateAndThrow(command);
     }
 }

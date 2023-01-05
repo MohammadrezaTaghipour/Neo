@@ -4,7 +4,6 @@ using Neo.Infrastructure.Framework.AspCore;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Framework.Swagger;
 using ServiceHost.Configurations;
-using ServiceHost.Handlers;
 
 namespace ServiceHost;
 

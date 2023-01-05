@@ -5,7 +5,11 @@ As me
 I want to configure stream contexts
 
 Background:
-	Given There are some defined stream event types with following properties
+	Given There are some provided stream event type metadata with following properties
+		| Title       |
+		| Description |
+		| HappenedOn  |
+	And There are some defined stream event types with following properties
 		| Title        | Metadata |
 		| Conversation |          |
 		| Conclusion   |          |
@@ -17,7 +21,7 @@ Background:
 		| Conversation    |
 	And There is a defined stream context 'Career path'
 
-Scenario Outline: Stream context gets modified with its valid properties
+Scenario: Stream context gets modified with its valid properties
 	When I reprovide stream context 'Career path' with following properties
 		| Title      | Description |
 		| My Familiy |             |
@@ -63,7 +67,7 @@ Scenario: Stream context can not be modified when stream event type is not found
 	And I modify stream context 'Career path'
 	Then I get error with code 'NEO-SC-BR-10007' and message 'Stream context can not be created due to invalid stream event type' from the system
 
-Scenario Outline: Stream context is not allowed to get modified with duplicated stream event type
+Scenario: Stream context is not allowed to get modified with duplicated stream event type
 	When I reprovide stream context 'Career path' with following properties
 		| Title      | Description |
 		| My Familiy |             |
@@ -73,3 +77,6 @@ Scenario Outline: Stream context is not allowed to get modified with duplicated 
 		| Conversation    |
 	And I modify stream context 'Career path'
 	Then I get error with code 'NEO-SC-BR-10008' and message 'There are duplicated stream event types' from the system
+
+		#TODO: comming soon
+Scenario: Stream context stream event types is not allowed to get modified when an stream event is appended in

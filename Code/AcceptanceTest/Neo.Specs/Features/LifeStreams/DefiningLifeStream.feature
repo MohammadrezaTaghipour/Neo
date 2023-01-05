@@ -6,8 +6,8 @@ I want to configure life stream
 
 Scenario Outline: Life stream gets defined with its valid properties
 	When I define a new life stream with following properties
-		| Title   | Description   | ParentStream |
-		| <title> | <description> |              |
+		| Title   | Description   |
+		| <title> | <description> |
 	Then I can find life stream '<title>' with above properties
 
 Examples:
@@ -18,8 +18,8 @@ Examples:
 
 Scenario Outline: Life stream is not allowed to get defined with invalid properties
 	When I define a new life stream with following properties
-		| Title   | Description   | ParentStream |
-		| <title> | <description> |              |
+		| Title   | Description   |
+		| <title> | <description> |
 	Then I get error with code '<errorCode>' and message '<errorMessage>' from the system
 
 Examples:

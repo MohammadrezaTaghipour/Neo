@@ -13,8 +13,8 @@ namespace Neo.Specs.Features.LifeStreams.Then
     {
         private readonly ScenarioContext _context;
         private readonly Actor _actor;
-        public ICanFindLifeStreamWithAboveProperties(ScenarioContext context,
-            Stage stage)
+        public ICanFindLifeStreamWithAboveProperties(
+            ScenarioContext context, Stage stage)
         {
             _context = context;
             _actor = stage.ActorInTheSpotlight;
@@ -37,13 +37,7 @@ namespace Neo.Specs.Features.LifeStreams.Then
             var actual = _actor.AsksFor(new GetLifeStreamByIdQuestion(expected.Id));
 
             actual.Should().BeEquivalentTo(expected, opt => opt
-                .Excluding(_ => _.Id)
-                .Excluding(_ => _.ParentStreams));
-
-            //if (expected.ParentStreams.Any())
-            //    actual.Metadata.OrderBy(_ => _.Title)
-            //        .Should()
-            //        .BeEquivalentTo(expected.Metadata.OrderBy(_ => _.Title));
+                .Excluding(_ => _.Id));
         }
 
         private void AssertModification(string expectedTitle)
@@ -54,13 +48,7 @@ namespace Neo.Specs.Features.LifeStreams.Then
 
             actual.Should().BeEquivalentTo(expected, opt => opt
                 .Excluding(_ => _.Id)
-                .Excluding(_ => _.ParentStreams)
                 .Excluding(_ => _.Version));
-
-            //if (expected.ParentStreams.Any())
-            //    actual.Metadata.OrderBy(_ => _.Title)
-            //        .Should()
-            //        .BeEquivalentTo(expected.Metadata.OrderBy(_ => _.Title));
         }
     }
 }

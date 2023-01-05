@@ -18,7 +18,7 @@ public class StreamEventTypeModelTransformer
     public DefineStreamEventTypeCommand ConvertToDefineCommand(Table table)
     {
         var model = table.CreateInstance<StreamEventTypeModel>();
-        return new DefineStreamEventTypeCommand
+        var commands = new DefineStreamEventTypeCommand
         {
             Id = default,
             Title = model.Title,
@@ -26,6 +26,8 @@ public class StreamEventTypeModelTransformer
                 ? _context.Get<IReadOnlyCollection<StreamEventTypeMetadataCommandItem>>()
                 : new List<StreamEventTypeMetadataCommandItem>()
         };
+        _context.Remove(typeof(IReadOnlyCollection<StreamEventTypeMetadataCommandItem>).FullName);
+        return commands;
     }
 
     [StepArgumentTransformation]

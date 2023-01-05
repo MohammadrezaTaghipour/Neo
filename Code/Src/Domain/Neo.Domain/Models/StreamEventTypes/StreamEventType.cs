@@ -6,6 +6,7 @@ namespace Neo.Domain.Models.StreamEventTypes;
 public interface IStreamEventType
 {
     StreamEventTypeId GetId();
+    string GetTitle();
     bool IsRemoved();
 }
 
@@ -32,6 +33,11 @@ public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>,
     public StreamEventTypeId GetId()
     {
         return State.Id;
+    }
+
+    public string GetTitle()
+    {
+        return State.Title;
     }
 
     public bool IsRemoved()

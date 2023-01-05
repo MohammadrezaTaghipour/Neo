@@ -1,5 +1,6 @@
 ﻿using Neo.Specs.Framework;
 using Neo.Specs.ScreenPlay.LifeStreams.Commands;
+using Neo.Specs.ScreenPlay.StreamContexts.Commands;
 using Suzianna.Core.Screenplay;
 using Suzianna.Core.Screenplay.Actors;
 using Suzianna.Rest.Screenplay.Questions;
