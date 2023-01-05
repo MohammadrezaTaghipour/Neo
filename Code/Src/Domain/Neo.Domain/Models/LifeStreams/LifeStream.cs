@@ -30,7 +30,8 @@ public partial class LifeStream : EventSourcedAggregate<LifeStreamState>
 
     public Task Remove()
     {
-        //TODO: check invarinats here :)
+        GuardAginstRemovalIfAnyStreamEventsHasBeenAppendedBefore(this);
+
         Apply(new LifeStreamRemoved(State.Id));
         return Task.CompletedTask;
     }

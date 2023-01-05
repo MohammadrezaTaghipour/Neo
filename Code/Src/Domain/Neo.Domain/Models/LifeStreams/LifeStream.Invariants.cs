@@ -3,7 +3,6 @@ using Neo.Domain.Contracts.LifeStreams;
 using Neo.Domain.Models.StreamContexts;
 using Neo.Domain.Models.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
-using Neo.Infrastructure.Framework.Subscriptions.Contexts;
 
 namespace Neo.Domain.Models.LifeStreams;
 
@@ -39,5 +38,11 @@ public partial class LifeStream
                 .Intersect(arg.Metadata.Select(_ => _.Key))
                 .Count() != arg.StreamEventTypeMetadata.Count)
             throw new BusinessException(LifeStreamErrorCodes.SE_BR_10009);
+    }
+
+    static void GuardAginstRemovalIfAnyStreamEventsHasBeenAppendedBefore(LifeStream lifeStream)
+    {
+        if (lifeStream.State.StreamEvents.Any())
+            throw new BusinessException(LifeStreamErrorCodes.LS_BR_10006);
     }
 }
