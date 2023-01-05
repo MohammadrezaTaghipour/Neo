@@ -92,3 +92,6 @@ Scenario: Stream event type is not allowed to get modified with duplicated matad
 		| Title        | Metadata |
 		| Conversation |          |
 	Then I get error with code 'NEO-SET-BR-10009' and message 'There are duplicated metadata' from the system
+
+	#TODO: comming soon
+Scenario: Stream event type metadata is not allowed to get modified when an stream event is appended with

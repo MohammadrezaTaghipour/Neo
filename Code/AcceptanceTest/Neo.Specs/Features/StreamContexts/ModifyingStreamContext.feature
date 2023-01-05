@@ -77,3 +77,6 @@ Scenario: Stream context is not allowed to get modified with duplicated stream e
 		| Conversation    |
 	And I modify stream context 'Career path'
 	Then I get error with code 'NEO-SC-BR-10008' and message 'There are duplicated stream event types' from the system
+
+		#TODO: comming soon
+Scenario: Stream context stream event types is not allowed to get modified when an stream event is appended in

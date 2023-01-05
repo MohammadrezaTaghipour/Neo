@@ -24,3 +24,7 @@ Background:
 Scenario: Stream context gets removed when no any events has registered for it
 	When I remove stream context 'Career path'
 	Then I can not find stream context 'Career path' with above properties
+
+
+	#TODO: comming soon
+Scenario: Stream context is not allowed to get removed when an stream event is appended in

@@ -12,4 +12,4 @@ Scenario Outline: Life stream gets removed when no any events has registered for
 	Then I can not find life stream 'Friendship with Souzan' with above properties
 
 	#TODO: comming soon
-Scenario Outline: Life stream is not allowed to get removed when events has registered for it
+Scenario Outline: Life stream is not allowed to get removed when stream any events has been appened for it
