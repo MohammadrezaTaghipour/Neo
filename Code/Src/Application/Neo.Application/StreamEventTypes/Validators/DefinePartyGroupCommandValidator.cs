@@ -25,19 +25,19 @@ public class DefineStreamEventTypeCommandValidator :
         RuleFor(x => x.Metadata).Custom((value, _) =>
         {
             if (value == null || !value.Any())
-                return;
-
-            if (value.Any(a => string.IsNullOrWhiteSpace(a.Title)))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10005);
 
-            if (value.Any(a => Constants.InvalidCharacters.Any(__ => a.Title.Contains(__))))
+            if (value.Any(a => string.IsNullOrWhiteSpace(a.Title)))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10006);
 
-            if (value.Any(a => a.Title.Length > 128))
+            if (value.Any(a => Constants.InvalidCharacters.Any(__ => a.Title.Contains(__))))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10007);
 
-            if (value.GroupBy(a => a.Title).Any(c => c.Count() > 1))
+            if (value.Any(a => a.Title.Length > 128))
                 throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10008);
+
+            if (value.GroupBy(a => a.Title).Any(c => c.Count() > 1))
+                throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10009);
         });
     }
 }
