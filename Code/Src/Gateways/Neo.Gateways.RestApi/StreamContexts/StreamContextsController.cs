@@ -17,7 +17,7 @@ public class StreamContextsController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> Post(
-        DefineStreamContextCommand command,
+        DefiningStreamContextRequested command,
         CancellationToken cancellationToken)
     {
         await _commandBus.Dispatch(command, cancellationToken)
@@ -40,7 +40,7 @@ public class StreamContextsController : ControllerBase
     public async Task<IActionResult> Delete(Guid id, int version,
         CancellationToken cancellationToken)
     {
-        var command = new RemoveStreamContextCommand
+        var command = new RemoveStreamContextRequested
         {
             Id = id,
             Version = version

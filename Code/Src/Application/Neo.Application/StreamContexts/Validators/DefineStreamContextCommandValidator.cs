@@ -8,7 +8,7 @@ using Neo.Infrastructure.Framework.Domain;
 namespace Neo.Application.StreamContexts.Validators;
 
 public class DefineStreamContextCommandValidator :
-     AbstractValidator<DefineStreamContextCommand>
+     AbstractValidator<DefiningStreamContextRequested>
 {
 	public DefineStreamContextCommandValidator()
 	{

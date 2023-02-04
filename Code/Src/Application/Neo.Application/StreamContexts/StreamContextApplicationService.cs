@@ -6,9 +6,9 @@ using Neo.Infrastructure.Framework.Application;
 namespace Neo.Application.StreamContexts;
 
 public class StreamContextApplicationService :
-     IApplicationService<DefineStreamContextCommand>,
+     IApplicationService<DefiningStreamContextRequested>,
      IApplicationService<ModifyStreamContextCommand>,
-     IApplicationService<RemoveStreamContextCommand>
+     IApplicationService<RemoveStreamContextRequested>
 {
     private readonly IStreamContextRepository _repository;
     private readonly IStreamContextArgFactory _argFactory;
@@ -21,7 +21,7 @@ public class StreamContextApplicationService :
         _argFactory = argFactory;
     }
 
-    public async Task Handle(DefineStreamContextCommand command,
+    public async Task Handle(DefiningStreamContextRequested command,
         CancellationToken cancellationToken)
     {
         var arg = await _argFactory.CreateFrom(command, cancellationToken);
@@ -42,7 +42,7 @@ public class StreamContextApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(RemoveStreamContextCommand command,
+    public async Task Handle(RemoveStreamContextRequested command,
         CancellationToken cancellationToken)
     {
         var id = new StreamContextId(command.Id);

@@ -2,9 +2,9 @@
 
 namespace Neo.Application.Contracts.StreamContexts;
 
-public class DefineStreamContextCommand : BaseCommand
+public class DefiningStreamContextRequested : BaseCommand
 {
-    public DefineStreamContextCommand()
+    public DefiningStreamContextRequested()
     {
         StreamEventTypes = new List<StreamEventTypeCommandItem>();
     }
@@ -12,4 +12,19 @@ public class DefineStreamContextCommand : BaseCommand
     public string Title { get; set; }
     public string Description { get; set; }
     public IReadOnlyCollection<StreamEventTypeCommandItem> StreamEventTypes { get; set; }
+}
+
+public class DefiningStreamContextRequestExecuted
+{
+    public Guid Id { get; set; }
+}
+
+public class SyncingStreamContextReferentialPointersRequest
+{
+    public Guid Id { get; set; }
+}
+
+public class StreamContextReferentialPointersSynced
+{
+    public Guid Id { get; set; } 
 }
