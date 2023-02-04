@@ -16,10 +16,10 @@ public class MvcBootstrapper : IBootstrapper
                     .AllowAnyHeader());
         });
 
-        AddAriusMvc(services);
+        AddNeoMvc(services);
     }
 
-    static void AddAriusMvc(IServiceCollection services)
+    static void AddNeoMvc(IServiceCollection services)
     {
         services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddControllers()

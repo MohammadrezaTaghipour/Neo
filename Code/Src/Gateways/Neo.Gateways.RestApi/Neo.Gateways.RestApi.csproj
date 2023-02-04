@@ -14,6 +14,7 @@
       <ProjectReference Include="..\..\Application\Neo.Application.Contracts\Neo.Application.Contracts.csproj" />
       <ProjectReference Include="..\..\Application\Neo.Application.Query\Neo.Application.Query.csproj" />
       <ProjectReference Include="..\..\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />
+      <ProjectReference Include="..\Neo.Gateways.Facade\Neo.Gateways.Facade.csproj" />
     </ItemGroup>
 
 </Project>
