@@ -1,21 +1,26 @@
 ﻿using MassTransit;
+using MassTransit.Courier.Contracts;
+using Neo.Application.Contracts;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Application.StreamContexts.CourierActivities;
+using Neo.Infrastructure.Framework.ReferentialPointers;
 
 namespace Neo.Application.StreamContexts.StateMachineActivities;
 
 public class OnDefiningStreamContextRequested :
-    IStateMachineActivity<StreamContextState, DefiningStreamContextRequested>
+    IStateMachineActivity<StreamContextMachineState, DefiningStreamContextRequested>
 {
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<StreamContextState,
+    public async Task Execute(BehaviorContext<StreamContextMachineState,
         DefiningStreamContextRequested> context,
-        IBehavior<StreamContextState, DefiningStreamContextRequested> next)
+        IBehavior<StreamContextMachineState, DefiningStreamContextRequested> next)
     {
+        UpdateReferentialPointersState(context.Saga, context.Message);
+
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
 
         builder.AddActivity(nameof(DefineStreamContextActivity),
@@ -23,13 +28,24 @@ public class OnDefiningStreamContextRequested :
                 DefiningStreamContextRequested>(),
             context.Message);
 
-        builder.AddActivity(nameof(SyncStreamContextReferentialPointersActivity),
-            RoutingSlipAddress.ForQueue<SyncStreamContextReferentialPointersActivity,
-                SyncingStreamContextReferentialPointersRequest>(),
-            new SyncingStreamContextReferentialPointersRequest
+        builder.AddActivity(nameof(SyncReferentialPointersActivity),
+            RoutingSlipAddress.ForQueue<SyncReferentialPointersActivity,
+                SyncingReferentialPointersRequest>(),
+            new SyncingReferentialPointersRequest
             {
-                Id = context.Message.Id
+                Id = context.Message.Id,
+                CurrentState = context.Saga.ReferentialPointerCurrentState,
+                NextState = context.Saga.ReferentialPointerNextState
             });
+
+        await builder.AddSubscription(context.SourceAddress,
+               RoutingSlipEvents.Faulted | RoutingSlipEvents.Supplemental,
+               RoutingSlipEventContents.None, x => x.Send(
+                   new DefiningStreamContextFaulted
+                   {
+                       Id = context.Message.Id
+                   }));
+
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip);
@@ -37,9 +53,9 @@ public class OnDefiningStreamContextRequested :
         await next.Execute(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<StreamContextState,
+    public Task Faulted<TException>(BehaviorExceptionContext<StreamContextMachineState,
         DefiningStreamContextRequested, TException> context,
-        IBehavior<StreamContextState, DefiningStreamContextRequested> next)
+        IBehavior<StreamContextMachineState, DefiningStreamContextRequested> next)
         where TException : Exception
     {
         return next.Faulted(context);
@@ -48,5 +64,21 @@ public class OnDefiningStreamContextRequested :
     public void Probe(ProbeContext context)
     {
         context.CreateScope("defining-streamContext");
+    }
+
+    private static void UpdateReferentialPointersState(
+        StreamContextMachineState machineState,
+        DefiningStreamContextRequested request)
+    {
+        machineState.ReferentialPointerNextState.DefinedItems
+            .Add(new ReferentialStateRecord(request.Id,
+                ReferentialPointerType.StreamContext.ToString()));
+
+        //foreach (var item in request.StreamEventTypes)
+        //{
+        //    machineState.ReferentialPointerNextState.UsedItems
+        //        .Add(new ReferentialStateRecord(item.StreamEventTypeId,
+        //            ReferentialPointerType.StreamContext.ToString()));
+        //}
     }
 }

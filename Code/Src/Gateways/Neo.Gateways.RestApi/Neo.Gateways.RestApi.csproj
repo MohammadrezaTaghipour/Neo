@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="MassTransit" Version="8.0.12" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\Application\Neo.Application.Contracts\Neo.Application.Contracts.csproj" />
-      <ProjectReference Include="..\..\Application\Neo.Application.Query\Neo.Application.Query.csproj" />
-      <ProjectReference Include="..\..\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />
-      <ProjectReference Include="..\Neo.Gateways.Facade\Neo.Gateways.Facade.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\Neo.Application.Contracts\Neo.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\Application\Neo.Application.Query\Neo.Application.Query.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />
+  </ItemGroup>
 
 </Project>

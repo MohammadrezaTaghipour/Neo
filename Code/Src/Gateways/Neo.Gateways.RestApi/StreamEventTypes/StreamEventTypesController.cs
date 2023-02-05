@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamEventTypes;
-using Neo.Gateways.Facade.StreamEventTypes;
+using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Gateways.RestApi.StreamEventTypes;
 
@@ -8,11 +8,11 @@ namespace Neo.Gateways.RestApi.StreamEventTypes;
 [Route("api/[controller]")]
 public class StreamEventTypesController : ControllerBase
 {
-    private readonly IStreamEventTypesFacade _facade;
+    private readonly ICommandBus _bus;
 
-    public StreamEventTypesController(IStreamEventTypesFacade facade)
+    public StreamEventTypesController(ICommandBus bus)
     {
-        _facade = facade;
+        _bus = bus;
     }
 
     [HttpPost]
@@ -20,9 +20,9 @@ public class StreamEventTypesController : ControllerBase
         DefineStreamEventTypeCommand command,
         CancellationToken cancellationToken)
     {
-        var response = await _facade.DefineStreamEventType(command, cancellationToken)
+        await _bus.Dispatch(command, cancellationToken)
             .ConfigureAwait(false);
-        return Created("", response);
+        return Created("", command.Id);
     }
 
     [HttpPut("{id:guid}")]
@@ -31,7 +31,7 @@ public class StreamEventTypesController : ControllerBase
         CancellationToken cancellationToken)
     {
         command.Id = id;
-        await _facade.ModifyDefineStreamEventType(command, cancellationToken)
+        await _bus.Dispatch(command, cancellationToken)
             .ConfigureAwait(false);
         return NoContent();
     }
@@ -45,7 +45,7 @@ public class StreamEventTypesController : ControllerBase
             Id = id,
             Version = version
         };
-        await _facade.RemoveStreamEventType(command, cancellationToken)
+        await _bus.Dispatch(command, cancellationToken)
             .ConfigureAwait(false);
         return NoContent();
     }

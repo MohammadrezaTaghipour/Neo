@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 
-namespace Neo.Application.StreamContexts;
+namespace Neo.Application;
 
 public static class RoutingSlipAddress
 {

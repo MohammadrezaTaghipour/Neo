@@ -26,7 +26,6 @@ public class StreamContextArgFactory : IStreamContextArgFactory
     public async Task<StreamContextArg> CreateFrom(DefiningStreamContextRequested command,
         CancellationToken cancellationToken)
     {
-        command.Id = StreamContextId.New().Value;
         return StreamContextArg.Builder
             .With(_ => _.Id, new StreamContextId(command.Id))
             .With(_ => _.Title, command.Title)

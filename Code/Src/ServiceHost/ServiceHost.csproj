@@ -8,13 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.12" />
   </ItemGroup>
   
     <ItemGroup>
       <ProjectReference Include="..\Application\Neo.Application.Query\Neo.Application.Query.csproj" />
       <ProjectReference Include="..\Application\Neo.Application\Neo.Application.csproj" />
-      <ProjectReference Include="..\Gateways\Neo.Gateways.Facade\Neo.Gateways.Facade.csproj" />
       <ProjectReference Include="..\Gateways\Neo.Gateways.RestApi\Neo.Gateways.RestApi.csproj" />
       <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Framework.EventStore\Neo.Infrastructure.Framework.EventStore.csproj" />
       <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />

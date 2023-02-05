@@ -2,7 +2,6 @@ using System.Reflection;
 using Neo.Application.Query.StreamEventTypes;
 using Neo.Application.StreamEventTypes;
 using Neo.Application.StreamEventTypes.Validators;
-using Neo.Gateways.Facade.StreamEventTypes;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Persistence.ES;
@@ -18,7 +17,6 @@ public class NeoBootstrapper : IBootstrapper
         AddApplicationServices(services, typeof(StreamEventTypeApplicationService).Assembly);
         AddQueryServices(services, typeof(StreamEventTypeQueryService).Assembly);
         AddCommandValidators(services, typeof(StreamEventTypeCommandValidators).Assembly);
-        AddFacade(services, typeof(StreamEventTypesFacade).Assembly);
     }
 
     static void AddDomainRepository(IServiceCollection services,
@@ -101,11 +99,5 @@ public class NeoBootstrapper : IBootstrapper
                      .ForEach(typeToRegister => services
                          .AddScoped(typeToRegister, typesToRegister.assignedType));
              });
-    }
-
-    static void AddFacade(IServiceCollection services,
-        Assembly assembly)
-    {
-        services.AddScoped<IStreamEventTypesFacade, StreamEventTypesFacade>();
     }
 }

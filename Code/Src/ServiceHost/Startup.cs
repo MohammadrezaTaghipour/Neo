@@ -1,8 +1,10 @@
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Neo.Application.Contracts.StreamEventTypes;
+using Neo.Application.ReferentialPointers;
+using Neo.Application.StreamContexts;
+using Neo.Application.StreamContexts.CourierActivities;
 using Neo.Domain.Contracts.StreamEventTypes;
-using Neo.Gateways.Facade.StreamEventTypes;
 using Neo.Infrastructure.EventStore.Configurations;
 using Neo.Infrastructure.Framework.AspCore;
 using Neo.Infrastructure.Framework.Configurations;
@@ -38,22 +40,22 @@ public class Startup
         services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
         services.AddMassTransit(mt =>
         {
-            mt.AddConsumersFromNamespaceContaining<StreamEventTypesConsumers>();
+            mt.AddConsumersFromNamespaceContaining<ReferentialPointerConsumer>();
+            mt.AddActivitiesFromNamespaceContaining<DefineStreamContextActivity>();
+            mt.AddSagaStateMachine<StreamContextStateMachine, StreamContextMachineState>(_ =>
+                _.UseInMemoryOutbox())
+              .RedisRepository("127.0.0.1");
 
             mt.UsingRabbitMq((context, cfg) =>
             {
-                //cfg.Host("localhost");
-                //cfg.ConfigureEndpoints(context);
+                cfg.Host("localhost");
+                cfg.ConfigureEndpoints(context);
                 //cfg.UseMessageRetry(_ =>
                 //{
                 //    _.Ignore<BusinessException>();
                 //    _.Interval(3, 2000);
                 //});
             });
-
-            mt.AddRequestClient<DefineStreamEventTypeCommand>();
-            mt.AddRequestClient<ModifyStreamEventTypeCommand>();
-            mt.AddRequestClient<RemoveStreamEventTypeCommand>();
         });
     }
 

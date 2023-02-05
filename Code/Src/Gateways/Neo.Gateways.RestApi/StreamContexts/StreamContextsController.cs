@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamContexts;
-using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Gateways.RestApi.StreamContexts;
 
@@ -8,11 +8,11 @@ namespace Neo.Gateways.RestApi.StreamContexts;
 [Route("api/[controller]")]
 public class StreamContextsController : ControllerBase
 {
-    private readonly ICommandBus _commandBus;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public StreamContextsController(ICommandBus commandBus)
+    public StreamContextsController(IPublishEndpoint publishEndpoint)
     {
-        _commandBus = commandBus;
+        _publishEndpoint = publishEndpoint;
     }
 
     [HttpPost]
@@ -20,9 +20,10 @@ public class StreamContextsController : ControllerBase
         DefiningStreamContextRequested command,
         CancellationToken cancellationToken)
     {
-        await _commandBus.Dispatch(command, cancellationToken)
+        command.Id = Guid.NewGuid();
+        await _publishEndpoint.Publish(command, cancellationToken)
             .ConfigureAwait(false);
-        return Ok(command.Id);
+        return Accepted(command.Id);
     }
 
     [HttpPut("{id:guid}")]
@@ -31,9 +32,9 @@ public class StreamContextsController : ControllerBase
         CancellationToken cancellationToken)
     {
         command.Id = id;
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _publishEndpoint.Publish(command, cancellationToken)
             .ConfigureAwait(false);
-        return NoContent();
+        return Accepted();
     }
 
     [HttpDelete("{id:guid}/{version:long}")]
@@ -45,7 +46,7 @@ public class StreamContextsController : ControllerBase
             Id = id,
             Version = version
         };
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _publishEndpoint.Publish(command, cancellationToken)
             .ConfigureAwait(false);
         return NoContent();
     }
