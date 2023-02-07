@@ -2,7 +2,7 @@
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Infrastructure.Framework.Application;
 
-namespace Neo.Application.StreamContexts.CourierActivities;
+namespace Neo.Application.StreamContexts.Activities;
 
 public class DefineStreamContextActivity :
     IActivity<DefiningStreamContextRequested, DefineStreamContextActivityLog>

@@ -1,6 +1,6 @@
 ﻿namespace Neo.Application.Contracts.StreamContexts;
 
-public class StreamEventTypeCommandItem
+public class StreamEventTypeRequestItem
 {
     public Guid StreamEventTypeId { get; set; }
 }

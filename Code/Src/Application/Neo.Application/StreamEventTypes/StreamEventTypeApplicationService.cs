@@ -6,9 +6,9 @@ using Neo.Domain.Contracts.StreamEventTypes;
 namespace Neo.Application.StreamEventTypes;
 
 public class StreamEventTypeApplicationService :
-    IApplicationService<DefineStreamEventTypeCommand>,
+    IApplicationService<DefiningStreamEventTypeRequested>,
     IApplicationService<ModifyStreamEventTypeCommand>,
-    IApplicationService<RemoveStreamEventTypeCommand>
+    IApplicationService<RemoveStreamEventTypeRequested>
 {
     private readonly IStreamEventTypeRepository _repository;
     private readonly IStreamEventTypeArgFactory _argFactory;
@@ -21,7 +21,7 @@ public class StreamEventTypeApplicationService :
         _argFactory = argFactory;
     }
 
-    public async Task Handle(DefineStreamEventTypeCommand command,
+    public async Task Handle(DefiningStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
         var arg = _argFactory.CreateFrom(command);
@@ -43,7 +43,7 @@ public class StreamEventTypeApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(RemoveStreamEventTypeCommand command,
+    public async Task Handle(RemoveStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
         var id = new StreamEventTypeId(command.Id);

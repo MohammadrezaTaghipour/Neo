@@ -13,7 +13,7 @@ public interface ILifeStreamQueryService : IQueryService
 public class LifeStreamQueryService : ILifeStreamQueryService
 {
     private readonly IAggregateReader _aggregateReader;
-
+    
     public LifeStreamQueryService(IAggregateReader aggregateReader)
     {
         _aggregateReader = aggregateReader;

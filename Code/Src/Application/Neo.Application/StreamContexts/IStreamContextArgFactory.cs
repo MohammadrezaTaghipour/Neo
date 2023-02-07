@@ -48,7 +48,7 @@ public class StreamContextArgFactory : IStreamContextArgFactory
     }
 
     static async Task<IReadOnlyCollection<IStreamEventType>> GetStreamEventTypes(
-        IReadOnlyCollection<StreamEventTypeCommandItem> streamEventTypes,
+        IReadOnlyCollection<StreamEventTypeRequestItem> streamEventTypes,
         IStreamEventTypeRepository _streamEventTypeRepository,
         CancellationToken cancellationToken)
     {

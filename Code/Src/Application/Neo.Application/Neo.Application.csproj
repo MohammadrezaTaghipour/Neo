@@ -10,7 +10,6 @@
 		<PackageReference Include="FluentValidation" Version="11.2.2" />
 		<PackageReference Include="MassTransit" Version="8.0.12" />
 		<PackageReference Include="MassTransit.Redis" Version="8.0.12" />
-
 	</ItemGroup>
 
 	<ItemGroup>

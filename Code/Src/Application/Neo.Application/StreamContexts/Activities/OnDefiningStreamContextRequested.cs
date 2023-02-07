@@ -1,11 +1,11 @@
 ﻿using MassTransit;
 using MassTransit.Courier.Contracts;
-using Neo.Application.Contracts;
+using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamContexts;
-using Neo.Application.StreamContexts.CourierActivities;
+using Neo.Application.ReferentialPointers;
 using Neo.Infrastructure.Framework.ReferentialPointers;
 
-namespace Neo.Application.StreamContexts.StateMachineActivities;
+namespace Neo.Application.StreamContexts.Activities;
 
 public class OnDefiningStreamContextRequested :
     IStateMachineActivity<StreamContextMachineState, DefiningStreamContextRequested>
@@ -30,8 +30,8 @@ public class OnDefiningStreamContextRequested :
 
         builder.AddActivity(nameof(SyncReferentialPointersActivity),
             RoutingSlipAddress.ForQueue<SyncReferentialPointersActivity,
-                SyncingReferentialPointersRequest>(),
-            new SyncingReferentialPointersRequest
+                SyncingReferentialPointersRequested>(),
+            new SyncingReferentialPointersRequested
             {
                 Id = context.Message.Id,
                 CurrentState = context.Saga.ReferentialPointerCurrentState,
@@ -74,11 +74,11 @@ public class OnDefiningStreamContextRequested :
             .Add(new ReferentialStateRecord(request.Id,
                 ReferentialPointerType.StreamContext.ToString()));
 
-        //foreach (var item in request.StreamEventTypes)
-        //{
-        //    machineState.ReferentialPointerNextState.UsedItems
-        //        .Add(new ReferentialStateRecord(item.StreamEventTypeId,
-        //            ReferentialPointerType.StreamContext.ToString()));
-        //}
+        foreach (var item in request.StreamEventTypes)
+        {
+            machineState.ReferentialPointerNextState.UsedItems
+                .Add(new ReferentialStateRecord(item.StreamEventTypeId,
+                    ReferentialPointerType.StreamContext.ToString()));
+        }
     }
 }

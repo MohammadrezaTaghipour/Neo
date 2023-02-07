@@ -1,4 +1,4 @@
-﻿namespace Neo.Application.Contracts;
+﻿namespace Neo.Application.Contracts.ReferentialPointers;
 
 public enum ReferentialPointerType
 {

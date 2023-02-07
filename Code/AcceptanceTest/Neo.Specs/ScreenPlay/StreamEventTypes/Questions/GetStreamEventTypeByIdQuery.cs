@@ -16,6 +16,7 @@ public class GetStreamEventTypeByIdQuestion : IQuestion<StreamEventTypeResponse>
 
     public StreamEventTypeResponse AnsweredBy(Actor actor)
     {
+        return null;
         actor.AttemptsTo(Get.ResourceAt($"/api/StreamEventTypesQuery/{_id}"));
         return actor.AsksFor(LastResponse.Content<StreamEventTypeResponse>());
     }

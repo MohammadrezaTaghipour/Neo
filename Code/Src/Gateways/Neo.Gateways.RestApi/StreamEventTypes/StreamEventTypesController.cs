@@ -1,3 +1,4 @@
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Application;
@@ -8,21 +9,22 @@ namespace Neo.Gateways.RestApi.StreamEventTypes;
 [Route("api/[controller]")]
 public class StreamEventTypesController : ControllerBase
 {
-    private readonly ICommandBus _bus;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public StreamEventTypesController(ICommandBus bus)
+    public StreamEventTypesController(IPublishEndpoint publishEndpoint)
     {
-        _bus = bus;
+        _publishEndpoint = publishEndpoint;
     }
 
     [HttpPost]
     public async Task<IActionResult> Post(
-        DefineStreamEventTypeCommand command,
+        DefiningStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
-        await _bus.Dispatch(command, cancellationToken)
+        command.Id = Guid.NewGuid();
+        await _publishEndpoint.Publish(command, cancellationToken)
             .ConfigureAwait(false);
-        return Created("", command.Id);
+        return Accepted(command.Id);
     }
 
     [HttpPut("{id:guid}")]
@@ -31,22 +33,22 @@ public class StreamEventTypesController : ControllerBase
         CancellationToken cancellationToken)
     {
         command.Id = id;
-        await _bus.Dispatch(command, cancellationToken)
+        await _publishEndpoint.Publish(command, cancellationToken)
             .ConfigureAwait(false);
-        return NoContent();
+        return Accepted();
     }
 
     [HttpDelete("{id:guid}/{version:long}")]
     public async Task<IActionResult> Delete(Guid id, int version,
         CancellationToken cancellationToken)
     {
-        var command = new RemoveStreamEventTypeCommand
+        var command = new RemoveStreamEventTypeRequested
         {
             Id = id,
             Version = version
         };
-        await _bus.Dispatch(command, cancellationToken)
-            .ConfigureAwait(false);
+        await _publishEndpoint.Publish(command, cancellationToken)
+           .ConfigureAwait(false);
         return NoContent();
     }
 }

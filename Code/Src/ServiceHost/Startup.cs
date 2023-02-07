@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Application.ReferentialPointers;
 using Neo.Application.StreamContexts;
-using Neo.Application.StreamContexts.CourierActivities;
+using Neo.Application.StreamContexts.Activities;
+using Neo.Application.StreamEventTypes;
+using Neo.Application.StreamEventTypes.Activities;
 using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.EventStore.Configurations;
 using Neo.Infrastructure.Framework.AspCore;
@@ -40,21 +42,19 @@ public class Startup
         services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
         services.AddMassTransit(mt =>
         {
-            mt.AddConsumersFromNamespaceContaining<ReferentialPointerConsumer>();
-            mt.AddActivitiesFromNamespaceContaining<DefineStreamContextActivity>();
+            mt.AddActivities(typeof(DefineStreamContextActivity).Assembly);
+
             mt.AddSagaStateMachine<StreamContextStateMachine, StreamContextMachineState>(_ =>
                 _.UseInMemoryOutbox())
+              .RedisRepository("127.0.0.1");
+            mt.AddSagaStateMachine<StreamEventTypeStateMachine, StreamEventTypeMachineState>(
+                typeof(StreamEventTypeStateMachineDefinition))
               .RedisRepository("127.0.0.1");
 
             mt.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host("localhost");
                 cfg.ConfigureEndpoints(context);
-                //cfg.UseMessageRetry(_ =>
-                //{
-                //    _.Ignore<BusinessException>();
-                //    _.Interval(3, 2000);
-                //});
             });
         });
     }

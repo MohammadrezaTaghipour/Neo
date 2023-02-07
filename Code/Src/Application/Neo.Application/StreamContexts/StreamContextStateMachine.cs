@@ -1,6 +1,7 @@
 ﻿using MassTransit;
+using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamContexts;
-using Neo.Application.StreamContexts.StateMachineActivities;
+using Neo.Application.StreamContexts.Activities;
 using Neo.Infrastructure.Framework.ReferentialPointers;
 
 namespace Neo.Application.StreamContexts;
@@ -45,7 +46,7 @@ public class StreamContextStateMachine :
     public Event<DefiningStreamContextRequested> DefiningRequested { get; set; }
     public Event<DefiningStreamContextRequestExecuted> DefiningExecuted { get; set; }
     public Event<DefiningStreamContextFaulted> DefiningFaulted { get; set; }
-    public Event<StreamContextReferentialPointersSynced> ReferentialPointersSynced { get; set; }
+    public Event<ReferentialPointersSynced> ReferentialPointersSynced { get; set; }
 
 }
 
