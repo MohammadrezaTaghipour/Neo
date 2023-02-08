@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts.ReferentialPointers;
+using Neo.Domain.Contracts.ReferentialPointers;
 using Neo.Infrastructure.Framework.Application;
-using Neo.Infrastructure.Framework.ReferentialPointers;
 
 namespace Neo.Application.ReferentialPointers;
 
@@ -21,14 +21,13 @@ public class SyncReferentialPointersActivity :
         if (context.Arguments.NextState == null)
             return context.Completed();
 
-        var ctoken = new CancellationToken();
         var nextState = context.Arguments.NextState;
         nextState.DefinedItems.ToList().ForEach(async a =>
         {
             await _commandBus.Dispatch(
                 new ReferentialPointerDefined(
                  new ReferentialPointerId(a.Id),
-                 a.ReferentialType), ctoken)
+                 a.ReferentialType), context.CancellationToken)
             .ConfigureAwait(false);
         });
 
@@ -37,7 +36,7 @@ public class SyncReferentialPointersActivity :
             await _commandBus.Dispatch(
                 new ReferentialPointerMarkedAsUsed(
                 new ReferentialPointerId(a.Id),
-                a.ReferentialType), ctoken)
+                a.ReferentialType), context.CancellationToken)
             .ConfigureAwait(false);
         });
 
@@ -46,7 +45,7 @@ public class SyncReferentialPointersActivity :
             await _commandBus.Dispatch(
                 new ReferentialPointerMarkedAsUnused(
                 new ReferentialPointerId(a.Id),
-                a.ReferentialType), ctoken)
+                a.ReferentialType), context.CancellationToken)
             .ConfigureAwait(false);
         });
 
@@ -55,7 +54,7 @@ public class SyncReferentialPointersActivity :
             await _commandBus.Dispatch(
                 new ReferentialPointerRemoved(
                 new ReferentialPointerId(a.Id),
-                a.ReferentialType), ctoken)
+                a.ReferentialType), context.CancellationToken)
             .ConfigureAwait(false);
         });
 

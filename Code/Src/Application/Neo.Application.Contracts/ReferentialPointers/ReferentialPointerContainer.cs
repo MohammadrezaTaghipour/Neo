@@ -1,6 +1,4 @@
-﻿
-
-namespace Neo.Infrastructure.Framework.ReferentialPointers;
+﻿namespace Neo.Application.Contracts.ReferentialPointers;
 
 public class ReferentialPointerContainer
 {

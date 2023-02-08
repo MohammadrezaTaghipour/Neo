@@ -2,7 +2,7 @@
 
 namespace Neo.Application.Contracts.LifeStreams;
 
-public class AppendStreamEventCommand : BaseCommand
+public class AppendStreamEventCommand : BaseRequest
 {
     public long Id { get; set; }
     public Guid LifeStreamId { get; set; }

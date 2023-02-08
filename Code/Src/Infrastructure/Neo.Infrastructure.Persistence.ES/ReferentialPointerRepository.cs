@@ -1,5 +1,6 @@
-﻿using Neo.Infrastructure.Framework.Persistence;
-using Neo.Infrastructure.Framework.ReferentialPointers;
+﻿using Neo.Domain.Contracts.ReferentialPointers;
+using Neo.Domain.Models.ReferentialPointers;
+using Neo.Infrastructure.Framework.Persistence;
 
 namespace Neo.Infrastructure.Persistence.ES;
 
@@ -15,7 +16,8 @@ public class ReferentialPointerRepository : IReferentialPointerRepository
         _repository = repository;
     }
 
-    public async Task Add(ReferentialPointerId id, ReferentialPointer referentialPointer,
+    public async Task Add(ReferentialPointerId id,
+        ReferentialPointer referentialPointer,
         CancellationToken cancellationToken)
           => await _repository.Add(GetStreamName(id),
                 referentialPointer, cancellationToken)

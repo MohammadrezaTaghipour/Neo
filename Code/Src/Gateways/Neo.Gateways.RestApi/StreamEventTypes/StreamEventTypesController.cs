@@ -29,7 +29,7 @@ public class StreamEventTypesController : ControllerBase
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Put(Guid id,
-        ModifyStreamEventTypeCommand command,
+        ModifyingStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
         command.Id = id;
@@ -42,7 +42,7 @@ public class StreamEventTypesController : ControllerBase
     public async Task<IActionResult> Delete(Guid id, int version,
         CancellationToken cancellationToken)
     {
-        var command = new RemoveStreamEventTypeRequested
+        var command = new RemovingStreamEventTypeRequested
         {
             Id = id,
             Version = version

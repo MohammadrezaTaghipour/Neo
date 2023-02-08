@@ -7,8 +7,8 @@ namespace Neo.Application.StreamEventTypes;
 
 public class StreamEventTypeApplicationService :
     IApplicationService<DefiningStreamEventTypeRequested>,
-    IApplicationService<ModifyStreamEventTypeCommand>,
-    IApplicationService<RemoveStreamEventTypeRequested>
+    IApplicationService<ModifyingStreamEventTypeRequested>,
+    IApplicationService<RemovingStreamEventTypeRequested>
 {
     private readonly IStreamEventTypeRepository _repository;
     private readonly IStreamEventTypeArgFactory _argFactory;
@@ -31,7 +31,7 @@ public class StreamEventTypeApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(ModifyStreamEventTypeCommand command,
+    public async Task Handle(ModifyingStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
         var arg = _argFactory.CreateFrom(command);
@@ -43,7 +43,7 @@ public class StreamEventTypeApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(RemoveStreamEventTypeRequested command,
+    public async Task Handle(RemovingStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
         var id = new StreamEventTypeId(command.Id);

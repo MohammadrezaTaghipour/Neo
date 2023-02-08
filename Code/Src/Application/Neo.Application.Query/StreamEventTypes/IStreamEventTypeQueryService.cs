@@ -33,9 +33,10 @@ public class StreamEventTypeQueryService : IStreamEventTypeQueryService
                 {
                     Id = id
                 })).Message;
-        if (!streamEventTypeStatus.Id.HasValue)
-            return new StreamEventTypeResponse(null, null, null,
-                null, new StatusResponse(false, streamEventTypeStatus.ErrorCode,
+        if (streamEventTypeStatus.Faulted)
+            return StreamEventTypeResponse.CreateFaulted(
+                new StatusResponse(streamEventTypeStatus.Completed,
+                streamEventTypeStatus.ErrorCode,
                 streamEventTypeStatus.ErrorMessage));
 
         var streamEventType = await _aggregateReader

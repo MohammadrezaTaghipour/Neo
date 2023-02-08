@@ -9,7 +9,7 @@ namespace Neo.Application.StreamEventTypes;
 public interface IStreamEventTypeArgFactory : IDomainArgFactory
 {
     StreamEventTypeArg CreateFrom(DefiningStreamEventTypeRequested command);
-    StreamEventTypeArg CreateFrom(ModifyStreamEventTypeCommand command);
+    StreamEventTypeArg CreateFrom(ModifyingStreamEventTypeRequested command);
 }
 
 public class StreamEventTypeArgFactory : IStreamEventTypeArgFactory
@@ -24,7 +24,7 @@ public class StreamEventTypeArgFactory : IStreamEventTypeArgFactory
             .Build();
     }
 
-    public StreamEventTypeArg CreateFrom(ModifyStreamEventTypeCommand command)
+    public StreamEventTypeArg CreateFrom(ModifyingStreamEventTypeRequested command)
     {
         return StreamEventTypeArg.Builder
             .With(a => a.Id, new StreamEventTypeId(command.Id))

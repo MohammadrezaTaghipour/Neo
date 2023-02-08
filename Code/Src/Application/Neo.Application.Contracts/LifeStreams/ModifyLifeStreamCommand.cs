@@ -2,7 +2,7 @@
 
 namespace Neo.Application.Contracts.LifeStreams;
 
-public class ModifyLifeStreamCommand : BaseCommand
+public class ModifyLifeStreamCommand : BaseRequest
 {
     public Guid Id { get; set; }
     public string Title { get; set; }

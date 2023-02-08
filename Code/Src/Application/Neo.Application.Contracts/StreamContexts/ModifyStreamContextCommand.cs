@@ -2,7 +2,7 @@
 
 namespace Neo.Application.Contracts.StreamContexts;
 
-public class ModifyStreamContextCommand : BaseCommand
+public class ModifyStreamContextCommand : BaseRequest
 {
     public ModifyStreamContextCommand()
     {

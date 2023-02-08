@@ -1,4 +1,6 @@
-﻿namespace Neo.Infrastructure.Framework.ReferentialPointers;
+﻿using Neo.Domain.Contracts.ReferentialPointers;
+
+namespace Neo.Domain.Models.ReferentialPointers;
 
 public class ReferentialPointerArg
 {

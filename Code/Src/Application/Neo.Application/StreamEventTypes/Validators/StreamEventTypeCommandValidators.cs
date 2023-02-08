@@ -6,8 +6,8 @@ namespace Neo.Application.StreamEventTypes.Validators;
 
 public class StreamEventTypeCommandValidators :
     ICommandValidator<DefiningStreamEventTypeRequested>,
-    ICommandValidator<ModifyStreamEventTypeCommand>,
-    ICommandValidator<RemoveStreamEventTypeRequested>
+    ICommandValidator<ModifyingStreamEventTypeRequested>,
+    ICommandValidator<RemovingStreamEventTypeRequested>
 {
 
     public void Validate(DefiningStreamEventTypeRequested command)
@@ -15,12 +15,12 @@ public class StreamEventTypeCommandValidators :
         new DefineStreamEventTypeCommandValidator().ValidateAndThrow(command);
     }
 
-    public void Validate(ModifyStreamEventTypeCommand command)
+    public void Validate(ModifyingStreamEventTypeRequested command)
     {
         new ModifyStreamEventTypeCommandValidator().ValidateAndThrow(command);
     }
 
-    public void Validate(RemoveStreamEventTypeRequested command)
+    public void Validate(RemovingStreamEventTypeRequested command)
     {
         
     }

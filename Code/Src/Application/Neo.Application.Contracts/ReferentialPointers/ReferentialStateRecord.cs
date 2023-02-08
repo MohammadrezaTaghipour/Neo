@@ -1,7 +1,6 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Neo.Infrastructure.Framework.ReferentialPointers;
+namespace Neo.Application.Contracts.ReferentialPointers;
 
 public class ReferentialStateRecord
 {

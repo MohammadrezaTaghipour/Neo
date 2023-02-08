@@ -1,7 +1,8 @@
-﻿using Neo.Infrastructure.Framework.Domain;
+﻿using Neo.Domain.Contracts.ReferentialPointers;
+using Neo.Infrastructure.Framework.Domain;
 using System.Collections.Concurrent;
 
-namespace Neo.Infrastructure.Framework.ReferentialPointers;
+namespace Neo.Domain.Models.ReferentialPointers;
 
 public record ReferentialPointerState : AggregateState<ReferentialPointerState>
 {

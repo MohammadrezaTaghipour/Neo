@@ -29,12 +29,13 @@ public class EsdbRepository<TAggregate, TState, TId> :
     public async Task Add(StreamName streamName, TAggregate aggregate,
         CancellationToken cancellationToken)
     {
-        if (aggregate.Changes.Count == 0) return;
+        if (aggregate.Changes.Count == 0)
+            return;
         var expectedVersion = aggregate.OriginalVersion;
         var proposedEvents = Create(aggregate);
         switch (expectedVersion)
         {
-            case (int)ExpectedStreamVersion.NoStream:
+            case (long)ExpectedStreamVersion.NoStream:
                 await _client.AppendToStreamAsync(
                     streamName,
                     StreamState.NoStream,
@@ -74,7 +75,7 @@ public class EsdbRepository<TAggregate, TState, TId> :
     }
 
     static bool HasVersionChanged(TAggregate aggregate, long version)
-        => aggregate.Changes.Count + version != aggregate.Version;
+        => aggregate.Changes.Count + version != aggregate.CurrentVersion;
 
     static IReadOnlyCollection<EventData> Create(TAggregate aggregate)
     {

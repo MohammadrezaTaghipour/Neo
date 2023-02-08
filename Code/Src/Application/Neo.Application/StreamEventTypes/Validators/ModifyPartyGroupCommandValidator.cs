@@ -6,7 +6,7 @@ using Neo.Infrastructure.Framework.Domain;
 namespace Neo.Application.StreamEventTypes.Validators;
 
 public class ModifyStreamEventTypeCommandValidator :
-    AbstractValidator<ModifyStreamEventTypeCommand>
+    AbstractValidator<ModifyingStreamEventTypeRequested>
 {
     public ModifyStreamEventTypeCommandValidator()
     {

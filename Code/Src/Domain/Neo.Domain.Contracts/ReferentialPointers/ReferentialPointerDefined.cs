@@ -1,16 +1,16 @@
 ﻿using Neo.Infrastructure.Framework.Domain;
 
-namespace Neo.Infrastructure.Framework.ReferentialPointers;
+namespace Neo.Domain.Contracts.ReferentialPointers;
 
 public class ReferentialPointerDefined : DomainEvent
 {
     public ReferentialPointerId Id { get; }
-    public string PointerType { get; set; }
+    public string PointerType { get; }
 
     public ReferentialPointerDefined(ReferentialPointerId id,
         string pointerType)
     {
-        Id = id; 
+        Id = id;
         PointerType = pointerType;
     }
 }

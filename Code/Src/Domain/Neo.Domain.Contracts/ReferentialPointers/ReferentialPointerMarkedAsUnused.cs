@@ -1,6 +1,6 @@
 ﻿using Neo.Infrastructure.Framework.Domain;
 
-namespace Neo.Infrastructure.Framework.ReferentialPointers;
+namespace Neo.Domain.Contracts.ReferentialPointers;
 
 public class ReferentialPointerMarkedAsUnused : DomainEvent
 {

@@ -2,7 +2,7 @@
 
 namespace Neo.Application.Contracts.LifeStreams;
 
-public class PartialModifyLifeStreamCommand : BaseCommand
+public class PartialModifyLifeStreamCommand : BaseRequest
 {
     public PartialModifyLifeStreamCommand()
     {

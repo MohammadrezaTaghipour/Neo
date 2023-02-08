@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Neo.Application.Contracts.StreamEventTypes;
@@ -6,6 +8,8 @@ using Neo.Application.StreamContexts;
 using Neo.Application.StreamContexts.Activities;
 using Neo.Application.StreamEventTypes;
 using Neo.Application.StreamEventTypes.Activities;
+using Neo.Application.StreamEventTypes.Validators;
+using Neo.Domain.Contracts.ReferentialPointers;
 using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.EventStore.Configurations;
 using Neo.Infrastructure.Framework.AspCore;
@@ -32,12 +36,17 @@ public class Startup
             .With(new NeoBootstrapper())
             .With(new CoreBootstrapper())
             .With(new EsDbBootstrapper(Configuration,
-                typeof(StreamEventTypeDefined).Assembly))
+                typeof(StreamEventTypeDefined).Assembly,
+                typeof(ReferentialPointerDefined).Assembly))
             //.With(new EsDbSubscriptionBootstrapper(Configuration,
             //    typeof(TestEventHandler).Assembly))
             .With(new SwaggerBootstrapper(Configuration))
             .With(new MvcBootstrapper())
             .Build();
+
+
+        services.AddFluentValidationAutoValidation();
+        services.AddValidatorsFromAssemblyContaining<DefineStreamEventTypeCommandValidator>();
 
         services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
         services.AddMassTransit(mt =>

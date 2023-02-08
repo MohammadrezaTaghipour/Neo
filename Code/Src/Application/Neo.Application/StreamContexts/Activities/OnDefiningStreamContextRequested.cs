@@ -3,7 +3,6 @@ using MassTransit.Courier.Contracts;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Application.ReferentialPointers;
-using Neo.Infrastructure.Framework.ReferentialPointers;
 
 namespace Neo.Application.StreamContexts.Activities;
 

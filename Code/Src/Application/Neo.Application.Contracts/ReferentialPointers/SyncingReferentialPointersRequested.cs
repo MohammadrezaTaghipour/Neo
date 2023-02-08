@@ -1,6 +1,4 @@
-﻿using Neo.Infrastructure.Framework.ReferentialPointers;
-
-namespace Neo.Application.Contracts.ReferentialPointers;
+﻿namespace Neo.Application.Contracts.ReferentialPointers;
 
 public class SyncingReferentialPointersRequested
 {

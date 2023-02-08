@@ -1,7 +1,7 @@
-﻿using Neo.Infrastructure.Framework.Domain;
-using System.Reflection;
+﻿using Neo.Domain.Contracts.ReferentialPointers;
+using Neo.Infrastructure.Framework.Domain;
 
-namespace Neo.Infrastructure.Framework.ReferentialPointers;
+namespace Neo.Domain.Models.ReferentialPointers;
 
 public class ReferentialPointer : EventSourcedAggregate<ReferentialPointerState>
 {
@@ -15,9 +15,11 @@ public class ReferentialPointer : EventSourcedAggregate<ReferentialPointerState>
             arg.PointerType.ToLower()));
     }
 
-    public static ReferentialPointer Create(ReferentialPointerArg arg)
+    public static async Task<ReferentialPointer> Create(ReferentialPointerArg arg)
     {
-        return new ReferentialPointer(arg);
+        var refPointer = new ReferentialPointer(arg);
+        await (Task)refPointer.CompletionTask;
+        return refPointer;
     }
 
     public long CalculateCounter()

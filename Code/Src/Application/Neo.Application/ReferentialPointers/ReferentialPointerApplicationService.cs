@@ -1,5 +1,6 @@
-﻿using Neo.Infrastructure.Framework.Application;
-using Neo.Infrastructure.Framework.ReferentialPointers;
+﻿using Neo.Domain.Contracts.ReferentialPointers;
+using Neo.Domain.Models.ReferentialPointers;
+using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Application.ReferentialPointers;
 
@@ -17,7 +18,7 @@ public class ReferentialPointerApplicationService :
         _repository = repository;
     }
 
-    public async Task Handle(ReferentialPointerDefined command, 
+    public async Task Handle(ReferentialPointerDefined command,
         CancellationToken cancellationToken)
     {
         //if (await _repository.GetById(command.Id, cancellationToken)
@@ -29,12 +30,12 @@ public class ReferentialPointerApplicationService :
             Id = command.Id,
             PointerType = command.PointerType,
         };
-        var refPointer = ReferentialPointer.Create(arg);
+        var refPointer = await ReferentialPointer.Create(arg);
         await _repository.Add(command.Id, refPointer, cancellationToken)
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(ReferentialPointerMarkedAsUsed command, 
+    public async Task Handle(ReferentialPointerMarkedAsUsed command,
         CancellationToken cancellationToken)
     {
         var refPointer = await _repository.GetById(command.Id, cancellationToken)
@@ -43,11 +44,12 @@ public class ReferentialPointerApplicationService :
         {
             var arg = new ReferentialPointerArg
             {
+                Id = command.Id,
                 PointerType = command.PointerType
             };
             refPointer.MarkAsUsed(arg);
-            await _repository.Add(command.Id, refPointer, cancellationToken)
-                .ConfigureAwait(false);
+            await _repository.Add(command.Id, refPointer,
+                cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -60,29 +62,29 @@ public class ReferentialPointerApplicationService :
         {
             var arg = new ReferentialPointerArg
             {
+                Id = command.Id,
                 PointerType = command.PointerType
             };
             refPointer.MarkAsUnused(arg);
-            await _repository.Add(command.Id, refPointer, cancellationToken)
-                .ConfigureAwait(false);
+            await _repository.Add(command.Id, refPointer,
+                cancellationToken).ConfigureAwait(false);
         }
     }
 
-    public async Task Handle(ReferentialPointerRemoved command, 
+    public async Task Handle(ReferentialPointerRemoved command,
         CancellationToken cancellationToken)
     {
-        var refPointer = await _repository.GetById(command.Id, cancellationToken)
-           .ConfigureAwait(false);
-        if (!IsPointerAlreadyReferenced(refPointer, command.Id))
+        var refPointer = await _repository.GetById(command.Id,
+            cancellationToken).ConfigureAwait(false);
+
+        var arg = new ReferentialPointerArg
         {
-            var arg = new ReferentialPointerArg
-            {
-                PointerType = command.PointerType
-            };
-            refPointer.Remove(arg);
-            await _repository.Add(command.Id, refPointer, cancellationToken)
-                .ConfigureAwait(false);
-        }
+            Id = command.Id,
+            PointerType = command.PointerType
+        };
+        refPointer.Remove(arg);
+        await _repository.Add(command.Id, refPointer, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     static bool IsPointerAlreadyReferenced(ReferentialPointer refPointer,

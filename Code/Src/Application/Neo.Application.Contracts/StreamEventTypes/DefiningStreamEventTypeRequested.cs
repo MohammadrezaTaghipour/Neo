@@ -2,7 +2,7 @@ using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Application.Contracts.StreamEventTypes;
 
-public class DefiningStreamEventTypeRequested : BaseCommand
+public class DefiningStreamEventTypeRequested : BaseRequest
 {
     public DefiningStreamEventTypeRequested()
     {

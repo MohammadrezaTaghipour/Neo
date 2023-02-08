@@ -1,4 +1,4 @@
-﻿namespace Neo.Infrastructure.Framework.ReferentialPointers;
+﻿namespace Neo.Domain.Models.ReferentialPointers;
 
 public class ReferentialPointerCounter
 {

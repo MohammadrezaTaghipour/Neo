@@ -16,7 +16,6 @@ public class NeoBootstrapper : IBootstrapper
         AddArgFactories(services, typeof(StreamEventTypeArgFactory).Assembly);
         AddApplicationServices(services, typeof(StreamEventTypeApplicationService).Assembly);
         AddQueryServices(services, typeof(StreamEventTypeQueryService).Assembly);
-        AddCommandValidators(services, typeof(StreamEventTypeCommandValidators).Assembly);
     }
 
     static void AddDomainRepository(IServiceCollection services,
@@ -74,23 +73,6 @@ public class NeoBootstrapper : IBootstrapper
              .Where(t => t.GetTypeInfo()
                  .ImplementedInterfaces.Any(
                      i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IApplicationService<>)))
-             .Select(a => new { assignedType = a, serviceTypes = a.GetInterfaces().ToList() })
-             .ToList()
-             .ForEach(typesToRegister =>
-             {
-                 typesToRegister.serviceTypes
-                     .ForEach(typeToRegister => services
-                         .AddScoped(typeToRegister, typesToRegister.assignedType));
-             });
-    }
-
-    static void AddCommandValidators(IServiceCollection services,
-        Assembly assembly)
-    {
-        assembly.GetTypes()
-             .Where(t => t.GetTypeInfo()
-                 .ImplementedInterfaces.Any(
-                     i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandValidator<>)))
              .Select(a => new { assignedType = a, serviceTypes = a.GetInterfaces().ToList() })
              .ToList()
              .ForEach(typesToRegister =>

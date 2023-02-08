@@ -2,9 +2,9 @@ using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Application.Contracts.StreamEventTypes;
 
-public class ModifyStreamEventTypeCommand : BaseCommand
+public class ModifyingStreamEventTypeRequested : BaseRequest
 {
-    public ModifyStreamEventTypeCommand()
+    public ModifyingStreamEventTypeRequested()
     {
         Metadata = new List<StreamEventTypeMetadataRequestItem>();
     }
@@ -13,4 +13,16 @@ public class ModifyStreamEventTypeCommand : BaseCommand
     public string Title { get; set; }
     public IReadOnlyList<StreamEventTypeMetadataRequestItem> Metadata { get; set; }
     public long Version { get; set; }
+}
+
+public class ModifyingStreamEventTypeRequestExecuted
+{
+    public Guid Id { get; set; }
+}
+
+public class ModifyingStreamEventTypeFaulted
+{
+    public Guid Id { get; set; }
+    public string ErrorCode { get; set; }
+    public string ErrorMessage { get; set; }
 }

@@ -2,7 +2,6 @@
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Application.StreamContexts.Activities;
-using Neo.Infrastructure.Framework.ReferentialPointers;
 
 namespace Neo.Application.StreamContexts;
 

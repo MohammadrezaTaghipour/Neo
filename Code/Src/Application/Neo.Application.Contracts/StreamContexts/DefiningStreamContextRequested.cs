@@ -2,7 +2,7 @@
 
 namespace Neo.Application.Contracts.StreamContexts;
 
-public class DefiningStreamContextRequested : BaseCommand
+public class DefiningStreamContextRequested : BaseRequest
 {
     public DefiningStreamContextRequested()
     {

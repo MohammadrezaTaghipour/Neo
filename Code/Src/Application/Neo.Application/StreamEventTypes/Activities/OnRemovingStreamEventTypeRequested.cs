@@ -2,12 +2,11 @@
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Application.ReferentialPointers;
-using Neo.Domain.Contracts.ReferentialPointers;
 
 namespace Neo.Application.StreamEventTypes.Activities;
 
-public class OnDefiningStreamEventTypeRequested :
-    IStateMachineActivity<StreamEventTypeMachineState, DefiningStreamEventTypeRequested>
+public class OnRemovingStreamEventTypeRequested :
+    IStateMachineActivity<StreamEventTypeMachineState, RemovingStreamEventTypeRequested>
 {
     public void Accept(StateMachineVisitor visitor)
     {
@@ -15,18 +14,16 @@ public class OnDefiningStreamEventTypeRequested :
     }
 
     public async Task Execute(BehaviorContext<StreamEventTypeMachineState,
-        DefiningStreamEventTypeRequested> context,
-        IBehavior<StreamEventTypeMachineState, DefiningStreamEventTypeRequested> next)
+        RemovingStreamEventTypeRequested> context,
+        IBehavior<StreamEventTypeMachineState, RemovingStreamEventTypeRequested> next)
     {
-        context.Saga.StreamEventTypeId = context.Message.Id;
-
         UpdateReferentialPointersState(context.Saga, context.Message);
 
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
 
-        builder.AddActivity(nameof(DefineStreamEventTypeActivity),
-            RoutingSlipAddress.ForQueue<DefineStreamEventTypeActivity,
-                DefiningStreamEventTypeRequested>(),
+        builder.AddActivity(nameof(RemoveStreamEventTypeActivity),
+            RoutingSlipAddress.ForQueue<RemoveStreamEventTypeActivity,
+                RemovingStreamEventTypeRequested>(),
             context.Message);
 
         builder.AddActivity(nameof(SyncReferentialPointersActivity),
@@ -46,8 +43,8 @@ public class OnDefiningStreamEventTypeRequested :
     }
 
     public Task Faulted<TException>(BehaviorExceptionContext<StreamEventTypeMachineState,
-        DefiningStreamEventTypeRequested, TException> context,
-        IBehavior<StreamEventTypeMachineState, DefiningStreamEventTypeRequested> next)
+        RemovingStreamEventTypeRequested, TException> context,
+        IBehavior<StreamEventTypeMachineState, RemovingStreamEventTypeRequested> next)
         where TException : Exception
     {
         return next.Faulted(context);
@@ -55,14 +52,16 @@ public class OnDefiningStreamEventTypeRequested :
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope("defining-streamEventType");
+        context.CreateScope("removing-streamEventType");
     }
 
     private static void UpdateReferentialPointersState(
         StreamEventTypeMachineState machineState,
-        DefiningStreamEventTypeRequested request)
+        RemovingStreamEventTypeRequested request)
     {
-        machineState.ReferentialPointerNextState.DefinedItems
+
+        machineState.ReferentialPointerNextState = new();
+        machineState.ReferentialPointerNextState.RemovedItems
             .Add(new ReferentialStateRecord(request.Id,
                 ReferentialPointerType.StreamContext.ToString()));
     }

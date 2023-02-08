@@ -2,7 +2,7 @@
 
 namespace Neo.Application.Contracts.StreamContexts;
 
-public class RemoveStreamContextRequested : BaseCommand
+public class RemoveStreamContextRequested : BaseRequest
 {
     public Guid Id { get; set; }
     public long Version { get; set; }

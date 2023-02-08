@@ -2,7 +2,7 @@
 
 namespace Neo.Application.Contracts.LifeStreams;
 
-public class RemoveStreamEventCommand : BaseCommand
+public class RemoveStreamEventCommand : BaseRequest
 {
     public long Id { get; set; }
     public Guid LifeStreamId { get; set; }

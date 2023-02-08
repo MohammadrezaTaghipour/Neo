@@ -5,18 +5,18 @@ using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Application.StreamEventTypes.Activities;
 
-public class DefineStreamEventTypeActivity :
-    IActivity<DefiningStreamEventTypeRequested, StreamEventTypeActivityLog>
+public class ModifyStreamEventTypeActivity :
+    IActivity<ModifyingStreamEventTypeRequested, StreamEventTypeActivityLog>
 {
     private readonly ICommandBus _commandBus;
 
-    public DefineStreamEventTypeActivity(ICommandBus commandBus)
+    public ModifyStreamEventTypeActivity(ICommandBus commandBus)
     {
         _commandBus = commandBus;
     }
 
     public async Task<ExecutionResult> Execute(
-        ExecuteContext<DefiningStreamEventTypeRequested> context)
+        ExecuteContext<ModifyingStreamEventTypeRequested> context)
     {
         try
         {
@@ -26,7 +26,7 @@ public class DefineStreamEventTypeActivity :
                 .ConfigureAwait(false);
 
             await context.Send(context.SourceAddress,
-                new DefiningStreamEventTypeRequestExecuted
+                new ModifyingStreamEventTypeRequestExecuted
                 {
                     Id = request.Id
                 }).ConfigureAwait(false);
@@ -40,7 +40,7 @@ public class DefineStreamEventTypeActivity :
         catch (Exception e)
         {
             await context.Send(context.SourceAddress,
-                new DefiningStreamEventTypeFaulted
+                new ModifyingStreamEventTypeFaulted
                 {
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
