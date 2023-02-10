@@ -38,12 +38,12 @@ public class OnRemovingStreamEventTypeRequested :
             });
 
         await builder.AddSubscription(new Uri("queue:stream-event-type-machine-state"),
-        RoutingSlipEvents.Completed | RoutingSlipEvents.Supplemental,
-        RoutingSlipEventContents.Data,
-        x => x.Send(new ReferentialPointersSynced
-        {
-            Id = context.Message.Id
-        }));
+                 RoutingSlipEvents.Completed,
+                 RoutingSlipEventContents.Data,
+                 x => x.Send(new StreamEventTypeActivityCompleted
+                 {
+                     Id = context.Message.Id
+                 }));
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip);

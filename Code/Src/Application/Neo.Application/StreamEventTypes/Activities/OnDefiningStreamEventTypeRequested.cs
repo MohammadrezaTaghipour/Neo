@@ -40,10 +40,11 @@ public class OnDefiningStreamEventTypeRequested :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
+
         await builder.AddSubscription(new Uri("queue:stream-event-type-machine-state"),
                 RoutingSlipEvents.Completed,
                 RoutingSlipEventContents.Data,
-                x => x.Send(new ReferentialPointersSynced
+                x => x.Send(new StreamEventTypeActivityCompleted
                 {
                     Id = context.Message.Id
                 }));

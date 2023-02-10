@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MassTransit.Courier.Contracts;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Application.StreamEventTypes.Activities;
@@ -25,8 +26,7 @@ public class StreamEventTypeStateMachine :
                 }
             }));
         });
-        Event(() => ReferentialPointersSynced, x => x.CorrelateById(m => m.Message.Id));
-
+        Event(() => ActivityCompleted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => DefiningRequested, x => x.CorrelateById(m => m.Message.Id));
         Event(() => DefiningExecuted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => DefiningFaulted, x => x.CorrelateById(m => m.Message.Id));
@@ -58,17 +58,17 @@ public class StreamEventTypeStateMachine :
                     _.Saga.ErrorMessage = _.Message.ErrorMessage;
                 })
                 .TransitionTo(Faulted),
-            When(ReferentialPointersSynced)
+            When(ActivityCompleted)
                 .TransitionTo(Idle));
 
         During(ReferentialSyncing,
-            When(ReferentialPointersSynced)
+            When(ActivityCompleted)
                 .TransitionTo(Idle));
 
         During(Idle,
             Ignore(DefiningExecuted),
             Ignore(RemovingExecuted),
-            Ignore(ReferentialPointersSynced),
+            Ignore(ActivityCompleted),
             When(ModifyingRequested)
                 .Activity(_ => _.OfType<OnModifyingStreamEventTypeRequested>()
                 .RespondAsync(_ =>
@@ -133,7 +133,7 @@ public class StreamEventTypeStateMachine :
 
 
     public Event<StreamEventTypeStatusRequested> StatusRequested { get; private set; }
-    public Event<ReferentialPointersSynced> ReferentialPointersSynced { get; private set; }
+    public Event<StreamEventTypeActivityCompleted> ActivityCompleted { get; private set; }
     public Event<DefiningStreamEventTypeRequested> DefiningRequested { get; private set; }
     public Event<DefiningStreamEventTypeRequestExecuted> DefiningExecuted { get; private set; }
     public Event<DefiningStreamEventTypeFaulted> DefiningFaulted { get; private set; }
