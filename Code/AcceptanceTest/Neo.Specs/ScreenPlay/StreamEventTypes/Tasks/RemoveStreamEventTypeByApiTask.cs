@@ -18,14 +18,14 @@ public class RemoveStreamEventTypeByApiTask : ITask
 
     public void PerformAs<T>(T actor) where T : Actor
     {
-        while (true)
-        {
-            actor.AttemptsTo(Get.ResourceAt($"/api/StreamEventTypesQuery/{_command.Id}"));
-            var response = actor.AsksFor(LastResponse.Content<StreamEventTypeResponse>());
-            if (response.Status.Completed)
-                break;
-        }
         actor.AttemptsTo(Delete
-            .From($"/api/StreamEventTypes/{_command.Id}/{_command.Version}"));
+             .From($"/api/StreamEventTypes/{_command.Id}/{_command.Version}"));
+
+        if (!LastResponseException.HasException())
+        {
+            var state = actor.AsksFor(new GetStreamEventTypeByIdQuestion(_command.Id)).Status;
+            if (state.Completed)
+                return;
+        }
     }
 }

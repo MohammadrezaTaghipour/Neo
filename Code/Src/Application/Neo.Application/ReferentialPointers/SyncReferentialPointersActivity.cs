@@ -57,13 +57,7 @@ public class SyncReferentialPointersActivity :
                 a.ReferentialType), context.CancellationToken)
             .ConfigureAwait(false);
         });
-
-        await context.Send(context.SourceAddress,
-            new ReferentialPointersSynced
-            {
-                Id = context.Arguments.Id
-            }).ConfigureAwait(false);
-
+        await Task.CompletedTask;
         return context.Completed();
     }
 }

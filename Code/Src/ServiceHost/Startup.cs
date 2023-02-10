@@ -56,9 +56,16 @@ public class Startup
             mt.AddSagaStateMachine<StreamContextStateMachine, StreamContextMachineState>(_ =>
                 _.UseInMemoryOutbox())
               .RedisRepository("127.0.0.1");
-            mt.AddSagaStateMachine<StreamEventTypeStateMachine, StreamEventTypeMachineState>(
-                typeof(StreamEventTypeStateMachineDefinition))
-              .RedisRepository("127.0.0.1");
+            mt.AddSagaStateMachine<StreamEventTypeStateMachine, StreamEventTypeMachineState>(_ =>
+            {
+                _.ConcurrentMessageLimit = 1;
+                _.UseInMemoryOutbox();
+                _.UseMessageRetry(r => r.Intervals(2, 1000));
+            })
+            .RedisRepository("127.0.0.1");
+
+            //(typeof(StreamEventTypeStateMachineDefinition))
+            //  .RedisRepository("127.0.0.1");
 
             mt.UsingRabbitMq((context, cfg) =>
             {

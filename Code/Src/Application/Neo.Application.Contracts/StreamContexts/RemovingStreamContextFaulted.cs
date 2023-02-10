@@ -1,6 +1,6 @@
 ﻿namespace Neo.Application.Contracts.StreamContexts;
 
-public class DefiningStreamContextFaulted
+public class RemovingStreamContextFaulted
 {
     public Guid Id { get; set; }
     public string ErrorCode { get; set; }

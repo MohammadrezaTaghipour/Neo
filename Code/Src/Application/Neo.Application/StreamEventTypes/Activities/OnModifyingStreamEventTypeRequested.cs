@@ -1,4 +1,6 @@
 ﻿using MassTransit;
+using MassTransit.Courier.Contracts;
+using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamEventTypes;
 
 namespace Neo.Application.StreamEventTypes.Activities;

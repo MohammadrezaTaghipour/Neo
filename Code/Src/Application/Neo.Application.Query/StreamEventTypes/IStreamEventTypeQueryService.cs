@@ -32,7 +32,7 @@ public class StreamEventTypeQueryService : IStreamEventTypeQueryService
                 new StreamEventTypeStatusRequested
                 {
                     Id = id
-                })).Message;
+                }).ConfigureAwait(false)).Message;
         if (streamEventTypeStatus.Faulted)
             return StreamEventTypeResponse.CreateFaulted(
                 new StatusResponse(streamEventTypeStatus.Completed,

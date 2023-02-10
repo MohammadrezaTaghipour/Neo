@@ -1,6 +1,9 @@
 ﻿
+using Neo.Specs.ScreenPlay.StreamEventTypes.Questions;
+
 namespace Neo.Specs.ScreenPlay.StreamContexts.Questions;
 
 public record StreamContextResponse(string Title,
-    string Description, IReadOnlyCollection<Guid> StreamEventTypes,
-    bool Removed);
+    string Description, bool Removed,
+    IReadOnlyCollection<Guid> StreamEventTypes,
+    StatusResponse Status);

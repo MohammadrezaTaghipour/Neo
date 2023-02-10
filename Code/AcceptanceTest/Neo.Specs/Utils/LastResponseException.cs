@@ -1,5 +1,4 @@
 ﻿using Neo.Specs.Features.Shared;
-using Suzianna.Core.Screenplay.Actors;
 
 namespace Suzianna.Rest.Screenplay.Questions;
 
@@ -16,8 +15,13 @@ public static class LastResponseException
         };
     }
 
-    public static ErrorResponse Content(Actor actor)
+    public static ErrorResponse Content()
     {
-        return _response ?? actor.AsksFor(LastResponse.Content<ErrorResponse>());
+        return _response;
+    }
+
+    public static bool HasException()
+    {
+        return _response != null;
     }
 }

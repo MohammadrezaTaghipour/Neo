@@ -42,6 +42,10 @@ public class StreamEventTypeStateMachine :
         Initially(
             When(DefiningRequested)
                 .Activity(_ => _.OfType<OnDefiningStreamEventTypeRequested>()
+                .RespondAsync(_ =>
+                {
+                    return _.Init<DefiningStreamEventTypeRequested>(_.Message);
+                })
                 .TransitionTo(Defining)));
 
         During(Defining,
@@ -51,20 +55,35 @@ public class StreamEventTypeStateMachine :
                 .Then(_ =>
                 {
                     _.Saga.ErrorCode = _.Message.ErrorCode;
-                    _.Message.ErrorMessage = _.Message.ErrorMessage;
+                    _.Saga.ErrorMessage = _.Message.ErrorMessage;
                 })
-                .TransitionTo(Faulted));
+                .TransitionTo(Faulted),
+            When(ReferentialPointersSynced)
+                .TransitionTo(Idle));
 
         During(ReferentialSyncing,
             When(ReferentialPointersSynced)
                 .TransitionTo(Idle));
 
         During(Idle,
+            Ignore(DefiningExecuted),
+            Ignore(RemovingExecuted),
+            Ignore(ReferentialPointersSynced),
             When(ModifyingRequested)
                 .Activity(_ => _.OfType<OnModifyingStreamEventTypeRequested>()
+                .RespondAsync(_ =>
+                {
+                    return _.Init<ModifyingStreamEventTypeRequested>(_.Message);
+                })
                 .TransitionTo(Modifying)),
+            When(ModifyingExecuted)
+                .TransitionTo(Idle),
             When(RemovingRequested)
                 .Activity(_ => _.OfType<OnRemovingStreamEventTypeRequested>()
+                .RespondAsync(_ =>
+                {
+                    return _.Init<RemovingStreamEventTypeRequested>(_.Message);
+                })
                 .TransitionTo(Removing)));
 
         During(Modifying,
@@ -97,6 +116,8 @@ public class StreamEventTypeStateMachine :
                             Id = x.Saga.StreamEventTypeId,
                             Completed = x.Saga.CurrentState == nameof(Idle) ||
                                         x.Saga.CurrentState == nameof(Faulted),
+                            Faulted = !string.IsNullOrEmpty(x.Saga.ErrorCode) ||
+                                      !string.IsNullOrEmpty(x.Saga.ErrorMessage),
                             ErrorCode = x.Saga.ErrorCode,
                             ErrorMessage = x.Saga.ErrorMessage
                         })));

@@ -4,6 +4,7 @@ namespace Neo.Domain.Contracts.StreamEventTypes;
 
 public enum StreamEventTypeErrorCodes
 {
+    SET_BR_10001,
     SET_BR_10002,
     SET_BR_10003,
     SET_BR_10004,

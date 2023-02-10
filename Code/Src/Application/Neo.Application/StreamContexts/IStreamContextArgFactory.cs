@@ -11,7 +11,7 @@ namespace Neo.Application.StreamContexts;
 public interface IStreamContextArgFactory : IDomainArgFactory
 {
     Task<StreamContextArg> CreateFrom(DefiningStreamContextRequested command, CancellationToken cancellationToken);
-    Task<StreamContextArg> CreateFrom(ModifyStreamContextCommand command, CancellationToken cancellationToken);
+    Task<StreamContextArg> CreateFrom(ModifyingStreamContextRequested command, CancellationToken cancellationToken);
 }
 
 public class StreamContextArgFactory : IStreamContextArgFactory
@@ -35,7 +35,7 @@ public class StreamContextArgFactory : IStreamContextArgFactory
             .Build();
     }
 
-    public async Task<StreamContextArg> CreateFrom(ModifyStreamContextCommand command,
+    public async Task<StreamContextArg> CreateFrom(ModifyingStreamContextRequested command,
         CancellationToken cancellationToken)
     {
         return StreamContextArg.Builder

@@ -7,8 +7,8 @@ namespace Neo.Application.StreamContexts;
 
 public class StreamContextApplicationService :
      IApplicationService<DefiningStreamContextRequested>,
-     IApplicationService<ModifyStreamContextCommand>,
-     IApplicationService<RemoveStreamContextRequested>
+     IApplicationService<ModifyingStreamContextRequested>,
+     IApplicationService<RemovingStreamContextRequested>
 {
     private readonly IStreamContextRepository _repository;
     private readonly IStreamContextArgFactory _argFactory;
@@ -31,7 +31,7 @@ public class StreamContextApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(ModifyStreamContextCommand command,
+    public async Task Handle(ModifyingStreamContextRequested command,
         CancellationToken cancellationToken)
     {
         var arg = await _argFactory.CreateFrom(command, cancellationToken);
@@ -42,7 +42,7 @@ public class StreamContextApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(RemoveStreamContextRequested command,
+    public async Task Handle(RemovingStreamContextRequested command,
         CancellationToken cancellationToken)
     {
         var id = new StreamContextId(command.Id);

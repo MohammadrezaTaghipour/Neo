@@ -1,4 +1,6 @@
-﻿namespace Neo.Application.Contracts.ReferentialPointers;
+﻿using Newtonsoft.Json;
+
+namespace Neo.Application.Contracts.ReferentialPointers;
 
 public class ReferentialPointerContainer
 {
@@ -14,4 +16,10 @@ public class ReferentialPointerContainer
     public List<ReferentialStateRecord> UsedItems { get; set; }
     public List<ReferentialStateRecord> UnusedItems { get; set; }
     public List<ReferentialStateRecord> RemovedItems { get; set; }
+
+    public ReferentialPointerContainer? Clone()
+    {
+        var serialized = JsonConvert.SerializeObject(this);
+        return JsonConvert.DeserializeObject<ReferentialPointerContainer>(serialized);
+    }
 }

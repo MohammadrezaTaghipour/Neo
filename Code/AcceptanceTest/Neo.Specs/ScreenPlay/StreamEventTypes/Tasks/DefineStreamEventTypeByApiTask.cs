@@ -1,7 +1,9 @@
 using Neo.Specs.ScreenPlay.StreamEventTypes.Commands;
+using Neo.Specs.ScreenPlay.StreamEventTypes.Questions;
 using Suzianna.Core.Screenplay;
 using Suzianna.Core.Screenplay.Actors;
 using Suzianna.Rest.Screenplay.Interactions;
+using Suzianna.Rest.Screenplay.Questions;
 
 namespace Neo.Specs.ScreenPlay.StreamEventTypes.Tasks;
 
@@ -18,5 +20,12 @@ public class DefineStreamEventTypeByApiTask : ITask
     {
         actor.AttemptsTo(Post.DataAsJson(_command)
             .To($"/api/StreamEventTypes"));
+
+        if (!LastResponseException.HasException())
+        {
+            var state = actor.AsksFor(new GetStreamEventTypeByIdQuestion(_command.Id)).Status;
+            if (state.Completed)
+                return;
+        }
     }
 }

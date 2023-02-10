@@ -1,7 +1,6 @@
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamEventTypes;
-using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Gateways.RestApi.StreamEventTypes;
 
@@ -9,11 +8,18 @@ namespace Neo.Gateways.RestApi.StreamEventTypes;
 [Route("api/[controller]")]
 public class StreamEventTypesController : ControllerBase
 {
-    private readonly IPublishEndpoint _publishEndpoint;
+    IRequestClient<DefiningStreamEventTypeRequested> _definingClient;
+    IRequestClient<ModifyingStreamEventTypeRequested> _modifyingClient;
+    IRequestClient<RemovingStreamEventTypeRequested> _removingClient;
 
-    public StreamEventTypesController(IPublishEndpoint publishEndpoint)
+    public StreamEventTypesController(
+        IRequestClient<DefiningStreamEventTypeRequested> defineClient,
+        IRequestClient<ModifyingStreamEventTypeRequested> modifyClient,
+        IRequestClient<RemovingStreamEventTypeRequested> removeClient)
     {
-        _publishEndpoint = publishEndpoint;
+        _definingClient = defineClient;
+        _modifyingClient = modifyClient;
+        _removingClient = removeClient;
     }
 
     [HttpPost]
@@ -21,8 +27,8 @@ public class StreamEventTypesController : ControllerBase
         DefiningStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
-        command.Id = Guid.NewGuid();
-        await _publishEndpoint.Publish(command, cancellationToken)
+        await _definingClient
+            .GetResponse<DefiningStreamEventTypeRequested>(command, cancellationToken)
             .ConfigureAwait(false);
         return Accepted(command.Id);
     }
@@ -33,7 +39,8 @@ public class StreamEventTypesController : ControllerBase
         CancellationToken cancellationToken)
     {
         command.Id = id;
-        await _publishEndpoint.Publish(command, cancellationToken)
+        await _modifyingClient
+            .GetResponse<ModifyingStreamEventTypeRequested>(command, cancellationToken)
             .ConfigureAwait(false);
         return Accepted();
     }
@@ -47,8 +54,9 @@ public class StreamEventTypesController : ControllerBase
             Id = id,
             Version = version
         };
-        await _publishEndpoint.Publish(command, cancellationToken)
-           .ConfigureAwait(false);
+        await _removingClient
+            .GetResponse<RemovingStreamEventTypeRequested>(command, cancellationToken)
+            .ConfigureAwait(false);
         return NoContent();
     }
 }

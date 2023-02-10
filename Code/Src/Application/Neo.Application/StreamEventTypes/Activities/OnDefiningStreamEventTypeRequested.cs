@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MassTransit.Courier.Contracts;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Application.ReferentialPointers;
@@ -38,6 +39,14 @@ public class OnDefiningStreamEventTypeRequested :
                 CurrentState = context.Saga.ReferentialPointerCurrentState,
                 NextState = context.Saga.ReferentialPointerNextState
             });
+
+        await builder.AddSubscription(new Uri("queue:stream-event-type-machine-state"),
+                RoutingSlipEvents.Completed,
+                RoutingSlipEventContents.Data,
+                x => x.Send(new ReferentialPointersSynced
+                {
+                    Id = context.Message.Id
+                }));
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip);

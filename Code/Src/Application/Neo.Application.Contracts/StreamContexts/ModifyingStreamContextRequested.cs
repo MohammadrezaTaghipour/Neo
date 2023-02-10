@@ -2,9 +2,9 @@
 
 namespace Neo.Application.Contracts.StreamContexts;
 
-public class ModifyStreamContextCommand : BaseRequest
+public class ModifyingStreamContextRequested : BaseRequest
 {
-    public ModifyStreamContextCommand()
+    public ModifyingStreamContextRequested()
     {
         StreamEventTypes = new List<StreamEventTypeRequestItem>();
     }

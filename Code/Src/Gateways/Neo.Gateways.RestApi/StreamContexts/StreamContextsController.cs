@@ -28,7 +28,7 @@ public class StreamContextsController : ControllerBase
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Put(Guid id,
-        ModifyStreamContextCommand command,
+        ModifyingStreamContextRequested command,
         CancellationToken cancellationToken)
     {
         command.Id = id;
@@ -41,7 +41,7 @@ public class StreamContextsController : ControllerBase
     public async Task<IActionResult> Delete(Guid id, int version,
         CancellationToken cancellationToken)
     {
-        var command = new RemoveStreamContextRequested
+        var command = new RemovingStreamContextRequested
         {
             Id = id,
             Version = version
