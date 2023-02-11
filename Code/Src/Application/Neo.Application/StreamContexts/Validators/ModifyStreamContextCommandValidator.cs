@@ -10,6 +10,12 @@ public class ModifyStreamContextCommandValidator :
 {
 	public ModifyStreamContextCommandValidator()
 	{
+        RuleFor(x => x.Id).Custom((value, _) =>
+        {
+            if (value == Guid.Empty)
+                throw new BusinessException(StreamContextErrorCodes.SC_BR_10001);
+        });
+
         RuleFor(x => x.Title).Custom((value, _) =>
         {
             if (string.IsNullOrWhiteSpace(value))

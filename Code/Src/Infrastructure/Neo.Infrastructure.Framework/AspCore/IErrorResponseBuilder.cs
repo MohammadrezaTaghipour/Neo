@@ -21,7 +21,6 @@ public class ErrorResponseBuilder : IErrorResponseBuilder
         var basicOption = _configuration.GetSection("basic").Get<BasicOption>();
         var errorResponse = new ErrorResponse($"{basicOption.ServiceName}_{errorCode}",
             errorMessage);
-        Console.WriteLine($"--------------******** code: {errorResponse.Code}");
         return errorResponse;
     }
 }

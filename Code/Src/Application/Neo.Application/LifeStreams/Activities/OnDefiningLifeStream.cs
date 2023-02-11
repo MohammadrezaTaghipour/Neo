@@ -1,33 +1,32 @@
-﻿using MassTransit;
-using MassTransit.Courier.Contracts;
+﻿using MassTransit.Courier.Contracts;
+using MassTransit;
 using Neo.Application.Contracts.ReferentialPointers;
-using Neo.Application.Contracts.StreamEventTypes;
+using Neo.Application.Contracts.LifeStreams;
 using Neo.Application.ReferentialPointers;
 
-namespace Neo.Application.StreamEventTypes.Activities;
+namespace Neo.Application.LifeStreams.Activities;
 
-public class OnDefiningStreamEventTypeRequested :
-    IStateMachineActivity<StreamEventTypeMachineState, DefiningStreamEventTypeRequested>
+public class OnDefiningLifeStream :
+    IStateMachineActivity<LifeStreamMachineState, DefiningLifeStreamRequested>
 {
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<StreamEventTypeMachineState,
-        DefiningStreamEventTypeRequested> context,
-        IBehavior<StreamEventTypeMachineState,
-            DefiningStreamEventTypeRequested> next)
+    public async Task Execute(BehaviorContext<LifeStreamMachineState,
+        DefiningLifeStreamRequested> context,
+        IBehavior<LifeStreamMachineState, DefiningLifeStreamRequested> next)
     {
-        context.Saga.StreamEventTypeId = context.Message.Id;
+        context.Saga.LifeStreamId = context.Message.Id;
 
         UpdateReferentialPointersState(context.Saga, context.Message);
 
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
 
-        builder.AddActivity(nameof(DefineStreamEventTypeActivity),
-            RoutingSlipAddress.ForQueue<DefineStreamEventTypeActivity,
-                DefiningStreamEventTypeRequested>(),
+        builder.AddActivity(nameof(DefineLifeStreamActivity),
+            RoutingSlipAddress.ForQueue<DefineLifeStreamActivity,
+                DefiningLifeStreamRequested>(),
             context.Message);
 
         builder.AddActivity(nameof(SyncReferentialPointersActivity),
@@ -40,11 +39,10 @@ public class OnDefiningStreamEventTypeRequested :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
-
-        await builder.AddSubscription(new Uri("queue:stream-event-type-machine-state"),
+        await builder.AddSubscription(new Uri("queue:life-stream-machine-state"),
                 RoutingSlipEvents.Completed,
                 RoutingSlipEventContents.Data,
-                x => x.Send(new StreamEventTypeActivitiesCompleted
+                x => x.Send(new LifeStreamActivitiesCompleted
                 {
                     Id = context.Message.Id
                 }));
@@ -55,9 +53,9 @@ public class OnDefiningStreamEventTypeRequested :
         await next.Execute(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<StreamEventTypeMachineState,
-        DefiningStreamEventTypeRequested, TException> context,
-        IBehavior<StreamEventTypeMachineState, DefiningStreamEventTypeRequested> next)
+    public Task Faulted<TException>(BehaviorExceptionContext<LifeStreamMachineState,
+        DefiningLifeStreamRequested, TException> context,
+        IBehavior<LifeStreamMachineState, DefiningLifeStreamRequested> next)
         where TException : Exception
     {
         return next.Faulted(context);
@@ -65,15 +63,16 @@ public class OnDefiningStreamEventTypeRequested :
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope("defining-streamEventType");
+        context.CreateScope("defining-lifeStream");
     }
 
     private static void UpdateReferentialPointersState(
-        StreamEventTypeMachineState machineState,
-        DefiningStreamEventTypeRequested request)
+        LifeStreamMachineState machineState,
+        DefiningLifeStreamRequested request)
     {
+        machineState.ReferentialPointerNextState = new();
         machineState.ReferentialPointerNextState.DefinedItems
             .Add(new ReferentialStateRecord(request.Id,
-                ReferentialPointerType.StreamEventType.ToString()));
+                ReferentialPointerType.LifeStream.ToString()));
     }
 }

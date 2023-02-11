@@ -1,14 +1,14 @@
 ﻿using MassTransit;
+using Neo.Application.Contracts.LifeStreams;
 using Neo.Application.Contracts;
-using Neo.Application.Contracts.StreamContexts;
-using Neo.Application.StreamContexts.Activities;
+using Neo.Application.LifeStreams.Activities;
 
-namespace Neo.Application.StreamContexts;
+namespace Neo.Application.LifeStreams;
 
-public class StreamContextStateMachine :
-    MassTransitStateMachine<StreamContextMachineState>
+public class LifeStreamStateMachine :
+    MassTransitStateMachine<LifeStreamMachineState>
 {
-    public StreamContextStateMachine()
+    public LifeStreamStateMachine()
     {
         Event(() => StatusRequested, x =>
         {
@@ -17,11 +17,12 @@ public class StreamContextStateMachine :
             {
                 if (context.RequestId.HasValue)
                 {
-                    await context.RespondAsync(new StreamContextStatusRequestExecuted
-                    {
-                        Faulted = true,
-                        ErrorMessage = $"Item with id:'{context.Message.Id}' not found."
-                    });
+                    await context.RespondAsync(
+                        new LifeStreamStatusRequestExecuted
+                        {
+                            Faulted = true,
+                            ErrorMessage = $"Item with id:'{context.Message.Id}' not found."
+                        });
                 }
             }));
         });
@@ -38,21 +39,21 @@ public class StreamContextStateMachine :
 
         Initially(
             When(DefiningRequested)
-                .Activity(_ => _.OfType<OnDefiningStreamContextRequested>()
+                .Activity(_ => _.OfType<OnDefiningLifeStream>()
                 .RespondAsync(_ =>
                 {
-                    return _.Init<DefiningStreamContextRequested>(_.Message);
+                    return _.Init<DefiningLifeStreamRequested>(_.Message);
                 })
                 .TransitionTo(Defining)));
 
         During(Defining,
             When(DefiningExecuted)
                 .TransitionTo(ReferentialSyncing),
-            When(ActivitiesCompleted)
-                .TransitionTo(Idle),
             When(ActivitiesFaulted)
-                .Activity(_ => _.OfType<OnStreamContextActivitiesFaulted>())
-                .TransitionTo(Faulted));
+                .Activity(_ => _.OfType<OnLifeStreamActivitiesFaulted>())
+                .TransitionTo(Faulted),
+            When(ActivitiesCompleted)
+                .TransitionTo(Idle));
 
         During(ReferentialSyncing,
             When(ActivitiesCompleted)
@@ -63,42 +64,42 @@ public class StreamContextStateMachine :
             Ignore(RemovingExecuted),
             Ignore(ActivitiesCompleted),
             When(ModifyingRequested)
-                .Activity(_ => _.OfType<OnModifyingStreamContextRequested>()
+                .Activity(_ => _.OfType<OnModifyingLifeStream>()
                 .RespondAsync(_ =>
                 {
-                    return _.Init<ModifyingStreamContextRequested>(_.Message);
+                    return _.Init<ModifyingLifeStreamRequested>(_.Message);
                 })
                 .TransitionTo(Modifying)),
             When(ModifyingExecuted)
-                .TransitionTo(ReferentialSyncing),
+                .TransitionTo(Idle),
             When(RemovingRequested)
-                .Activity(_ => _.OfType<OnRemovingStreamContextRequested>()
+                .Activity(_ => _.OfType<OnRemovingLifeStream>()
                 .RespondAsync(_ =>
                 {
-                    return _.Init<RemovingStreamContextRequested>(_.Message);
+                    return _.Init<RemovingLifeStreamRequested>(_.Message);
                 })
                 .TransitionTo(Removing)));
 
         During(Modifying,
             When(ModifyingExecuted)
-                .TransitionTo(ReferentialSyncing),
+                .TransitionTo(Idle),
             When(ActivitiesFaulted)
-                .Activity(_ => _.OfType<OnStreamContextActivitiesFaulted>())
+                .Activity(_ => _.OfType<OnLifeStreamActivitiesFaulted>())
                 .TransitionTo(Idle));
 
         During(Removing,
             When(RemovingExecuted)
                 .TransitionTo(ReferentialSyncing),
             When(ActivitiesFaulted)
-                .Activity(_ => _.OfType<OnStreamContextActivitiesFaulted>())
+                .Activity(_ => _.OfType<OnLifeStreamActivitiesFaulted>())
                 .TransitionTo(Idle));
 
         DuringAny(
             When(StatusRequested)
-                    .RespondAsync(x => x.Init<StreamContextStatusRequestExecuted>(
-                        new StreamContextStatusRequestExecuted
+                    .RespondAsync(x => x.Init<LifeStreamStatusRequestExecuted>(
+                        new LifeStreamStatusRequestExecuted
                         {
-                            Id = x.Saga.StreamContextId,
+                            Id = x.Saga.LifeStreamId,
                             Completed = x.Saga.CurrentState == nameof(Idle) ||
                                         x.Saga.CurrentState == nameof(Faulted),
                             Faulted = x.Saga.Error != null,
@@ -115,14 +116,14 @@ public class StreamContextStateMachine :
     public State Idle { get; private set; }
     public State Faulted { get; private set; }
 
-    public Event<StreamContextStatusRequested> StatusRequested { get; private set; }
-    public Event<StreamContextActivitiesCompleted> ActivitiesCompleted { get; private set; }
-    public Event<ActivitiesFaulted> ActivitiesFaulted { get; private set; }
-    public Event<DefiningStreamContextRequested> DefiningRequested { get; private set; }
-    public Event<DefiningStreamContextRequestExecuted> DefiningExecuted { get; private set; }
-    public Event<ModifyingStreamContextRequested> ModifyingRequested { get; private set; }
-    public Event<ModifyingStreamContextRequestExecuted> ModifyingExecuted { get; private set; }
-    public Event<RemovingStreamContextRequested> RemovingRequested { get; private set; }
-    public Event<RemovingStreamContextRequestExecuted> RemovingExecuted { get; private set; }
 
+    public Event<LifeStreamActivitiesCompleted> ActivitiesCompleted { get; private set; }
+    public Event<ActivitiesFaulted> ActivitiesFaulted { get; private set; }
+    public Event<LifeStreamStatusRequested> StatusRequested { get; private set; }
+    public Event<DefiningLifeStreamRequested> DefiningRequested { get; private set; }
+    public Event<DefiningLifeStreamRequestExecuted> DefiningExecuted { get; private set; }
+    public Event<ModifyingLifeStreamRequested> ModifyingRequested { get; private set; }
+    public Event<ModifyingLifeStreamRequestExecuted> ModifyingExecuted { get; private set; }
+    public Event<RemovingLifeStreamRequested> RemovingRequested { get; private set; }
+    public Event<RemovingLifeStreamRequestExecuted> RemovingExecuted { get; private set; }
 }

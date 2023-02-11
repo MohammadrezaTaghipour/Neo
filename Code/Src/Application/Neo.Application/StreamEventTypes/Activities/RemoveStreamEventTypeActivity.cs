@@ -55,12 +55,6 @@ public class RemoveStreamEventTypeActivity :
     public async Task<CompensationResult> Compensate(
         CompensateContext<StreamEventTypeActivityLog> context)
     {
-        await _commandBus.Dispatch(new RemovingStreamEventTypeRequested
-        {
-            Id = context.Log.StreamEventTypeId
-        }, context.CancellationToken)
-            .ConfigureAwait(false);
-
         return context.Compensated();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Domain.Contracts.StreamContexts;
+using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Application.StreamContexts.Validators;
@@ -10,6 +11,12 @@ public class DefineStreamContextCommandValidator :
 {
 	public DefineStreamContextCommandValidator()
 	{
+        RuleFor(x => x.Id).Custom((value, _) =>
+        {
+            if (value == Guid.Empty)
+                throw new BusinessException(StreamContextErrorCodes.SC_BR_10001);
+        });
+
         RuleFor(x => x.Title).Custom((value, _) =>
         {
             if (string.IsNullOrWhiteSpace(value))

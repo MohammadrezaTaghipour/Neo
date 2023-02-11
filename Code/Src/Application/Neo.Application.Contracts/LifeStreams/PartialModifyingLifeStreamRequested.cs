@@ -2,11 +2,11 @@
 
 namespace Neo.Application.Contracts.LifeStreams;
 
-public class PartialModifyLifeStreamCommand : BaseRequest
+public class PartialModifyingLifeStreamRequested : BaseRequest
 {
-    public PartialModifyLifeStreamCommand()
+    public PartialModifyingLifeStreamRequested()
     {
-        Metadata = new List<StreamEventMetadaCommandItem>();
+        Metadata = new List<StreamEventMetadaRequestItem>();
     }
 
     public long Id { get; set; }
@@ -14,7 +14,7 @@ public class PartialModifyLifeStreamCommand : BaseRequest
     public Guid LifeStreamId { get; set; }
     public Guid StreamContextId { get; set; }
     public Guid StreamEventTypeId { get; set; }
-    public IReadOnlyCollection<StreamEventMetadaCommandItem> Metadata { get; set; }
+    public IReadOnlyCollection<StreamEventMetadaRequestItem> Metadata { get; set; }
 }
 
 
@@ -25,7 +25,7 @@ public enum LifeStreamPartialModificationOperationType
 }
 
 
-public class StreamEventMetadaCommandItem
+public class StreamEventMetadaRequestItem
 {
     public string Key { get; set; }
     public string Value { get; set; }

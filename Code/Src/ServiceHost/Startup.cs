@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Neo.Application.LifeStreams;
 using Neo.Application.StreamContexts;
 using Neo.Application.StreamContexts.Activities;
 using Neo.Application.StreamEventTypes;
@@ -49,26 +50,18 @@ public class Startup
         {
             mt.AddActivities(typeof(DefineStreamContextActivity).Assembly);
 
-            mt.AddSagaStateMachine<StreamContextStateMachine, StreamContextMachineState>(_ =>
-            {
-                _.ConcurrentMessageLimit = 1;
-                _.UseInMemoryOutbox();
-                _.UseMessageRetry(r => r.Intervals(2, 1000));
-            })
+            mt.AddSagaStateMachine<StreamContextStateMachine, StreamContextMachineState>()
             .RedisRepository("127.0.0.1");
-            mt.AddSagaStateMachine<StreamEventTypeStateMachine, StreamEventTypeMachineState>(_ =>
-            {
-                _.ConcurrentMessageLimit = 1;
-                _.UseInMemoryOutbox();
-                _.UseMessageRetry(r => r.Intervals(2, 1000));
-            })
+            mt.AddSagaStateMachine<StreamEventTypeStateMachine, StreamEventTypeMachineState>()
             .RedisRepository("127.0.0.1");
-
-            //(typeof(StreamEventTypeStateMachineDefinition))
-            //  .RedisRepository("127.0.0.1");
+            mt.AddSagaStateMachine<LifeStreamStateMachine, LifeStreamMachineState>()
+            .RedisRepository("127.0.0.1");
 
             mt.UsingRabbitMq((context, cfg) =>
             {
+                cfg.ConcurrentMessageLimit = 1;
+                cfg.UseInMemoryOutbox();
+                cfg.UseMessageRetry(r => r.Intervals(2, 1000));
                 cfg.Host("localhost");
                 cfg.ConfigureEndpoints(context);
             });

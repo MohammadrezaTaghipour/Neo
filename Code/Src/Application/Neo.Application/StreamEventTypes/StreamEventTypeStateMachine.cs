@@ -20,9 +20,8 @@ public class StreamEventTypeStateMachine :
                     await context.RespondAsync(
                         new StreamEventTypeStatusRequestExecuted
                         {
-                            Id = null,
                             Faulted = true,
-                            ErrorMessage = $"Item With id:{context.Message.Id} not found."
+                            ErrorMessage = $"Item with id:'{context.Message.Id}' not found."
                         });
                 }
             }));
@@ -118,9 +117,9 @@ public class StreamEventTypeStateMachine :
     public State Faulted { get; private set; }
 
 
-    public Event<StreamEventTypeStatusRequested> StatusRequested { get; private set; }
     public Event<StreamEventTypeActivitiesCompleted> ActivitiesCompleted { get; private set; }
     public Event<ActivitiesFaulted> ActivitiesFaulted { get; private set; }
+    public Event<StreamEventTypeStatusRequested> StatusRequested { get; private set; }
     public Event<DefiningStreamEventTypeRequested> DefiningRequested { get; private set; }
     public Event<DefiningStreamEventTypeRequestExecuted> DefiningExecuted { get; private set; }
     public Event<ModifyingStreamEventTypeRequested> ModifyingRequested { get; private set; }

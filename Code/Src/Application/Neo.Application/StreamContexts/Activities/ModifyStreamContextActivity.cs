@@ -55,12 +55,6 @@ public class ModifyStreamContextActivity :
     public async Task<CompensationResult> Compensate(
         CompensateContext<StreamContextActivityLog> context)
     {
-        await _commandBus.Dispatch(new RemovingStreamContextRequested
-        {
-            Id = context.Log.StreamContextId
-        }, context.CancellationToken)
-            .ConfigureAwait(false);
-
         return context.Compensated();
     }
 }

@@ -45,7 +45,7 @@ public class DefineStreamContextActivity :
                 new ActivitiesFaulted
                 {
                     Id = context.Arguments.Id,
-                    ErrorCode = (e as BusinessException)?.ErrorCode ?? "No Error Code",
+                    ErrorCode = (e as BusinessException)?.ErrorCode,
                     ErrorMessage = e.Message
                 });
             throw;

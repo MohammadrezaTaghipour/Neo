@@ -1,23 +1,22 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts;
-using Neo.Application.Contracts.StreamEventTypes;
+using Neo.Application.Contracts.LifeStreams;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Domain;
 
-namespace Neo.Application.StreamEventTypes.Activities;
+namespace Neo.Application.LifeStreams.Activities;
 
-public class ModifyStreamEventTypeActivity :
-    IActivity<ModifyingStreamEventTypeRequested, StreamEventTypeActivityLog>
+public class ModifyLifeStreamActivity :
+    IActivity<ModifyingLifeStreamRequested, LifeStreamActivityLog>
 {
     private readonly ICommandBus _commandBus;
-
-    public ModifyStreamEventTypeActivity(ICommandBus commandBus)
+    public ModifyLifeStreamActivity(ICommandBus commandBus)
     {
         _commandBus = commandBus;
     }
 
     public async Task<ExecutionResult> Execute(
-        ExecuteContext<ModifyingStreamEventTypeRequested> context)
+        ExecuteContext<ModifyingLifeStreamRequested> context)
     {
         try
         {
@@ -27,19 +26,20 @@ public class ModifyStreamEventTypeActivity :
                 .ConfigureAwait(false);
 
             await context.Send(context.SourceAddress,
-                new ModifyingStreamEventTypeRequestExecuted
+                new ModifyingLifeStreamRequestExecuted
                 {
                     Id = request.Id
-                }).ConfigureAwait(false);
+                });
 
             return context.Completed(
-                new StreamEventTypeActivityLog
+                new LifeStreamActivityLog
                 {
-                    StreamEventTypeId = request.Id
+                    LifeStreamId = request.Id
                 });
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             await context.Send(context.SourceAddress,
                 new ActivitiesFaulted
                 {
@@ -52,7 +52,7 @@ public class ModifyStreamEventTypeActivity :
     }
 
     public async Task<CompensationResult> Compensate(
-        CompensateContext<StreamEventTypeActivityLog> context)
+        CompensateContext<LifeStreamActivityLog> context)
     {
         return context.Compensated();
     }
