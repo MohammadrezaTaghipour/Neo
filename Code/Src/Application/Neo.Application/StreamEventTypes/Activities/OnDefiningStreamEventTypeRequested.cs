@@ -3,7 +3,6 @@ using MassTransit.Courier.Contracts;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Application.ReferentialPointers;
-using Neo.Domain.Contracts.ReferentialPointers;
 
 namespace Neo.Application.StreamEventTypes.Activities;
 
@@ -44,7 +43,7 @@ public class OnDefiningStreamEventTypeRequested :
         await builder.AddSubscription(new Uri("queue:stream-event-type-machine-state"),
                 RoutingSlipEvents.Completed,
                 RoutingSlipEventContents.Data,
-                x => x.Send(new StreamEventTypeActivityCompleted
+                x => x.Send(new StreamEventTypeActivitiesCompleted
                 {
                     Id = context.Message.Id
                 }));
@@ -74,6 +73,6 @@ public class OnDefiningStreamEventTypeRequested :
     {
         machineState.ReferentialPointerNextState.DefinedItems
             .Add(new ReferentialStateRecord(request.Id,
-                ReferentialPointerType.StreamContext.ToString()));
+                ReferentialPointerType.StreamEventType.ToString()));
     }
 }

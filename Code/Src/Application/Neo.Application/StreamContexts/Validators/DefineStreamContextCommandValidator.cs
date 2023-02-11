@@ -1,8 +1,6 @@
 ﻿using FluentValidation;
 using Neo.Application.Contracts.StreamContexts;
-using Neo.Domain.Contracts.LifeStreams;
 using Neo.Domain.Contracts.StreamContexts;
-using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Application.StreamContexts.Validators;

@@ -1,6 +1,5 @@
 ﻿using MassTransit;
-using MassTransit.Courier.Contracts;
-using Neo.Application.Contracts.ReferentialPointers;
+using Neo.Application.Contracts;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Application.StreamEventTypes.Activities;
 
@@ -18,24 +17,24 @@ public class StreamEventTypeStateMachine :
             {
                 if (context.RequestId.HasValue)
                 {
-                    await context.RespondAsync(new StreamEventTypeStatusRequestExecuted
-                    {
-                        Id = null,
-                        ErrorMessage = $"Item With id:{context.Message.Id} not found."
-                    });
+                    await context.RespondAsync(
+                        new StreamEventTypeStatusRequestExecuted
+                        {
+                            Id = null,
+                            Faulted = true,
+                            ErrorMessage = $"Item With id:{context.Message.Id} not found."
+                        });
                 }
             }));
         });
-        Event(() => ActivityCompleted, x => x.CorrelateById(m => m.Message.Id));
+        Event(() => ActivitiesCompleted, x => x.CorrelateById(m => m.Message.Id));
+        Event(() => ActivitiesFaulted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => DefiningRequested, x => x.CorrelateById(m => m.Message.Id));
         Event(() => DefiningExecuted, x => x.CorrelateById(m => m.Message.Id));
-        Event(() => DefiningFaulted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => ModifyingRequested, x => x.CorrelateById(m => m.Message.Id));
         Event(() => ModifyingExecuted, x => x.CorrelateById(m => m.Message.Id));
-        Event(() => ModifyingFaulted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => RemovingRequested, x => x.CorrelateById(m => m.Message.Id));
         Event(() => RemovingExecuted, x => x.CorrelateById(m => m.Message.Id));
-        Event(() => RemovingFaulted, x => x.CorrelateById(m => m.Message.Id));
 
         InstanceState(x => x.CurrentState);
 
@@ -51,24 +50,20 @@ public class StreamEventTypeStateMachine :
         During(Defining,
             When(DefiningExecuted)
                 .TransitionTo(ReferentialSyncing),
-            When(DefiningFaulted)
-                .Then(_ =>
-                {
-                    _.Saga.ErrorCode = _.Message.ErrorCode;
-                    _.Saga.ErrorMessage = _.Message.ErrorMessage;
-                })
+            When(ActivitiesFaulted)
+                .Activity(_ => _.OfType<OnStreamEventTypeActivitiesFaulted>())
                 .TransitionTo(Faulted),
-            When(ActivityCompleted)
+            When(ActivitiesCompleted)
                 .TransitionTo(Idle));
 
         During(ReferentialSyncing,
-            When(ActivityCompleted)
+            When(ActivitiesCompleted)
                 .TransitionTo(Idle));
 
         During(Idle,
             Ignore(DefiningExecuted),
             Ignore(RemovingExecuted),
-            Ignore(ActivityCompleted),
+            Ignore(ActivitiesCompleted),
             When(ModifyingRequested)
                 .Activity(_ => _.OfType<OnModifyingStreamEventTypeRequested>()
                 .RespondAsync(_ =>
@@ -89,23 +84,15 @@ public class StreamEventTypeStateMachine :
         During(Modifying,
             When(ModifyingExecuted)
                 .TransitionTo(Idle),
-            When(ModifyingFaulted)
-                .Then(_ =>
-                {
-                    _.Saga.ErrorCode = _.Message.ErrorCode;
-                    _.Saga.ErrorMessage = _.Message.ErrorMessage;
-                })
+            When(ActivitiesFaulted)
+                .Activity(_ => _.OfType<OnStreamEventTypeActivitiesFaulted>())
                 .TransitionTo(Idle));
 
         During(Removing,
             When(RemovingExecuted)
                 .TransitionTo(ReferentialSyncing),
-            When(RemovingFaulted)
-                .Then(_ =>
-                {
-                    _.Saga.ErrorCode = _.Message.ErrorCode;
-                    _.Message.ErrorMessage = _.Message.ErrorMessage;
-                })
+            When(ActivitiesFaulted)
+                .Activity(_ => _.OfType<OnStreamEventTypeActivitiesFaulted>())
                 .TransitionTo(Idle));
 
         DuringAny(
@@ -116,10 +103,9 @@ public class StreamEventTypeStateMachine :
                             Id = x.Saga.StreamEventTypeId,
                             Completed = x.Saga.CurrentState == nameof(Idle) ||
                                         x.Saga.CurrentState == nameof(Faulted),
-                            Faulted = !string.IsNullOrEmpty(x.Saga.ErrorCode) ||
-                                      !string.IsNullOrEmpty(x.Saga.ErrorMessage),
-                            ErrorCode = x.Saga.ErrorCode,
-                            ErrorMessage = x.Saga.ErrorMessage
+                            Faulted = x.Saga.Error != null,
+                            ErrorCode = x.Saga.Error?.Code,
+                            ErrorMessage = x.Saga.Error?.Message
                         })));
     }
 
@@ -133,14 +119,12 @@ public class StreamEventTypeStateMachine :
 
 
     public Event<StreamEventTypeStatusRequested> StatusRequested { get; private set; }
-    public Event<StreamEventTypeActivityCompleted> ActivityCompleted { get; private set; }
+    public Event<StreamEventTypeActivitiesCompleted> ActivitiesCompleted { get; private set; }
+    public Event<ActivitiesFaulted> ActivitiesFaulted { get; private set; }
     public Event<DefiningStreamEventTypeRequested> DefiningRequested { get; private set; }
     public Event<DefiningStreamEventTypeRequestExecuted> DefiningExecuted { get; private set; }
-    public Event<DefiningStreamEventTypeFaulted> DefiningFaulted { get; private set; }
     public Event<ModifyingStreamEventTypeRequested> ModifyingRequested { get; private set; }
     public Event<ModifyingStreamEventTypeRequestExecuted> ModifyingExecuted { get; private set; }
-    public Event<ModifyingStreamEventTypeFaulted> ModifyingFaulted { get; private set; }
     public Event<RemovingStreamEventTypeRequested> RemovingRequested { get; private set; }
     public Event<RemovingStreamEventTypeRequestExecuted> RemovingExecuted { get; private set; }
-    public Event<RemovingStreamEventTypeFaulted> RemovingFaulted { get; private set; }
 }

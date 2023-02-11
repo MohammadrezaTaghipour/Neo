@@ -22,16 +22,6 @@ public class ReferentialPointer : EventSourcedAggregate<ReferentialPointerState>
         return refPointer;
     }
 
-    public long CalculateCounter()
-    {
-        return State.Pointers.Values.Sum(a => a.Counter);
-    }
-
-    public bool IsPointerAlreadyReferenced(ReferentialPointerId id)
-    {
-        return State.Pointers.ContainsKey(id.ToString());
-    }
-
     public bool IsRemoved => State.IsRemoved;
 
     public void MarkAsUsed(ReferentialPointerArg arg)
@@ -48,7 +38,7 @@ public class ReferentialPointer : EventSourcedAggregate<ReferentialPointerState>
 
     public void Remove(ReferentialPointerArg arg)
     {
-        if (CalculateCounter() > 0)
+        if (State.Counter > 0)
             throw new ReferentialPointerCantBeRemovedDueToItsUsage();
         Apply(new ReferentialPointerRemoved(arg.Id,
             arg.PointerType.ToLower()));

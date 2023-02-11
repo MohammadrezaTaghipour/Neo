@@ -6,8 +6,8 @@ using Neo.Application.ReferentialPointers;
 
 namespace Neo.Application.StreamContexts.Activities;
 
-public class OnDefiningStreamContextRequested :
-    IStateMachineActivity<StreamContextMachineState, DefiningStreamContextRequested>
+public class OnRemovingStreamContextRequested :
+    IStateMachineActivity<StreamContextMachineState, RemovingStreamContextRequested>
 {
     public void Accept(StateMachineVisitor visitor)
     {
@@ -15,8 +15,8 @@ public class OnDefiningStreamContextRequested :
     }
 
     public async Task Execute(BehaviorContext<StreamContextMachineState,
-        DefiningStreamContextRequested> context,
-        IBehavior<StreamContextMachineState, DefiningStreamContextRequested> next)
+        RemovingStreamContextRequested> context,
+        IBehavior<StreamContextMachineState, RemovingStreamContextRequested> next)
     {
         context.Saga.StreamContextId = context.Message.Id;
 
@@ -24,9 +24,9 @@ public class OnDefiningStreamContextRequested :
 
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
 
-        builder.AddActivity(nameof(DefineStreamContextActivity),
-            RoutingSlipAddress.ForQueue<DefineStreamContextActivity,
-                DefiningStreamContextRequested>(),
+        builder.AddActivity(nameof(RemoveStreamContextActivity),
+            RoutingSlipAddress.ForQueue<RemoveStreamContextActivity,
+                RemovingStreamContextRequested>(),
             context.Message);
 
         builder.AddActivity(nameof(SyncReferentialPointersActivity),
@@ -54,8 +54,8 @@ public class OnDefiningStreamContextRequested :
     }
 
     public Task Faulted<TException>(BehaviorExceptionContext<StreamContextMachineState,
-        DefiningStreamContextRequested, TException> context,
-        IBehavior<StreamContextMachineState, DefiningStreamContextRequested> next)
+        RemovingStreamContextRequested, TException> context,
+        IBehavior<StreamContextMachineState, RemovingStreamContextRequested> next)
         where TException : Exception
     {
         return next.Faulted(context);
@@ -63,21 +63,26 @@ public class OnDefiningStreamContextRequested :
 
     public void Probe(ProbeContext context)
     {
-        context.CreateScope("defining-streamContext");
+        context.CreateScope("removing-streamContext");
     }
 
     private static void UpdateReferentialPointersState(
         StreamContextMachineState machineState,
-        DefiningStreamContextRequested request)
+        RemovingStreamContextRequested request)
     {
-        machineState.ReferentialPointerNextState.DefinedItems
+        machineState.ReferentialPointerCurrentState = machineState
+            .ReferentialPointerNextState.Clone();
+        machineState.ReferentialPointerNextState = new();
+
+        machineState.ReferentialPointerNextState.RemovedItems
             .Add(new ReferentialStateRecord(request.Id,
                 ReferentialPointerType.StreamContext.ToString()));
 
-        foreach (var item in request.StreamEventTypes)
+        foreach (var item in machineState.ReferentialPointerCurrentState.UsedItems)
         {
-            machineState.ReferentialPointerNextState.UsedItems
-                .Add(new ReferentialStateRecord(item.StreamEventTypeId,
+            machineState.ReferentialPointerNextState.UnusedItems
+                .Add(new ReferentialStateRecord(
+                    item.Id,
                     ReferentialPointerType.StreamContext.ToString()));
         }
     }

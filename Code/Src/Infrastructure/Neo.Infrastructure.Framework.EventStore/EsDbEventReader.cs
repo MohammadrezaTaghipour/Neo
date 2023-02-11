@@ -27,20 +27,42 @@ public class EsDbEventReader : IEventReader
         int count,
         CancellationToken cancellationToken)
     {
-        var stream = _client.ReadStreamAsync(Direction.Forwards,
-           streamName,
-           StreamPosition.Start,
-           4096,
-           cancellationToken: cancellationToken);
+        if (!await StreamExists(streamName, cancellationToken))
+            return null;
 
-        if (await stream.ReadState != ReadState.Ok)
-            throw new Exception($"{stream.ReadState}");
+        var stream = _client.ReadStreamAsync(
+            Direction.Forwards,
+            streamName,
+            StreamPosition.Start,
+            count,
+            cancellationToken: cancellationToken);
 
-        var resolvedEvents = await stream
-            .ToArrayAsync(cancellationToken: cancellationToken)
-            .ConfigureAwait(false);
+        try
+        {
+            var resolvedEvents = await stream
+                .ToArrayAsync(cancellationToken)
+                .ConfigureAwait(false);
 
-        return ToStreamEvents(resolvedEvents);
+            return ToStreamEvents(resolvedEvents);
+        }
+        catch (Exception e)
+        {
+            throw new ReadFromStreamException(e.Message, e);
+        }
+    }
+
+    async Task<bool> StreamExists(StreamName stream, CancellationToken cancellationToken)
+    {
+        var read = _client.ReadStreamAsync(
+            Direction.Backwards,
+            stream,
+            StreamPosition.End,
+            1,
+            cancellationToken: cancellationToken
+        );
+
+        var state = await read.ReadState.ConfigureAwait(false);
+        return state == ReadState.Ok;
     }
 
     StreamEvent[] ToStreamEvents(ResolvedEvent[] resolvedEvents)

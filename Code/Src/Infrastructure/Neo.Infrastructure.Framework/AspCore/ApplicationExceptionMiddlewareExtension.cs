@@ -5,10 +5,9 @@ namespace Neo.Infrastructure.Framework.AspCore
     public static class ApplicationExceptionMiddlewareExtension
     {
         public static void UseApplicationExceptionMiddleware(
-            this IApplicationBuilder applicationBuilder, string bcCode)
+            this IApplicationBuilder applicationBuilder)
         {
-            applicationBuilder.UseMiddleware(typeof(ExceptionHandlerMiddleware), bcCode);
+            applicationBuilder.UseMiddleware(typeof(ExceptionHandlerMiddleware));
         }
-
     }
 }

@@ -4,7 +4,6 @@ using TechTalk.SpecFlow;
 using FluentAssertions;
 using Neo.Specs.ScreenPlay.StreamContexts.Commands;
 using Neo.Specs.ScreenPlay.StreamContexts.Questions;
-using Suzianna.Rest.Screenplay.Questions;
 
 namespace Neo.Specs.Features.StreamContexts.Then;
 
@@ -33,11 +32,9 @@ public class ICanFindStreamContextWithAboveProperties
     private void AssertDefinition(string expectedTitle)
     {
         var expected = _context.Get<DefineStreamContextCommand>();
-        expected.Id = _actor.AsksFor(LastResponse.Content<Guid>());
         var actual = _actor.AsksFor(new GetStreamContextByIdQuestion(expected.Id));
 
         actual.Should().BeEquivalentTo(expected, opt => opt
-            .Excluding(_ => _.Id)
             .Excluding(_ => _.StreamEventTypes));
 
         if (expected.StreamEventTypes.Any())
@@ -49,12 +46,10 @@ public class ICanFindStreamContextWithAboveProperties
 
     private void AssertModification(string expectedTitle)
     {
-        var id = _context.Get<Guid>(expectedTitle);
         var expected = _context.Get<ModifyStreamContextCommand>();
         var actual = _actor.AsksFor(new GetStreamContextByIdQuestion(expected.Id));
 
         actual.Should().BeEquivalentTo(expected, opt => opt
-            .Excluding(_ => _.Id)
             .Excluding(_ => _.StreamEventTypes)
             .Excluding(_ => _.Version));
 

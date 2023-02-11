@@ -38,8 +38,8 @@ public class ReferentialPointerApplicationService :
     public async Task Handle(ReferentialPointerMarkedAsUsed command,
         CancellationToken cancellationToken)
     {
-        var refPointer = await _repository.GetById(command.Id, cancellationToken)
-            .ConfigureAwait(false);
+        var refPointer = await _repository.GetById(command.Id,
+            cancellationToken).ConfigureAwait(false);
         if (!IsPointerAlreadyReferenced(refPointer, command.Id))
         {
             var arg = new ReferentialPointerArg
@@ -56,8 +56,8 @@ public class ReferentialPointerApplicationService :
     public async Task Handle(ReferentialPointerMarkedAsUnused command,
         CancellationToken cancellationToken)
     {
-        var refPointer = await _repository.GetById(command.Id, cancellationToken)
-            .ConfigureAwait(false);
+        var refPointer = await _repository.GetById(command.Id,
+            cancellationToken).ConfigureAwait(false);
         if (!IsPointerAlreadyReferenced(refPointer, command.Id))
         {
             var arg = new ReferentialPointerArg
@@ -66,8 +66,8 @@ public class ReferentialPointerApplicationService :
                 PointerType = command.PointerType
             };
             refPointer.MarkAsUnused(arg);
-            await _repository.Add(command.Id, refPointer,
-                cancellationToken).ConfigureAwait(false);
+            await _repository.Add(command.Id, refPointer, cancellationToken)
+                .ConfigureAwait(false);
         }
     }
 
@@ -87,9 +87,11 @@ public class ReferentialPointerApplicationService :
             .ConfigureAwait(false);
     }
 
-    static bool IsPointerAlreadyReferenced(ReferentialPointer refPointer,
+    static bool IsPointerAlreadyReferenced(
+        ReferentialPointer refPointer,
         ReferentialPointerId newReferentialPointerId)
     {
-        return refPointer.IsPointerAlreadyReferenced(newReferentialPointerId);
+        //TODO: handle idempotency 
+        return false;
     }
 }

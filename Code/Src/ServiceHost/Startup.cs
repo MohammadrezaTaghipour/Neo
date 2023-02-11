@@ -2,19 +2,15 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Neo.Application.Contracts.StreamEventTypes;
-using Neo.Application.ReferentialPointers;
 using Neo.Application.StreamContexts;
 using Neo.Application.StreamContexts.Activities;
 using Neo.Application.StreamEventTypes;
-using Neo.Application.StreamEventTypes.Activities;
 using Neo.Application.StreamEventTypes.Validators;
 using Neo.Domain.Contracts.ReferentialPointers;
 using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.EventStore.Configurations;
 using Neo.Infrastructure.Framework.AspCore;
 using Neo.Infrastructure.Framework.Configurations;
-using Neo.Infrastructure.Framework.Domain;
 using Neo.Infrastructure.Framework.Swagger;
 using ServiceHost.Configurations;
 
@@ -46,7 +42,7 @@ public class Startup
 
 
         services.AddFluentValidationAutoValidation();
-        services.AddValidatorsFromAssemblyContaining<DefineStreamEventTypeCommandValidator>();
+        services.AddValidatorsFromAssembly(typeof(DefineStreamEventTypeCommandValidator).Assembly);
 
         services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
         services.AddMassTransit(mt =>
@@ -54,8 +50,12 @@ public class Startup
             mt.AddActivities(typeof(DefineStreamContextActivity).Assembly);
 
             mt.AddSagaStateMachine<StreamContextStateMachine, StreamContextMachineState>(_ =>
-                _.UseInMemoryOutbox())
-              .RedisRepository("127.0.0.1");
+            {
+                _.ConcurrentMessageLimit = 1;
+                _.UseInMemoryOutbox();
+                _.UseMessageRetry(r => r.Intervals(2, 1000));
+            })
+            .RedisRepository("127.0.0.1");
             mt.AddSagaStateMachine<StreamEventTypeStateMachine, StreamEventTypeMachineState>(_ =>
             {
                 _.ConcurrentMessageLimit = 1;
@@ -77,7 +77,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app)
     {
-        app.UseApplicationExceptionMiddleware("NEO");
+        app.UseApplicationExceptionMiddleware();
         app.UseSwaggerDocs();
         app.UseCors("CorsPolicy");
         app.UseMvcWithDefaultRoute();

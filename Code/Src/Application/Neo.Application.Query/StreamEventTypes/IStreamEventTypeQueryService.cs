@@ -9,7 +9,7 @@ namespace Neo.Application.Query.StreamEventTypes;
 
 public interface IStreamEventTypeQueryService : IQueryService
 {
-    Task<StreamEventTypeResponse> Get(Guid id, CancellationToken cancellationToken);
+    Task<StreamEventTypeResponse?> Get(Guid id, CancellationToken cancellationToken);
 }
 
 public class StreamEventTypeQueryService : IStreamEventTypeQueryService
@@ -24,15 +24,15 @@ public class StreamEventTypeQueryService : IStreamEventTypeQueryService
         _statusRequestClient = statusRequestClient;
     }
 
-    public async Task<StreamEventTypeResponse> Get(Guid id,
+    public async Task<StreamEventTypeResponse?> Get(Guid id,
         CancellationToken cancellationToken)
     {
         var streamEventTypeStatus = (await _statusRequestClient
-                .GetResponse<StreamEventTypeStatusRequestExecuted>(
-                new StreamEventTypeStatusRequested
-                {
-                    Id = id
-                }).ConfigureAwait(false)).Message;
+               .GetResponse<StreamEventTypeStatusRequestExecuted>(
+               new StreamEventTypeStatusRequested
+               {
+                   Id = id
+               }).ConfigureAwait(false)).Message;
         if (streamEventTypeStatus.Faulted)
             return StreamEventTypeResponse.CreateFaulted(
                 new StatusResponse(streamEventTypeStatus.Completed,
@@ -43,6 +43,9 @@ public class StreamEventTypeQueryService : IStreamEventTypeQueryService
             .Load<StreamEventType, StreamEventTypeState>(
                 GetStreamName(new StreamEventTypeId(id)), cancellationToken)
             .ConfigureAwait(false);
+
+        if (streamEventType == null)
+            return null;
 
         return new StreamEventTypeResponse(
             streamEventType.State.Id.Value,

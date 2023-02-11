@@ -40,7 +40,7 @@ public class OnRemovingStreamEventTypeRequested :
         await builder.AddSubscription(new Uri("queue:stream-event-type-machine-state"),
                  RoutingSlipEvents.Completed,
                  RoutingSlipEventContents.Data,
-                 x => x.Send(new StreamEventTypeActivityCompleted
+                 x => x.Send(new StreamEventTypeActivitiesCompleted
                  {
                      Id = context.Message.Id
                  }));
@@ -68,10 +68,9 @@ public class OnRemovingStreamEventTypeRequested :
         StreamEventTypeMachineState machineState,
         RemovingStreamEventTypeRequested request)
     {
-
         machineState.ReferentialPointerNextState = new();
         machineState.ReferentialPointerNextState.RemovedItems
             .Add(new ReferentialStateRecord(request.Id,
-                ReferentialPointerType.StreamContext.ToString()));
+                ReferentialPointerType.StreamEventType.ToString()));
     }
 }

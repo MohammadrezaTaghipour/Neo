@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamContexts;
+using Neo.Application.Contracts.StreamEventTypes;
 
 namespace Neo.Gateways.RestApi.StreamContexts;
 
@@ -8,11 +9,18 @@ namespace Neo.Gateways.RestApi.StreamContexts;
 [Route("api/[controller]")]
 public class StreamContextsController : ControllerBase
 {
-    private readonly IPublishEndpoint _publishEndpoint;
+    IRequestClient<DefiningStreamContextRequested> _definingClient;
+    IRequestClient<ModifyingStreamContextRequested> _modifyingClient;
+    IRequestClient<RemovingStreamContextRequested> _removingClient;
 
-    public StreamContextsController(IPublishEndpoint publishEndpoint)
+    public StreamContextsController(
+        IRequestClient<DefiningStreamContextRequested> defineClient,
+        IRequestClient<ModifyingStreamContextRequested> modifyClient,
+        IRequestClient<RemovingStreamContextRequested> removeClient)
     {
-        _publishEndpoint = publishEndpoint;
+        _definingClient = defineClient;
+        _modifyingClient = modifyClient;
+        _removingClient = removeClient;
     }
 
     [HttpPost]
@@ -20,8 +28,8 @@ public class StreamContextsController : ControllerBase
         DefiningStreamContextRequested command,
         CancellationToken cancellationToken)
     {
-        command.Id = Guid.NewGuid();
-        await _publishEndpoint.Publish(command, cancellationToken)
+        await _definingClient
+            .GetResponse<DefiningStreamContextRequested>(command, cancellationToken)
             .ConfigureAwait(false);
         return Accepted(command.Id);
     }
@@ -32,7 +40,8 @@ public class StreamContextsController : ControllerBase
         CancellationToken cancellationToken)
     {
         command.Id = id;
-        await _publishEndpoint.Publish(command, cancellationToken)
+        await _modifyingClient
+            .GetResponse<ModifyingStreamContextRequested>(command, cancellationToken)
             .ConfigureAwait(false);
         return Accepted();
     }
@@ -46,7 +55,8 @@ public class StreamContextsController : ControllerBase
             Id = id,
             Version = version
         };
-        await _publishEndpoint.Publish(command, cancellationToken)
+        await _removingClient
+            .GetResponse<RemovingStreamContextRequested>(command, cancellationToken)
             .ConfigureAwait(false);
         return NoContent();
     }

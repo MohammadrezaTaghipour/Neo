@@ -1,27 +1,29 @@
 ﻿using Neo.Specs.Features.Shared;
+using System.Collections.Concurrent;
 
 namespace Suzianna.Rest.Screenplay.Questions;
 
 public static class LastResponseException
 {
-    private static ErrorResponse _response;
+    private static ConcurrentQueue<ErrorResponse> _responses = new();
 
     public static void Set(string errorCode, string errorMessage)
     {
-        _response = new ErrorResponse
+        _responses.Enqueue(new ErrorResponse
         {
             Code = errorCode,
             Message = errorMessage
-        };
+        });
     }
 
     public static ErrorResponse Content()
     {
-        return _response;
+        _responses.TryDequeue(out var response);
+        return response;
     }
 
     public static bool HasException()
     {
-        return _response != null;
+        return _responses.Count > 0;
     }
 }

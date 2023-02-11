@@ -20,7 +20,7 @@ public class StreamContextModelTransformer
         var model = table.CreateInstance<StreamContextModel>();
         return new DefineStreamContextCommand
         {
-            Id = default,
+            Id = Guid.NewGuid(),
             Title = model.Title,
             Description = model.Description,
             StreamEventTypes = new List<StreamEventTypeCommandItem>()

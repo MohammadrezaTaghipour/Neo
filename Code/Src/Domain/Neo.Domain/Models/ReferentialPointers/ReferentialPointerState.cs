@@ -1,14 +1,14 @@
 ﻿using Neo.Domain.Contracts.ReferentialPointers;
 using Neo.Infrastructure.Framework.Domain;
-using System.Collections.Concurrent;
 
 namespace Neo.Domain.Models.ReferentialPointers;
 
 public record ReferentialPointerState : AggregateState<ReferentialPointerState>
 {
-    readonly ConcurrentDictionary<string, ReferentialPointerCounter> _pointers = new();
+    //readonly ConcurrentDictionary<string, ReferentialPointerCounter> _pointers = new();
+    //public IReadOnlyDictionary<string, ReferentialPointerCounter> Pointers => _pointers;
 
-    public IReadOnlyDictionary<string, ReferentialPointerCounter> Pointers => _pointers;
+    public int Counter { get; private set; }
     public bool IsRemoved { get; private set; }
 
     public override ReferentialPointerState When(IDomainEvent eventToHandle)
@@ -18,35 +18,30 @@ public record ReferentialPointerState : AggregateState<ReferentialPointerState>
 
     private ReferentialPointerState When(ReferentialPointerDefined eventToHandle)
     {
-        var counter = new ReferentialPointerCounter(
-                eventToHandle.Id.Value, eventToHandle.PointerType);
-        _pointers.TryAdd(eventToHandle.Id.Value.ToString(), counter);
-        return this;
+        return this with
+        {
+            Counter = 0
+        };
     }
 
     private ReferentialPointerState When(ReferentialPointerMarkedAsUsed eventToHandle)
     {
-        if (_pointers.TryGetValue(eventToHandle.Id.Value.ToString(), out var value))
+        return this with
         {
-            _pointers.TryUpdate(eventToHandle.Id.Value.ToString(),
-                value.Increase(), value);
-        }
-        return this;
+            Counter = Counter + 1
+        };
     }
 
     private ReferentialPointerState When(ReferentialPointerMarkedAsUnused eventToHandle)
     {
-        if (_pointers.TryGetValue(eventToHandle.Id.Value.ToString(), out var value))
+        return this with
         {
-            _pointers.TryUpdate(eventToHandle.Id.Value.ToString(),
-                value.Decrease(), value);
-        }
-        return this;
+            Counter = Counter - 1
+        };
     }
 
     private ReferentialPointerState When(ReferentialPointerRemoved eventToHandle)
     {
-        _pointers.Clear();
         return this with
         {
             IsRemoved = true

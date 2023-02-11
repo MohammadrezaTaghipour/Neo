@@ -1,6 +1,8 @@
-﻿namespace Neo.Application.Contracts.StreamEventTypes;
+﻿
 
-public class DefiningStreamEventTypeFaulted
+namespace Neo.Application.Contracts;
+
+public class ActivitiesFaulted
 {
     public Guid Id { get; set; }
     public string ErrorCode { get; set; }

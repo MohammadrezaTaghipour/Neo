@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Neo.Application.Contracts;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Domain;
@@ -40,7 +41,7 @@ public class RemoveStreamContextActivity :
         catch (Exception e)
         {
             await context.Send(context.SourceAddress,
-                new RemovingStreamContextFaulted
+                new ActivitiesFaulted
                 {
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,

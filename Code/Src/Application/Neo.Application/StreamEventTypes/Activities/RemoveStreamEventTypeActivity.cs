@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Neo.Application.Contracts;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Domain;
@@ -39,8 +40,9 @@ public class RemoveStreamEventTypeActivity :
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             await context.Send(context.SourceAddress,
-                new RemovingStreamEventTypeFaulted
+                new ActivitiesFaulted
                 {
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,

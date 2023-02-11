@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Neo.Application.Contracts;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Domain;
@@ -39,11 +40,12 @@ public class DefineStreamContextActivity :
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.Message);
             await context.Send(context.SourceAddress,
-                new DefiningStreamContextFaulted
+                new ActivitiesFaulted
                 {
                     Id = context.Arguments.Id,
-                    ErrorCode = (e as BusinessException)?.ErrorCode,
+                    ErrorCode = (e as BusinessException)?.ErrorCode ?? "No Error Code",
                     ErrorMessage = e.Message
                 });
             throw;

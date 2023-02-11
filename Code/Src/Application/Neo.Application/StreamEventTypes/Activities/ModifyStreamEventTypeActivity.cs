@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using Neo.Application.Contracts;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Domain;
@@ -40,7 +41,7 @@ public class ModifyStreamEventTypeActivity :
         catch (Exception e)
         {
             await context.Send(context.SourceAddress,
-                new ModifyingStreamEventTypeFaulted
+                new ActivitiesFaulted
                 {
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,

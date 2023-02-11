@@ -1,6 +1,6 @@
 ﻿namespace Neo.Application.Contracts.StreamEventTypes;
 
-public class StreamEventTypeActivityCompleted
+public class ModifyingStreamEventTypeRequestExecuted
 {
     public Guid Id { get; set; }
 }

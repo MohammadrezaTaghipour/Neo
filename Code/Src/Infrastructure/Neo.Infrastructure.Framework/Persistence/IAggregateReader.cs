@@ -4,7 +4,7 @@ namespace Neo.Infrastructure.Framework.Persistence
 {
     public interface IAggregateReader
     {
-        Task<T> Load<T, TState>(StreamName streamName,
+        Task<T?> Load<T, TState>(StreamName streamName,
             CancellationToken cancellationToken)
         where T : EventSourcedAggregate<TState>
         where TState : AggregateState<TState>, new();
@@ -22,7 +22,7 @@ namespace Neo.Infrastructure.Framework.Persistence
             _domainEventFactory = domainEventFactory;
         }
 
-        public async Task<T> Load<T, TState>(StreamName streamName,
+        public async Task<T?> Load<T, TState>(StreamName streamName,
             CancellationToken cancellationToken)
             where T : EventSourcedAggregate<TState>
             where TState : AggregateState<TState>, new()
@@ -30,6 +30,8 @@ namespace Neo.Infrastructure.Framework.Persistence
             var resolvedEvents = await _eventReader.ReadEvents(
                 streamName, 4096, cancellationToken)
             .ConfigureAwait(false);
+            if (resolvedEvents == null || !resolvedEvents.Any())
+                return null;
             var domainEvents = _domainEventFactory.Create(resolvedEvents);
             return AggregateFactory.Create<T, TState>(domainEvents);
         }

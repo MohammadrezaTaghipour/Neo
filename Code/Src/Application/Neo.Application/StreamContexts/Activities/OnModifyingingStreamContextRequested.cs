@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MassTransit.Courier.Contracts;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Application.ReferentialPointers;
@@ -36,6 +37,14 @@ public class OnModifyingStreamContextRequested :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
+        await builder.AddSubscription(new Uri("queue:stream-context-machine-state"),
+        RoutingSlipEvents.Completed,
+        RoutingSlipEventContents.Data,
+        x => x.Send(new StreamContextActivitiesCompleted
+        {
+            Id = context.Message.Id
+        }));
+
         var routingSlip = builder.Build();
         await context.Execute(routingSlip);
 
@@ -59,31 +68,31 @@ public class OnModifyingStreamContextRequested :
         StreamContextMachineState machineState,
         ModifyingStreamContextRequested request)
     {
-        var currentState = machineState.ReferentialPointerCurrentState;
-        var nextState = machineState.ReferentialPointerNextState;
-
-        currentState = nextState.Clone();
-        nextState = new();
+        machineState.ReferentialPointerCurrentState = machineState
+             .ReferentialPointerNextState.Clone();
+        machineState.ReferentialPointerNextState = new();
 
         foreach (var item in request.StreamEventTypes)
         {
-            if (currentState.UsedItems
+            if (machineState.ReferentialPointerCurrentState.UsedItems
                 .FirstOrDefault(_ => _.Id == item.StreamEventTypeId) == null)
             {
-                nextState.UsedItems.Add(new ReferentialStateRecord(
-                    item.StreamEventTypeId,
-                    ReferentialPointerType.StreamContext.ToString()));
+                machineState.ReferentialPointerNextState.UsedItems
+                    .Add(new ReferentialStateRecord(
+                        item.StreamEventTypeId,
+                        ReferentialPointerType.StreamContext.ToString()));
             }
         }
 
-        foreach (var item in currentState.UnusedItems)
+        foreach (var item in machineState.ReferentialPointerCurrentState.UnusedItems)
         {
             if (request.StreamEventTypes
                 .FirstOrDefault(_ => _.StreamEventTypeId == item.Id) == null)
             {
-                nextState.UnusedItems.Add(new ReferentialStateRecord(
-                    item.Id,
-                    ReferentialPointerType.StreamContext.ToString()));
+                machineState.ReferentialPointerNextState.UnusedItems
+                    .Add(new ReferentialStateRecord(
+                        item.Id,
+                        ReferentialPointerType.StreamContext.ToString()));
             }
         }
     }

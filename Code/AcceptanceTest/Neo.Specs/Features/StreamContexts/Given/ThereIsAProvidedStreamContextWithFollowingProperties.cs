@@ -44,7 +44,6 @@ public class ThereIsAProvidedStreamContextWithFollowingProperties
     {
         var command = _context.Get<DefineStreamContextCommand>();
         _commandBus.Dispatch(command);
-        command.Id = _actor.AsksFor(LastResponse.Content<Guid>());
         _context.Set(command.Id, title);
     }
 }

@@ -14,15 +14,3 @@ public class ModifyingStreamEventTypeRequested : BaseRequest
     public IReadOnlyList<StreamEventTypeMetadataRequestItem> Metadata { get; set; }
     public long Version { get; set; }
 }
-
-public class ModifyingStreamEventTypeRequestExecuted
-{
-    public Guid Id { get; set; }
-}
-
-public class ModifyingStreamEventTypeFaulted
-{
-    public Guid Id { get; set; }
-    public string ErrorCode { get; set; }
-    public string ErrorMessage { get; set; }
-}

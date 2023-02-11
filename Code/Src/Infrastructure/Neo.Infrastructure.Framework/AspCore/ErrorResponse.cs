@@ -1,25 +1,33 @@
 ﻿
 
+using System.Text.Json.Serialization;
+
 namespace Neo.Infrastructure.Framework.AspCore
 {
     public class ErrorResponse
     {
-        public ErrorResponse(string message, string code)
+        private ErrorResponse()
         {
-            Message = message;
-            Code = code.Replace("_", "-");
+
         }
 
-        public ErrorResponse(string message, string code,
+        [JsonConstructor]
+        public ErrorResponse(string code, string message)
+        {
+            Code = code.Replace("_", "-");
+            Message = message;
+        }
+
+        public ErrorResponse(string code, string message,
             object additionalData)
         {
-            Message = message;
             Code = code;
+            Message = message;
             AdditionalData = additionalData;
         }
 
-        public string Message { get; }
-        public string Code { get; set; }
+        public string Message { get; private set; }
+        public string Code { get; private set; }
         public object AdditionalData { get; set; }
     }
 }
