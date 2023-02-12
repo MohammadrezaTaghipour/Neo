@@ -34,6 +34,8 @@ public class LifeStreamStateMachine :
         Event(() => ModifyingExecuted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => RemovingRequested, x => x.CorrelateById(m => m.Message.Id));
         Event(() => RemovingExecuted, x => x.CorrelateById(m => m.Message.Id));
+        Event(() => PartialModifyingRequested, x => x.CorrelateById(m => m.Message.LifeStreamId));
+        Event(() => PartialModifyingExecuted, x => x.CorrelateById(m => m.Message.Id));
 
         InstanceState(x => x.CurrentState);
 
@@ -49,11 +51,11 @@ public class LifeStreamStateMachine :
         During(Defining,
             When(DefiningExecuted)
                 .TransitionTo(ReferentialSyncing),
+            When(ActivitiesCompleted)
+                .TransitionTo(Idle),
             When(ActivitiesFaulted)
                 .Activity(_ => _.OfType<OnLifeStreamActivitiesFaulted>())
-                .TransitionTo(Faulted),
-            When(ActivitiesCompleted)
-                .TransitionTo(Idle));
+                .TransitionTo(Faulted));
 
         During(ReferentialSyncing,
             When(ActivitiesCompleted)
@@ -78,11 +80,25 @@ public class LifeStreamStateMachine :
                 {
                     return _.Init<RemovingLifeStreamRequested>(_.Message);
                 })
-                .TransitionTo(Removing)));
+                .TransitionTo(Removing)),
+            When(PartialModifyingRequested)
+                .Activity(_ => _.OfType<OnPartialModifyingLifeStream>()
+                .RespondAsync(_ =>
+                {
+                    return _.Init<PartialModifyingLifeStreamRequested>(_.Message);
+                })
+                .TransitionTo(PartiallyModifying)));
 
         During(Modifying,
             When(ModifyingExecuted)
                 .TransitionTo(Idle),
+            When(ActivitiesFaulted)
+                .Activity(_ => _.OfType<OnLifeStreamActivitiesFaulted>())
+                .TransitionTo(Idle));
+
+        During(PartiallyModifying,
+            When(PartialModifyingExecuted)
+                .TransitionTo(ReferentialSyncing),
             When(ActivitiesFaulted)
                 .Activity(_ => _.OfType<OnLifeStreamActivitiesFaulted>())
                 .TransitionTo(Idle));
@@ -112,6 +128,7 @@ public class LifeStreamStateMachine :
     public State ReferentialSyncing { get; private set; }
     public State Defining { get; private set; }
     public State Modifying { get; private set; }
+    public State PartiallyModifying { get; private set; }
     public State Removing { get; private set; }
     public State Idle { get; private set; }
     public State Faulted { get; private set; }
@@ -126,4 +143,6 @@ public class LifeStreamStateMachine :
     public Event<ModifyingLifeStreamRequestExecuted> ModifyingExecuted { get; private set; }
     public Event<RemovingLifeStreamRequested> RemovingRequested { get; private set; }
     public Event<RemovingLifeStreamRequestExecuted> RemovingExecuted { get; private set; }
+    public Event<PartialModifyingLifeStreamRequested> PartialModifyingRequested { get; private set; }
+    public Event<PartialModifyingLifeStreamRequestExecuted> PartialModifyingExecuted { get; private set; }
 }

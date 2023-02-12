@@ -29,7 +29,7 @@ public class ModifyLifeStreamActivity :
                 new ModifyingLifeStreamRequestExecuted
                 {
                     Id = request.Id
-                });
+                }).ConfigureAwait(false);
 
             return context.Completed(
                 new LifeStreamActivityLog
@@ -39,14 +39,13 @@ public class ModifyLifeStreamActivity :
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
             await context.Send(context.SourceAddress,
                 new ActivitiesFaulted
                 {
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
                     ErrorMessage = e.Message
-                });
+                }).ConfigureAwait(false);
             throw;
         }
     }

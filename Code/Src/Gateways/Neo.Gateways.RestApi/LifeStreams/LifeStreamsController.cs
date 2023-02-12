@@ -11,15 +11,18 @@ public class LifeStreamsController : ControllerBase
     IRequestClient<DefiningLifeStreamRequested> _definingClient;
     IRequestClient<ModifyingLifeStreamRequested> _modifyingClient;
     IRequestClient<RemovingLifeStreamRequested> _removingClient;
+    IRequestClient<PartialModifyingLifeStreamRequested> _partialModifyingClient;
 
     public LifeStreamsController(
         IRequestClient<DefiningLifeStreamRequested> defineClient,
         IRequestClient<ModifyingLifeStreamRequested> modifyClient,
-        IRequestClient<RemovingLifeStreamRequested> removeClient)
+        IRequestClient<RemovingLifeStreamRequested> removeClient,
+        IRequestClient<PartialModifyingLifeStreamRequested> partialModifyingClient)
     {
         _definingClient = defineClient;
         _modifyingClient = modifyClient;
         _removingClient = removeClient;
+        _partialModifyingClient = partialModifyingClient;
     }
 
     [HttpPost]
@@ -60,14 +63,15 @@ public class LifeStreamsController : ControllerBase
         return NoContent();
     }
 
-    //[HttpPatch("{id:guid}")]
-    //public async Task<IActionResult> Patch(Guid id,
-    //    PartialModifyingLifeStreamRequested command,
-    //    CancellationToken cancellationToken)
-    //{
-    //    command.LifeStreamId = id;
-    //    await _commandBus.Dispatch(command, cancellationToken)
-    //        .ConfigureAwait(false);
-    //    return NoContent();
-    //}
+    [HttpPatch("{id:guid}")]
+    public async Task<IActionResult> Patch(Guid id,
+        PartialModifyingLifeStreamRequested command,
+        CancellationToken cancellationToken)
+    {
+        command.LifeStreamId = id;
+        await _partialModifyingClient
+           .GetResponse<PartialModifyingLifeStreamRequested>(command, cancellationToken)
+           .ConfigureAwait(false);
+        return NoContent();
+    }
 }

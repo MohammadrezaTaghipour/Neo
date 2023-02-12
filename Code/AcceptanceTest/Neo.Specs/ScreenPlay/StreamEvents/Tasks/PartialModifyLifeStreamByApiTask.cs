@@ -1,7 +1,9 @@
-﻿using Neo.Specs.ScreenPlay.StreamEvents.Commands;
+﻿using Neo.Specs.ScreenPlay.LifeStreams.Questions;
+using Neo.Specs.ScreenPlay.StreamEvents.Commands;
 using Suzianna.Core.Screenplay;
 using Suzianna.Core.Screenplay.Actors;
 using Suzianna.Rest.Screenplay.Interactions;
+using Suzianna.Rest.Screenplay.Questions;
 
 namespace Neo.Specs.ScreenPlay.StreamEvents.Tasks;
 
@@ -18,5 +20,13 @@ public class PartialModifyLifeStreamByApiTask : ITask
     {
         actor.AttemptsTo(Patch.DataAsJson(_command)
             .To($"/api/LifeStreams/{_command.LifeStreamId}"));
+
+        if (!LastResponseException.HasException())
+        {
+            var status = actor.AsksFor(
+                new GetLifeStreamByIdQuestion(_command.LifeStreamId)).Status;
+            if (status.Completed)
+                return;
+        }
     }
 }

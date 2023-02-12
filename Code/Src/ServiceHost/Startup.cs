@@ -49,19 +49,29 @@ public class Startup
         services.AddMassTransit(mt =>
         {
             mt.AddActivities(typeof(DefineStreamContextActivity).Assembly);
+            mt.AddConsumer<RoutingSlipEventConsumer>();
 
-            mt.AddSagaStateMachine<StreamContextStateMachine, StreamContextMachineState>()
-            .RedisRepository("127.0.0.1");
-            mt.AddSagaStateMachine<StreamEventTypeStateMachine, StreamEventTypeMachineState>()
-            .RedisRepository("127.0.0.1");
-            mt.AddSagaStateMachine<LifeStreamStateMachine, LifeStreamMachineState>()
-            .RedisRepository("127.0.0.1");
+            mt.AddSagaStateMachine<StreamContextStateMachine, StreamContextMachineState>(_ =>
+            {
+                _.ConcurrentMessageLimit = 1;
+                _.UseInMemoryOutbox();
+            })
+              .RedisRepository("127.0.0.1");
+            mt.AddSagaStateMachine<StreamEventTypeStateMachine, StreamEventTypeMachineState>(_ =>
+            {
+                _.ConcurrentMessageLimit = 1;
+                _.UseInMemoryOutbox();
+            })
+              .RedisRepository("127.0.0.1");
+            mt.AddSagaStateMachine<LifeStreamStateMachine, LifeStreamMachineState>(_ =>
+            {
+                _.ConcurrentMessageLimit = 1;
+                _.UseInMemoryOutbox();
+            })
+              .RedisRepository("127.0.0.1");
 
             mt.UsingRabbitMq((context, cfg) =>
             {
-                cfg.ConcurrentMessageLimit = 1;
-                cfg.UseInMemoryOutbox();
-                cfg.UseMessageRetry(r => r.Intervals(2, 1000));
                 cfg.Host("localhost");
                 cfg.ConfigureEndpoints(context);
             });

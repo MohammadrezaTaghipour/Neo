@@ -40,14 +40,13 @@ public class RemoveStreamEventTypeActivity :
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
             await context.Send(context.SourceAddress,
                 new ActivitiesFaulted
                 {
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
                     ErrorMessage = e.Message
-                });
+                }).ConfigureAwait(false);
             throw;
         }
     }

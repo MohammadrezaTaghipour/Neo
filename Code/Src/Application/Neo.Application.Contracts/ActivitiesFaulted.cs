@@ -8,3 +8,10 @@ public class ActivitiesFaulted
     public string ErrorCode { get; set; }
     public string ErrorMessage { get; set; }
 }
+
+public class MyFuckingActivitiesFaulted
+{
+    public Guid Id { get; set; }
+    public string ErrorCode { get; set; }
+    public string ErrorMessage { get; set; }
+}

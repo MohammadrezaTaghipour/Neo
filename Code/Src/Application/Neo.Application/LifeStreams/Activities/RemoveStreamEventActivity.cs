@@ -1,23 +1,23 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts;
-using Neo.Application.Contracts.StreamContexts;
+using Neo.Application.Contracts.LifeStreams;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Domain;
 
-namespace Neo.Application.StreamContexts.Activities;
+namespace Neo.Application.LifeStreams.Activities;
 
-public class RemoveStreamContextActivity :
-    IActivity<RemovingStreamContextRequested, StreamContextActivityLog>
+public class RemoveStreamEventActivity :
+    IActivity<RemovingStreamEventRequested, LifeStreamActivityLog>
 {
     private readonly ICommandBus _commandBus;
 
-    public RemoveStreamContextActivity(ICommandBus commandBus)
+    public RemoveStreamEventActivity(ICommandBus commandBus)
     {
         _commandBus = commandBus;
     }
 
     public async Task<ExecutionResult> Execute(
-        ExecuteContext<RemovingStreamContextRequested> context)
+        ExecuteContext<RemovingStreamEventRequested> context)
     {
         try
         {
@@ -27,15 +27,15 @@ public class RemoveStreamContextActivity :
                 .ConfigureAwait(false);
 
             await context.Send(context.SourceAddress,
-                new RemovingStreamContextRequestExecuted
+                new PartialModifyingLifeStreamRequestExecuted
                 {
-                    Id = request.Id
+                    Id = request.LifeStreamId
                 }).ConfigureAwait(false);
 
             return context.Completed(
-                new StreamContextActivityLog
+                new LifeStreamActivityLog
                 {
-                    StreamContextId = request.Id
+                    LifeStreamId = request.LifeStreamId
                 });
         }
         catch (Exception e)
@@ -43,7 +43,7 @@ public class RemoveStreamContextActivity :
             await context.Send(context.SourceAddress,
                 new ActivitiesFaulted
                 {
-                    Id = context.Arguments.Id,
+                    Id = context.Arguments.LifeStreamId,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
                     ErrorMessage = e.Message
                 }).ConfigureAwait(false);
@@ -52,7 +52,7 @@ public class RemoveStreamContextActivity :
     }
 
     public async Task<CompensationResult> Compensate(
-        CompensateContext<StreamContextActivityLog> context)
+        CompensateContext<LifeStreamActivityLog> context)
     {
         return context.Compensated();
     }

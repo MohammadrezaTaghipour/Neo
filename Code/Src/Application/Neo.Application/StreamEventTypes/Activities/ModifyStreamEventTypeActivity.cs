@@ -46,7 +46,7 @@ public class ModifyStreamEventTypeActivity :
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
                     ErrorMessage = e.Message
-                });
+                }).ConfigureAwait(false);
             throw;
         }
     }

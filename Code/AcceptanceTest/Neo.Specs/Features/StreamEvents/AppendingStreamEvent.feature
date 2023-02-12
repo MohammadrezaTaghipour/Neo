@@ -9,9 +9,10 @@ Background:
 		| Title       |
 		| Description |
 		| HappenedOn  |
-	And There is a defined stream event type with following properties
+	And There are some defined stream event types with following properties
 		| Title        | Metadata |
 		| Conversation |          |
+		| Conclusion   |          |
 	And there is a provided stream context with following properties
 		| Title       | Description                                             |
 		| Career Path | this stream context includes all career-related stuffs. |
@@ -64,7 +65,6 @@ Scenario: Stream event can not be appended when life stream is not found
 	And I append stream event 'Conversation'
 	Then I get error with code 'NEO-SE-BR-10006' and message 'Stream event can not be appended due to invalid life stream' from the system
 
-
 Scenario: Stream event can not be appended when stream context is not found
 	Given Stream context 'Career Path' has been removed
 	When I provide a new stream event with following properties
@@ -78,18 +78,17 @@ Scenario: Stream event can not be appended when stream context is not found
 	Then I get error with code 'NEO-SE-BR-10007' and message 'Stream event can not be appended due to invalid stream context' from the system
 
 Scenario: Stream event can not be appended when stream event type is not found
-	Given Stream event type 'Conversation' has been removed
+	Given Stream event type 'Conclusion' has been removed
 	When I provide a new stream event with following properties
 		| LifeStream             | StreamContext | StreamEventType |
-		| Friendship with Souzan | Career Path   | Conversation    |
+		| Friendship with Souzan | Career Path   | Conclusion      |
 	And With the following stream event metadata
 		| Key         | Value                                                              |
 		| Description | We talked about the importance of Design Patterns in code quality. |
 		| HappenedOn  | 2022-01-01                                                         |
-	And I append stream event 'Conversation'
+	And I append stream event 'Conclusion'
 	Then I get error with code 'NEO-SE-BR-10008' and message 'Stream event can not be appended due to invalid stream event type' from the system
 
-	
 Scenario: Stream event metadata is based on what has been configured in stream event type
 	When I provide a new stream event with following properties
 		| LifeStream             | StreamContext | StreamEventType |

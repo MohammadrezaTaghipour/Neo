@@ -33,7 +33,7 @@ public class OnModifyingLifeStream :
         }));
 
         var routingSlip = builder.Build();
-        await context.Execute(routingSlip);
+        await context.Execute(routingSlip).ConfigureAwait(false);
 
         await next.Execute(context).ConfigureAwait(false);
     }

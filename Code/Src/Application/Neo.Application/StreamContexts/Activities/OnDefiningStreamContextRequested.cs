@@ -40,7 +40,7 @@ public class OnDefiningStreamContextRequested :
             });
 
         await builder.AddSubscription(new Uri("queue:stream-context-machine-state"),
-                RoutingSlipEvents.Completed,
+                RoutingSlipEvents.Completed | RoutingSlipEvents.Supplemental,
                 RoutingSlipEventContents.Data,
                 x => x.Send(new StreamContextActivitiesCompleted
                 {

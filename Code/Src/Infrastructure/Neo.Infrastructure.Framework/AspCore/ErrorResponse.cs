@@ -6,15 +6,11 @@ namespace Neo.Infrastructure.Framework.AspCore
 {
     public class ErrorResponse
     {
-        private ErrorResponse()
-        {
-
-        }
 
         [JsonConstructor]
         public ErrorResponse(string code, string message)
         {
-            Code = code.Replace("_", "-");
+            Code = code?.Replace("_", "-");
             Message = message;
         }
 

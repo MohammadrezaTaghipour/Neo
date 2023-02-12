@@ -30,7 +30,7 @@ public class RemoveLifeStreamActivity :
                 new RemovingLifeStreamRequestExecuted
                 {
                     Id = request.Id
-                });
+                }).ConfigureAwait(false);
 
             return context.Completed(
                 new LifeStreamActivityLog
@@ -46,7 +46,7 @@ public class RemoveLifeStreamActivity :
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
                     ErrorMessage = e.Message
-                });
+                }).ConfigureAwait(false);
             throw;
         }
     }

@@ -30,7 +30,7 @@ public class ModifyStreamContextActivity :
                 new ModifyingStreamContextRequestExecuted
                 {
                     Id = request.Id
-                });
+                }).ConfigureAwait(false);
 
             return context.Completed(
                 new StreamContextActivityLog
@@ -40,14 +40,13 @@ public class ModifyStreamContextActivity :
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
             await context.Send(context.SourceAddress,
                 new ActivitiesFaulted
                 {
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
                     ErrorMessage = e.Message
-                });
+                }).ConfigureAwait(false);
             throw;
         }
     }

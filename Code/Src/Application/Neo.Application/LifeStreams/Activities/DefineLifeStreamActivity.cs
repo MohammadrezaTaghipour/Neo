@@ -30,7 +30,7 @@ public class DefineLifeStreamActivity :
                 new DefiningLifeStreamRequestExecuted
                 {
                     Id = request.Id
-                });
+                }).ConfigureAwait(false);
 
             return context.Completed(
                 new LifeStreamActivityLog
@@ -40,7 +40,6 @@ public class DefineLifeStreamActivity :
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
             await context.Send(context.SourceAddress,
                 new ActivitiesFaulted
                 {

@@ -9,7 +9,8 @@ public class LifeStreamApplicationService :
      IApplicationService<DefiningLifeStreamRequested>,
      IApplicationService<ModifyingLifeStreamRequested>,
      IApplicationService<RemovingLifeStreamRequested>,
-     IApplicationService<PartialModifyingLifeStreamRequested>
+     IApplicationService<AppendngStreamEventRequested>,
+     IApplicationService<RemovingStreamEventRequested>
 {
     private readonly ILifeStreamRepository _repository;
     private readonly ILifeStreamArgFactory _argFactory;
@@ -53,32 +54,6 @@ public class LifeStreamApplicationService :
         await lifeStream.Remove().ConfigureAwait(false);
         await _repository.Add(id, lifeStream, cancellationToken)
             .ConfigureAwait(false);
-    }
-
-    public async Task Handle(PartialModifyingLifeStreamRequested command,
-        CancellationToken cancellationToken)
-    {
-        switch (command.OperationType)
-        {
-            case LifeStreamPartialModificationOperationType.AppendStreamEvent:
-                await Handle(new AppendngStreamEventRequested
-                {
-                    LifeStreamId = command.LifeStreamId,
-                    StreamContextId = command.StreamContextId,
-                    StreamEventTypeId = command.StreamEventTypeId,
-                    Metadata = command.Metadata,
-                }, cancellationToken).ConfigureAwait(false);
-                break;
-            case LifeStreamPartialModificationOperationType.RemoveStreamEvent:
-                await Handle(new RemovingStreamEventRequested
-                {
-                    Id = command.Id,
-                    LifeStreamId = command.LifeStreamId,
-                }, cancellationToken).ConfigureAwait(false);
-                break;
-            default:
-                break;
-        }
     }
 
     public async Task Handle(AppendngStreamEventRequested command,
