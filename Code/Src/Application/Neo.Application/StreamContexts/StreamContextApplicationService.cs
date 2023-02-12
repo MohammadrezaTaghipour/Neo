@@ -1,5 +1,7 @@
 ﻿using Neo.Application.Contracts.StreamContexts;
+using Neo.Domain.Contracts.ReferentialPointers;
 using Neo.Domain.Contracts.StreamContexts;
+using Neo.Domain.Models.ReferentialPointers;
 using Neo.Domain.Models.StreamContexts;
 using Neo.Infrastructure.Framework.Application;
 
@@ -12,13 +14,16 @@ public class StreamContextApplicationService :
 {
     private readonly IStreamContextRepository _repository;
     private readonly IStreamContextArgFactory _argFactory;
+    private readonly IReferentialPointerRepository _referentialPointerRepository;
 
     public StreamContextApplicationService(
         IStreamContextRepository repositry,
-        IStreamContextArgFactory argFactory)
+        IStreamContextArgFactory argFactory,
+        IReferentialPointerRepository referentialPointerRepository)
     {
         _repository = repositry;
         _argFactory = argFactory;
+        _referentialPointerRepository = referentialPointerRepository;
     }
 
     public async Task Handle(DefiningStreamContextRequested command,
@@ -35,7 +40,8 @@ public class StreamContextApplicationService :
         CancellationToken cancellationToken)
     {
         var arg = await _argFactory.CreateFrom(command, cancellationToken);
-        var streamContext = await _repository.GetBy(arg.Id, cancellationToken)
+        var streamContext = await _repository
+            .GetBy(arg.Id, cancellationToken)
             .ConfigureAwait(false);
         await streamContext.Modify(arg).ConfigureAwait(false);
         await _repository.Add(arg.Id, streamContext, cancellationToken)
@@ -49,7 +55,10 @@ public class StreamContextApplicationService :
         var streamContext = await _repository
            .GetBy(id, cancellationToken)
            .ConfigureAwait(false);
-        await streamContext.Remove().ConfigureAwait(false);
+        var refPointer = await _referentialPointerRepository
+            .GetById(new ReferentialPointerId(command.Id), cancellationToken)
+            .ConfigureAwait(false);
+        await streamContext.Remove(refPointer).ConfigureAwait(false);
         await _repository.Add(id, streamContext, cancellationToken)
             .ConfigureAwait(false);
     }

@@ -3,7 +3,14 @@ using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Domain.Models.ReferentialPointers;
 
-public class ReferentialPointer : EventSourcedAggregate<ReferentialPointerState>
+public interface IReferentialPointer
+{
+    int GetCounter();
+}
+
+public class ReferentialPointer :
+    EventSourcedAggregate<ReferentialPointerState>,
+    IReferentialPointer
 {
     private ReferentialPointer()
     {
@@ -42,5 +49,10 @@ public class ReferentialPointer : EventSourcedAggregate<ReferentialPointerState>
             throw new ReferentialPointerCantBeRemovedDueToItsUsage();
         Apply(new ReferentialPointerRemoved(arg.Id,
             arg.PointerType.ToLower()));
+    }
+
+    public int GetCounter()
+    {
+        return State.Counter;
     }
 }

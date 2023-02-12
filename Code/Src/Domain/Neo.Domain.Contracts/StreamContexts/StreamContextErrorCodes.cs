@@ -12,4 +12,5 @@ public enum StreamContextErrorCodes
     SC_BR_10006,
     SC_BR_10007,
     SC_BR_10008,
+    SC_BR_10009,
 }
