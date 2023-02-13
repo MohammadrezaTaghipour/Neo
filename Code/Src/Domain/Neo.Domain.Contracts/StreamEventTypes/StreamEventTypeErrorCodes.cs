@@ -12,5 +12,6 @@ public enum StreamEventTypeErrorCodes
     SET_BR_10006,
     SET_BR_10007,
     SET_BR_10008,
-    SET_BR_10009
+    SET_BR_10009,
+    SET_BR_10010,
 }

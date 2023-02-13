@@ -1,5 +1,7 @@
 using Neo.Infrastructure.Framework.Domain;
 using Neo.Domain.Contracts.StreamEventTypes;
+using Neo.Domain.Contracts.StreamContexts;
+using Neo.Domain.Models.ReferentialPointers;
 
 namespace Neo.Domain.Models.StreamEventTypes;
 
@@ -10,7 +12,8 @@ public interface IStreamEventType
     bool IsRemoved();
 }
 
-public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>,
+public class StreamEventType :
+    EventSourcedAggregate<StreamEventTypeState>,
     IStreamEventType
 {
     private StreamEventType()
@@ -51,10 +54,17 @@ public class StreamEventType : EventSourcedAggregate<StreamEventTypeState>,
         return Task.CompletedTask;
     }
 
-    public Task Remove()
+    public Task Remove(IReferentialPointer referentialPointer)
     {
-        //Todo: add invariants here :)
+        GuardAgainstReferentialIntegrity(referentialPointer);
         Apply(new StreamEventTypeRemoved(State.Id));
         return Task.CompletedTask;
+    }
+
+    static void GuardAgainstReferentialIntegrity(
+        IReferentialPointer referentialPointer)
+    {
+        if (referentialPointer != null && referentialPointer.GetCounter() > 0)
+            throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10010);
     }
 }

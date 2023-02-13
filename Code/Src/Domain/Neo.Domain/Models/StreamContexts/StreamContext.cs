@@ -45,7 +45,7 @@ public class StreamContext : EventSourcedAggregate<StreamContextState>,
 
     public Task Remove(IReferentialPointer referentialPointer)
     {
-        GuardAgainstReferentialIntegrity(State.Id, referentialPointer);
+        GuardAgainstReferentialIntegrity(referentialPointer);
         Apply(new StreamContextRemoved(State.Id));
         return Task.CompletedTask;
     }
@@ -59,7 +59,7 @@ public class StreamContext : EventSourcedAggregate<StreamContextState>,
     {
         return State.Removed;
     }
-
+    
     static void GuardAgainstRemovedStreamEventTypes(
         IReadOnlyCollection<IStreamEventType> streamEventTypes)
     {
@@ -67,7 +67,7 @@ public class StreamContext : EventSourcedAggregate<StreamContextState>,
             throw new BusinessException(StreamContextErrorCodes.SC_BR_10007);
     }
 
-    static void GuardAgainstReferentialIntegrity(StreamContextId id,
+    static void GuardAgainstReferentialIntegrity(
         IReferentialPointer referentialPointer)
     {
         if (referentialPointer != null && referentialPointer.GetCounter() > 0)

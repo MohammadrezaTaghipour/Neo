@@ -21,14 +21,16 @@ public class GetStreamEventTypeByIdQuestion : IQuestion<StreamEventTypeResponse>
             actor.AttemptsTo(Get.ResourceAt($"/api/StreamEventTypesQuery/{_id}"));
             var response = actor.AsksFor(LastResponse.Content<StreamEventTypeResponse>());
             if (response != null && response.Status != null)
-                if (response.Status.Completed && response.Status.Faulted)
+                if (response.Status.Completed)
                 {
-                    LastResponseException.Set(response.Status.ErrorCode,
-                        response.Status.ErrorMessage);
-                    return null;
-                }
-                else if(response.Status.Completed)
+                    if (response.Status.Faulted)
+                    {
+                        LastResponseException.Set(
+                            response.Status.ErrorCode,
+                            response.Status.ErrorMessage);
+                    }
                     return response;
+                }
         }
     }
 }
