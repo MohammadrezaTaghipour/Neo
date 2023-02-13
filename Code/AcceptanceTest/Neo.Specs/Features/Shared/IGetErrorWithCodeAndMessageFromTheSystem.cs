@@ -19,14 +19,14 @@ namespace Neo.Specs.Features.Shared
         [Then("I get error with code '(.*)' and message '(.*)' from the system")]
         public void Func(string code, string message)
         {
-            var actual = _actor.AsksFor(LastResponse.Content<ErrorResponse>());
+            var actual = LastResponseException.Content();
             actual.Code.Should().Be(code);
         }
     }
 
     public class ErrorResponse
     {
-        public string Message { get; }
+        public string Message { get; set; }
         public string Code { get; set; }
         public object AdditionalData { get; set; }
     }

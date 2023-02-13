@@ -16,7 +16,21 @@ public class GetLifeStreamByIdQuestion : IQuestion<LifeStreamResponse>
 
     public LifeStreamResponse AnsweredBy(Actor actor)
     {
-        actor.AttemptsTo(Get.ResourceAt($"/api/LifeStreamsQuery/{_id}"));
-        return actor.AsksFor(LastResponse.Content<LifeStreamResponse>());
+        while (true)
+        {
+            actor.AttemptsTo(Get.ResourceAt($"/api/LifeStreamsQuery/{_id}"));
+            var response = actor.AsksFor(LastResponse.Content<LifeStreamResponse>());
+            if (response != null && response.Status != null)
+                if (response.Status.Completed)
+                {
+                    if (response.Status.Faulted)
+                    {
+                        LastResponseException.Set(
+                            response.Status.ErrorCode,
+                            response.Status.ErrorMessage);
+                    }
+                    return response;
+                }
+        }
     }
 }

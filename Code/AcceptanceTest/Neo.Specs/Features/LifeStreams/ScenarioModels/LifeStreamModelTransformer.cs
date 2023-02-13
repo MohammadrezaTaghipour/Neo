@@ -20,7 +20,7 @@ namespace Neo.Specs.Features.LifeStreams.ScenarioModels
             var model = table.CreateInstance<LifeStreamModel>();
             return new DefineLifeStreamCommand
             {
-                Id = default,
+                Id = Guid.NewGuid(),
                 Title = model.Title,
                 Description = model.Description
             };

@@ -1,4 +1,8 @@
+using FluentAssertions;
+using Neo.Specs.Features.Shared;
+using Newtonsoft.Json;
 using Suzianna.Rest;
+using Suzianna.Rest.Screenplay.Questions;
 
 namespace Neo.Specs.Utils;
 
@@ -13,8 +17,15 @@ public class CustomHttpRequestSender : IHttpRequestSender
 
     public HttpResponseMessage Send(HttpRequestMessage message)
     {
-        message.Headers.Add("X-SyncExecutionMode", new List<string> { $"{true}" });
-
-        return Client.SendAsync(message).GetAwaiter().GetResult();
+        var response = Client.SendAsync(message).GetAwaiter().GetResult();
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseString = response.Content.ReadAsStringAsync()
+                .GetAwaiter()
+                .GetResult();
+            var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseString);
+            LastResponseException.Set(errorResponse.Code, errorResponse.Message);
+        }
+        return response;
     }
 }

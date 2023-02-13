@@ -6,10 +6,16 @@ using Neo.Infrastructure.Framework.Domain;
 namespace Neo.Application.StreamEventTypes.Validators;
 
 public class DefineStreamEventTypeCommandValidator :
-    AbstractValidator<DefineStreamEventTypeCommand>
+    AbstractValidator<DefiningStreamEventTypeRequested>
 {
     public DefineStreamEventTypeCommandValidator()
     {
+        RuleFor(x => x.Id).Custom((value, _) =>
+        {
+            if (value == Guid.Empty)
+                throw new BusinessException(StreamEventTypeErrorCodes.SET_BR_10001);
+        });
+
         RuleFor(x => x.Title).Custom((value, _) =>
         {
             if (string.IsNullOrWhiteSpace(value))

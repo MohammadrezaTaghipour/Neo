@@ -1,4 +1,5 @@
 ﻿using Neo.Domain.Contracts.StreamContexts;
+using Neo.Domain.Models.ReferentialPointers;
 using Neo.Domain.Models.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
 
@@ -42,18 +43,11 @@ public class StreamContext : EventSourcedAggregate<StreamContextState>,
         return Task.CompletedTask;
     }
 
-    public Task Remove()
+    public Task Remove(IReferentialPointer referentialPointer)
     {
-        //Todo: add invariants here :)
+        GuardAgainstReferentialIntegrity(referentialPointer);
         Apply(new StreamContextRemoved(State.Id));
         return Task.CompletedTask;
-    }
-
-    static void GuardAgainstRemovedStreamEventTypes(
-        IReadOnlyCollection<IStreamEventType> streamEventTypes)
-    {
-        if (streamEventTypes.Any(_ => _.IsRemoved()))
-            throw new BusinessException(StreamContextErrorCodes.SC_BR_10007);
     }
 
     public StreamContextId GetId()
@@ -64,5 +58,19 @@ public class StreamContext : EventSourcedAggregate<StreamContextState>,
     public bool IsRemoved()
     {
         return State.Removed;
+    }
+    
+    static void GuardAgainstRemovedStreamEventTypes(
+        IReadOnlyCollection<IStreamEventType> streamEventTypes)
+    {
+        if (streamEventTypes.Any(_ => _.IsRemoved()))
+            throw new BusinessException(StreamContextErrorCodes.SC_BR_10007);
+    }
+
+    static void GuardAgainstReferentialIntegrity(
+        IReferentialPointer referentialPointer)
+    {
+        if (referentialPointer != null && referentialPointer.GetCounter() > 0)
+            throw new BusinessException(StreamContextErrorCodes.SC_BR_10009);
     }
 }

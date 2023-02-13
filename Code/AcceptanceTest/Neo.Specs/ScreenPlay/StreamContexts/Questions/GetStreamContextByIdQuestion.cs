@@ -1,4 +1,5 @@
-﻿using Suzianna.Core.Screenplay.Actors;
+﻿using Neo.Specs.ScreenPlay.StreamEventTypes.Questions;
+using Suzianna.Core.Screenplay.Actors;
 using Suzianna.Core.Screenplay.Questions;
 using Suzianna.Rest.Screenplay.Interactions;
 using Suzianna.Rest.Screenplay.Questions;
@@ -16,7 +17,21 @@ public class GetStreamContextByIdQuestion : IQuestion<StreamContextResponse>
 
     public StreamContextResponse AnsweredBy(Actor actor)
     {
-        actor.AttemptsTo(Get.ResourceAt($"/api/StreamContextsQuery/{_id}"));
-        return actor.AsksFor(LastResponse.Content<StreamContextResponse>());
+        while (true)
+        {
+            actor.AttemptsTo(Get.ResourceAt($"/api/StreamContextsQuery/{_id}"));
+            var response = actor.AsksFor(LastResponse.Content<StreamContextResponse>());
+            if (response != null && response.Status != null)
+                if (response.Status.Completed)
+                {
+                    if (response.Status.Faulted)
+                    {
+                        LastResponseException.Set(  
+                            response.Status.ErrorCode,
+                            response.Status.ErrorMessage);
+                    }
+                    return response;
+                }
+        }
     }
 }

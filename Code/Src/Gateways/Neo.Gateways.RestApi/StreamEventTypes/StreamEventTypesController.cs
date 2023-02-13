@@ -1,6 +1,6 @@
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamEventTypes;
-using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Gateways.RestApi.StreamEventTypes;
 
@@ -8,44 +8,54 @@ namespace Neo.Gateways.RestApi.StreamEventTypes;
 [Route("api/[controller]")]
 public class StreamEventTypesController : ControllerBase
 {
-    private readonly ICommandBus _commandBus;
+    IRequestClient<DefiningStreamEventTypeRequested> _definingClient;
+    IRequestClient<ModifyingStreamEventTypeRequested> _modifyingClient;
+    IRequestClient<RemovingStreamEventTypeRequested> _removingClient;
 
-    public StreamEventTypesController(ICommandBus commandBus)
+    public StreamEventTypesController(
+        IRequestClient<DefiningStreamEventTypeRequested> defineClient,
+        IRequestClient<ModifyingStreamEventTypeRequested> modifyClient,
+        IRequestClient<RemovingStreamEventTypeRequested> removeClient)
     {
-        _commandBus = commandBus;
+        _definingClient = defineClient;
+        _modifyingClient = modifyClient;
+        _removingClient = removeClient;
     }
 
     [HttpPost]
     public async Task<IActionResult> Post(
-        DefineStreamEventTypeCommand command,
+        DefiningStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _definingClient
+            .GetResponse<DefiningStreamEventTypeRequested>(command, cancellationToken)
             .ConfigureAwait(false);
-        return Created("", command.Id);
+        return Accepted(command.Id);
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Put(Guid id,
-        ModifyStreamEventTypeCommand command,
+        ModifyingStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
         command.Id = id;
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _modifyingClient
+            .GetResponse<ModifyingStreamEventTypeRequested>(command, cancellationToken)
             .ConfigureAwait(false);
-        return NoContent();
+        return Accepted();
     }
 
     [HttpDelete("{id:guid}/{version:long}")]
     public async Task<IActionResult> Delete(Guid id, int version,
         CancellationToken cancellationToken)
     {
-        var command = new RemoveStreamEventTypeCommand
+        var command = new RemovingStreamEventTypeRequested
         {
             Id = id,
             Version = version
         };
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _removingClient
+            .GetResponse<RemovingStreamEventTypeRequested>(command, cancellationToken)
             .ConfigureAwait(false);
         return NoContent();
     }

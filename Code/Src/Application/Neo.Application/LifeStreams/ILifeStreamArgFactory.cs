@@ -11,9 +11,9 @@ namespace Neo.Application.LifeStreams;
 
 public interface ILifeStreamArgFactory
 {
-    LifeStreamArg CreateFrom(DefineLifeStreamCommand command);
-    LifeStreamArg CreateFrom(ModifyLifeStreamCommand command);
-    Task<StreamEventArg> CreateFrom(AppendStreamEventCommand command,
+    LifeStreamArg CreateFrom(DefiningLifeStreamRequested command);
+    LifeStreamArg CreateFrom(ModifyingLifeStreamRequested command);
+    Task<StreamEventArg> CreateFrom(AppendngStreamEventRequested command,
         CancellationToken cancellationToken);
 }
 
@@ -29,17 +29,7 @@ public class LifeStreamArgFactory : ILifeStreamArgFactory
         _streamContextRepository = streamContextRepository;
     }
 
-    public LifeStreamArg CreateFrom(DefineLifeStreamCommand command)
-    {
-        command.Id = LifeStreamId.New().Value;
-        return LifeStreamArg.Builder
-            .With(_ => _.Id, new LifeStreamId(command.Id))
-            .With(_ => _.Title = command.Title)
-            .With(_ => _.Description = command.Description)
-            .Build();
-    }
-
-    public LifeStreamArg CreateFrom(ModifyLifeStreamCommand command)
+    public LifeStreamArg CreateFrom(DefiningLifeStreamRequested command)
     {
         return LifeStreamArg.Builder
             .With(_ => _.Id, new LifeStreamId(command.Id))
@@ -48,7 +38,16 @@ public class LifeStreamArgFactory : ILifeStreamArgFactory
             .Build();
     }
 
-    public async Task<StreamEventArg> CreateFrom(AppendStreamEventCommand command,
+    public LifeStreamArg CreateFrom(ModifyingLifeStreamRequested command)
+    {
+        return LifeStreamArg.Builder
+            .With(_ => _.Id, new LifeStreamId(command.Id))
+            .With(_ => _.Title = command.Title)
+            .With(_ => _.Description = command.Description)
+            .Build();
+    }
+
+    public async Task<StreamEventArg> CreateFrom(AppendngStreamEventRequested command,
         CancellationToken cancellationToken)
     {
         var streamEventType = await _streamEventTypeRepository

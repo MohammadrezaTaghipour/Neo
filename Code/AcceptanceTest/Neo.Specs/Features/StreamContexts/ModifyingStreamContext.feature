@@ -57,13 +57,13 @@ Examples:
 	| NEO-SC-BR-10006 | Stream context can not be created due to empty stream event types | Career                                                                                                                            |                                                                                                                                                                                                                                                                   |                 |
 	
 Scenario: Stream context can not be modified when stream event type is not found
-	And Stream event type 'Conversation' has been removed
+	And Stream event type 'Conclusion' has been removed
 	When I reprovide stream context 'Career path' with following properties
 		| Title      | Description |
 		| My Familiy |             |
 	And I reprovide the following stream event types
 		| StreamEventType |
-		| Conversation    |
+		| Conclusion      |
 	And I modify stream context 'Career path'
 	Then I get error with code 'NEO-SC-BR-10007' and message 'Stream context can not be created due to invalid stream event type' from the system
 

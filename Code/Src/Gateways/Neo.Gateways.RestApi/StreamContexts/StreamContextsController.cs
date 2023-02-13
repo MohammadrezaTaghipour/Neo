@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamContexts;
-using Neo.Infrastructure.Framework.Application;
+using Neo.Application.Contracts.StreamEventTypes;
 
 namespace Neo.Gateways.RestApi.StreamContexts;
 
@@ -8,44 +9,54 @@ namespace Neo.Gateways.RestApi.StreamContexts;
 [Route("api/[controller]")]
 public class StreamContextsController : ControllerBase
 {
-    private readonly ICommandBus _commandBus;
+    IRequestClient<DefiningStreamContextRequested> _definingClient;
+    IRequestClient<ModifyingStreamContextRequested> _modifyingClient;
+    IRequestClient<RemovingStreamContextRequested> _removingClient;
 
-    public StreamContextsController(ICommandBus commandBus)
+    public StreamContextsController(
+        IRequestClient<DefiningStreamContextRequested> defineClient,
+        IRequestClient<ModifyingStreamContextRequested> modifyClient,
+        IRequestClient<RemovingStreamContextRequested> removeClient)
     {
-        _commandBus = commandBus;
+        _definingClient = defineClient;
+        _modifyingClient = modifyClient;
+        _removingClient = removeClient;
     }
 
     [HttpPost]
     public async Task<IActionResult> Post(
-        DefineStreamContextCommand command,
+        DefiningStreamContextRequested command,
         CancellationToken cancellationToken)
     {
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _definingClient
+            .GetResponse<DefiningStreamContextRequested>(command, cancellationToken)
             .ConfigureAwait(false);
-        return Ok(command.Id);
+        return Accepted(command.Id);
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Put(Guid id,
-        ModifyStreamContextCommand command,
+        ModifyingStreamContextRequested command,
         CancellationToken cancellationToken)
     {
         command.Id = id;
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _modifyingClient
+            .GetResponse<ModifyingStreamContextRequested>(command, cancellationToken)
             .ConfigureAwait(false);
-        return NoContent();
+        return Accepted();
     }
 
     [HttpDelete("{id:guid}/{version:long}")]
     public async Task<IActionResult> Delete(Guid id, int version,
         CancellationToken cancellationToken)
     {
-        var command = new RemoveStreamContextCommand
+        var command = new RemovingStreamContextRequested
         {
             Id = id,
             Version = version
         };
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _removingClient
+            .GetResponse<RemovingStreamContextRequested>(command, cancellationToken)
             .ConfigureAwait(false);
         return NoContent();
     }

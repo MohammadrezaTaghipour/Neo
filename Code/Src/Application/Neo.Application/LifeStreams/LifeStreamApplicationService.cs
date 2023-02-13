@@ -6,10 +6,11 @@ using Neo.Infrastructure.Framework.Application;
 namespace Neo.Application.LifeStreams;
 
 public class LifeStreamApplicationService :
-     IApplicationService<DefineLifeStreamCommand>,
-     IApplicationService<ModifyLifeStreamCommand>,
-     IApplicationService<RemoveLifeStreamCommand>,
-     IApplicationService<PartialModifyLifeStreamCommand>
+     IApplicationService<DefiningLifeStreamRequested>,
+     IApplicationService<ModifyingLifeStreamRequested>,
+     IApplicationService<RemovingLifeStreamRequested>,
+     IApplicationService<AppendngStreamEventRequested>,
+     IApplicationService<RemovingStreamEventRequested>
 {
     private readonly ILifeStreamRepository _repository;
     private readonly ILifeStreamArgFactory _argFactory;
@@ -22,7 +23,7 @@ public class LifeStreamApplicationService :
         _argFactory = argFactory;
     }
 
-    public async Task Handle(DefineLifeStreamCommand command,
+    public async Task Handle(DefiningLifeStreamRequested command,
         CancellationToken cancellationToken)
     {
         var arg = _argFactory.CreateFrom(command);
@@ -32,7 +33,7 @@ public class LifeStreamApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(ModifyLifeStreamCommand command,
+    public async Task Handle(ModifyingLifeStreamRequested command,
         CancellationToken cancellationToken)
     {
         var arg = _argFactory.CreateFrom(command);
@@ -43,7 +44,7 @@ public class LifeStreamApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(RemoveLifeStreamCommand command,
+    public async Task Handle(RemovingLifeStreamRequested command,
         CancellationToken cancellationToken)
     {
         var id = new LifeStreamId(command.Id);
@@ -55,33 +56,7 @@ public class LifeStreamApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(PartialModifyLifeStreamCommand command,
-        CancellationToken cancellationToken)
-    {
-        switch (command.OperationType)
-        {
-            case LifeStreamPartialModificationOperationType.AppendStreamEvent:
-                await Handle(new AppendStreamEventCommand
-                {
-                    LifeStreamId = command.LifeStreamId,
-                    StreamContextId = command.StreamContextId,
-                    StreamEventTypeId = command.StreamEventTypeId,
-                    Metadata = command.Metadata,
-                }, cancellationToken).ConfigureAwait(false);
-                break;
-            case LifeStreamPartialModificationOperationType.RemoveStreamEvent:
-                await Handle(new RemoveStreamEventCommand
-                {
-                    Id = command.Id,
-                    LifeStreamId = command.LifeStreamId,
-                }, cancellationToken).ConfigureAwait(false);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public async Task Handle(AppendStreamEventCommand command,
+    public async Task Handle(AppendngStreamEventRequested command,
         CancellationToken cancellationToken)
     {
         var id = new LifeStreamId(command.LifeStreamId);
@@ -95,7 +70,7 @@ public class LifeStreamApplicationService :
             .ConfigureAwait(false);
     }
 
-    public async Task Handle(RemoveStreamEventCommand command,
+    public async Task Handle(RemovingStreamEventRequested command,
         CancellationToken cancellationToken)
     {
         var id = new LifeStreamId(command.LifeStreamId);

@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Neo.Infrastructure.Framework.Application;
+using Neo.Infrastructure.Framework.AspCore;
 using Neo.Infrastructure.Framework.Persistence;
 
 namespace Neo.Infrastructure.Framework.Configurations;
@@ -10,7 +12,6 @@ public class CoreBootstrapper : IBootstrapper
     {
         services.AddScoped<ICommandBus, InMemoryCommandBus>();
         services.AddScoped<IAggregateReader, AggregateReader>();
-
-        services.Decorate(typeof(IApplicationService<>), typeof(ApplicationServiceCommandValidationDecorator<>));
+        services.AddScoped<IErrorResponseBuilder, ErrorResponseBuilder>();
     }
 }

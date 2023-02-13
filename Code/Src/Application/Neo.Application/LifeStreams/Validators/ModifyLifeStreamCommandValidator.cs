@@ -6,7 +6,7 @@ using Neo.Infrastructure.Framework.Domain;
 namespace Neo.Application.LifeStreams.Validators;
 
 public class ModifyLifeStreamCommandValidator :
-    AbstractValidator<ModifyLifeStreamCommand>
+    AbstractValidator<ModifyingLifeStreamRequested>
 {
     public ModifyLifeStreamCommandValidator()
     {

@@ -3,7 +3,6 @@ using Neo.Specs.ScreenPlay.StreamEventTypes.Commands;
 using Neo.Specs.ScreenPlay.StreamEventTypes.Questions;
 using Suzianna.Core.Screenplay;
 using Suzianna.Core.Screenplay.Actors;
-using Suzianna.Rest.Screenplay.Questions;
 using TechTalk.SpecFlow;
 
 namespace Neo.Specs.Features.StreamEventTypes.Then;
@@ -33,11 +32,9 @@ public class ICanFindStreamEventTypeWithAboveProperties
     private void AssertDefinition(string expectedTitle)
     {
         var expected = _context.Get<DefineStreamEventTypeCommand>();
-        expected.Id = _actor.AsksFor(LastResponse.Content<Guid>());
         var actual = _actor.AsksFor(new GetStreamEventTypeByIdQuestion(expected.Id));
 
         actual.Should().BeEquivalentTo(expected, opt => opt
-            .Excluding(_ => _.Id)
             .Excluding(_ => _.Metadata));
 
         if (expected.Metadata.Any())
@@ -48,12 +45,10 @@ public class ICanFindStreamEventTypeWithAboveProperties
 
     private void AssertModification(string expectedTitle)
     {
-        var id = _context.Get<Guid>(expectedTitle);
         var expected = _context.Get<ModifyStreamEventTypeCommand>();
         var actual = _actor.AsksFor(new GetStreamEventTypeByIdQuestion(expected.Id));
 
         actual.Should().BeEquivalentTo(expected, opt => opt
-            .Excluding(_ => _.Id)
             .Excluding(_ => _.Metadata)
             .Excluding(_ => _.Version));
 

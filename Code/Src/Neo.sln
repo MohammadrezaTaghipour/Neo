@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo.Infrastructure.Framewor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceHost", "ServiceHost\ServiceHost.csproj", "{A68F4B6E-9793-4344-83D6-8B2BB453247C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Application.Query", "Application\Neo.Application.Query\Neo.Application.Query.csproj", "{AB41DD6E-3C97-4E87-B85D-4243092AC112}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo.Application.Query", "Application\Neo.Application.Query\Neo.Application.Query.csproj", "{AB41DD6E-3C97-4E87-B85D-4243092AC112}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

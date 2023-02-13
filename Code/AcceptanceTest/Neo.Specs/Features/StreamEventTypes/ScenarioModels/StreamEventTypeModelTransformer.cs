@@ -20,7 +20,7 @@ public class StreamEventTypeModelTransformer
         var model = table.CreateInstance<StreamEventTypeModel>();
         var commands = new DefineStreamEventTypeCommand
         {
-            Id = default,
+            Id = Guid.NewGuid(),
             Title = model.Title,
             Metadata = _context.ContainsKey(typeof(IReadOnlyCollection<StreamEventTypeMetadataCommandItem>).FullName)
                 ? _context.Get<IReadOnlyCollection<StreamEventTypeMetadataCommandItem>>()
@@ -36,7 +36,7 @@ public class StreamEventTypeModelTransformer
         var models = table.CreateSet<StreamEventTypeModel>();
         return models.Select(model => new DefineStreamEventTypeCommand
         {
-            Id = default,
+            Id = Guid.NewGuid(),
             Title = model.Title,
             Metadata = _context.ContainsKey(typeof(IReadOnlyCollection<StreamEventTypeMetadataCommandItem>).FullName)
                 ? _context.Get<IReadOnlyCollection<StreamEventTypeMetadataCommandItem>>()

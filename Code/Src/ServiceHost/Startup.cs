@@ -1,3 +1,7 @@
+using Neo.Application;
+using Neo.Application.StreamEventTypes;
+using Neo.Application.StreamEventTypes.Activities;
+using Neo.Domain.Contracts.ReferentialPointers;
 using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.EventStore.Configurations;
 using Neo.Infrastructure.Framework.AspCore;
@@ -23,9 +27,14 @@ public class Startup
             .With(new NeoBootstrapper())
             .With(new CoreBootstrapper())
             .With(new EsDbBootstrapper(Configuration,
-                typeof(StreamEventTypeDefined).Assembly))
+                typeof(StreamEventTypeDefined).Assembly,
+                typeof(ReferentialPointerDefined).Assembly))
             //.With(new EsDbSubscriptionBootstrapper(Configuration,
             //    typeof(TestEventHandler).Assembly))
+            .With(new MassTransitBootstrapper(Configuration,
+                  new[] { typeof(DefineStreamEventTypeActivity).Assembly },
+                  new[] { typeof(RoutingSlipEventConsumer).Assembly },
+                  new[] { typeof(StreamEventTypeStateMachine).Assembly }))
             .With(new SwaggerBootstrapper(Configuration))
             .With(new MvcBootstrapper())
             .Build();
@@ -33,7 +42,7 @@ public class Startup
 
     public void Configure(IApplicationBuilder app)
     {
-        app.UseApplicationExceptionMiddleware("NEO");
+        app.UseApplicationExceptionMiddleware();
         app.UseSwaggerDocs();
         app.UseCors("CorsPolicy");
         app.UseMvcWithDefaultRoute();

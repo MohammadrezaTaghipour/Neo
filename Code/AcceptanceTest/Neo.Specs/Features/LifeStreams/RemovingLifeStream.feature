@@ -11,7 +11,7 @@ Scenario Outline: Life stream gets removed when no any events has registered for
 	When I remove life stream 'Friendship with Souzan'
 	Then I can not find life stream 'Friendship with Souzan' with above properties
 
-Scenario: Life stream is not allowed to get removed when stream any stream events has been appened for it
+Scenario: Life stream is not allowed to get removed when any stream events has been appened for it
 	Given There are some provided stream event type metadata with following properties
 		| Title       |
 		| Description |

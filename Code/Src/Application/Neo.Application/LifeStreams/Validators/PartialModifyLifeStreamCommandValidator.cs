@@ -7,7 +7,7 @@ using Neo.Infrastructure.Framework.Domain;
 namespace Neo.Application.LifeStreams.Validators;
 
 public class PartialModifyLifeStreamCommandValidator :
-     AbstractValidator<PartialModifyLifeStreamCommand>
+     AbstractValidator<PartialModifyingLifeStreamRequested>
 {
     public PartialModifyLifeStreamCommandValidator()
     {
@@ -37,7 +37,7 @@ public class PartialModifyLifeStreamCommandValidator :
     }
 
     protected override bool PreValidate(
-        ValidationContext<PartialModifyLifeStreamCommand> context,
+        ValidationContext<PartialModifyingLifeStreamRequested> context,
         ValidationResult result)
     {
         return context.InstanceToValidate.OperationType !=

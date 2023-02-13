@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MassTransit;
+using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.LifeStreams;
-using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Gateways.RestApi.LifeStreams;
 
@@ -8,56 +8,70 @@ namespace Neo.Gateways.RestApi.LifeStreams;
 [Route("api/[controller]")]
 public class LifeStreamsController : ControllerBase
 {
-    private readonly ICommandBus _commandBus;
+    IRequestClient<DefiningLifeStreamRequested> _definingClient;
+    IRequestClient<ModifyingLifeStreamRequested> _modifyingClient;
+    IRequestClient<RemovingLifeStreamRequested> _removingClient;
+    IRequestClient<PartialModifyingLifeStreamRequested> _partialModifyingClient;
 
-    public LifeStreamsController(ICommandBus commandBus)
+    public LifeStreamsController(
+        IRequestClient<DefiningLifeStreamRequested> defineClient,
+        IRequestClient<ModifyingLifeStreamRequested> modifyClient,
+        IRequestClient<RemovingLifeStreamRequested> removeClient,
+        IRequestClient<PartialModifyingLifeStreamRequested> partialModifyingClient)
     {
-        _commandBus = commandBus;
+        _definingClient = defineClient;
+        _modifyingClient = modifyClient;
+        _removingClient = removeClient;
+        _partialModifyingClient = partialModifyingClient;
     }
 
     [HttpPost]
     public async Task<IActionResult> Post(
-        DefineLifeStreamCommand command,
+        DefiningLifeStreamRequested command,
         CancellationToken cancellationToken)
     {
-        await _commandBus.Dispatch(command, cancellationToken)
-            .ConfigureAwait(false);
-        return Ok(command.Id);
+        await _definingClient
+           .GetResponse<DefiningLifeStreamRequested>(command, cancellationToken)
+           .ConfigureAwait(false);
+        return Accepted(command.Id);
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Put(Guid id,
-        ModifyLifeStreamCommand command,
+        ModifyingLifeStreamRequested command,
         CancellationToken cancellationToken)
     {
         command.Id = id;
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _modifyingClient
+            .GetResponse<ModifyingLifeStreamRequested>(command, cancellationToken)
             .ConfigureAwait(false);
-        return NoContent();
+        return Accepted();
     }
 
     [HttpDelete("{id:guid}/{version:long}")]
     public async Task<IActionResult> Delete(Guid id,
         int version, CancellationToken cancellationToken)
     {
-        var command = new RemoveLifeStreamCommand
+        var command = new RemovingLifeStreamRequested
         {
             Id = id,
             Version = version
         };
-        await _commandBus.Dispatch(command, cancellationToken)
+        await _removingClient
+            .GetResponse<RemovingLifeStreamRequested>(command, cancellationToken)
             .ConfigureAwait(false);
         return NoContent();
     }
 
     [HttpPatch("{id:guid}")]
     public async Task<IActionResult> Patch(Guid id,
-        PartialModifyLifeStreamCommand command,
+        PartialModifyingLifeStreamRequested command,
         CancellationToken cancellationToken)
     {
         command.LifeStreamId = id;
-        await _commandBus.Dispatch(command, cancellationToken)
-            .ConfigureAwait(false);
+        await _partialModifyingClient
+           .GetResponse<PartialModifyingLifeStreamRequested>(command, cancellationToken)
+           .ConfigureAwait(false);
         return NoContent();
     }
 }

@@ -7,15 +7,14 @@ namespace Neo.Infrastructure.Framework.AspCore
     public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
-        private string _bcCode;
 
-        public ExceptionHandlerMiddleware(RequestDelegate next, string bcCode)
+        public ExceptionHandlerMiddleware(RequestDelegate next)
         {
             _next = next;
-            _bcCode = bcCode;
         }
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext httpContext,
+            IErrorResponseBuilder errorResponseBuilder)
         {
             try
             {
@@ -23,34 +22,39 @@ namespace Neo.Infrastructure.Framework.AspCore
             }
             catch (Exception exception)
             {
-                await HandleException(httpContext, exception);
+                await HandleException(httpContext, exception, errorResponseBuilder);
             }
         }
 
-        private async Task HandleException(HttpContext httpContext, Exception exception)
+        private async Task HandleException(HttpContext httpContext,
+            Exception exception, IErrorResponseBuilder errorResponseBuilder)
         {
             switch (exception)
             {
                 case BusinessException businessException:
-                    await HandleBusinessException(httpContext, businessException);
+                    await HandleBusinessException(httpContext, 
+                            businessException, errorResponseBuilder);
                     break;
                 default:
-                    await HandleDefaultException(httpContext);
+                    await HandleDefaultException(httpContext, errorResponseBuilder);
                     break;
             }
         }
 
         private async Task HandleBusinessException(HttpContext httpContext,
-            BusinessException businessException)
+            BusinessException businessException,
+            IErrorResponseBuilder errorResponseBuilder)
         {
-            var error = new ErrorResponse(nameof(businessException),
-                $"{_bcCode}_{businessException.ErrorCode}");
+            var error = errorResponseBuilder
+                .Buid(businessException.ErrorCode, businessException.Message);
             await WriteToResponse(httpContext, error, 400);
         }
 
-        private async Task HandleDefaultException(HttpContext httpContext)
+        private async Task HandleDefaultException(HttpContext httpContext,
+            IErrorResponseBuilder errorResponseBuilder)
         {
-            var error = new ErrorResponse("Unhandled exception", _bcCode);
+            var error = errorResponseBuilder
+                .Buid(string.Empty, "Unhandled exception");
             await WriteToResponse(httpContext, error);
         }
 

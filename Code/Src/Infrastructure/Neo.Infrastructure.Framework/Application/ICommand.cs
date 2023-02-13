@@ -1,13 +1,13 @@
 namespace Neo.Infrastructure.Framework.Application;
 
-public interface ICommand
+public interface IRequest
 {
     Guid CorrelationId { get; }
 }
 
-public abstract class BaseCommand : ICommand
+public abstract class BaseRequest: IRequest
 {
-    protected BaseCommand()
+    protected BaseRequest()
     {
         CorrelationId = new Guid();
     }

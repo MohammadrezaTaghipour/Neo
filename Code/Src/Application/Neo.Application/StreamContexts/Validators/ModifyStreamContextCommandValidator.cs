@@ -6,10 +6,16 @@ using Neo.Infrastructure.Framework.Domain;
 namespace Neo.Application.StreamContexts.Validators;
 
 public class ModifyStreamContextCommandValidator :
-     AbstractValidator<ModifyStreamContextCommand>
+     AbstractValidator<ModifyingStreamContextRequested>
 {
 	public ModifyStreamContextCommandValidator()
 	{
+        RuleFor(x => x.Id).Custom((value, _) =>
+        {
+            if (value == Guid.Empty)
+                throw new BusinessException(StreamContextErrorCodes.SC_BR_10001);
+        });
+
         RuleFor(x => x.Title).Custom((value, _) =>
         {
             if (string.IsNullOrWhiteSpace(value))

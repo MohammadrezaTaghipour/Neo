@@ -1,7 +1,9 @@
 ﻿using Neo.Specs.ScreenPlay.StreamContexts.Commands;
+using Neo.Specs.ScreenPlay.StreamContexts.Questions;
 using Suzianna.Core.Screenplay;
 using Suzianna.Core.Screenplay.Actors;
 using Suzianna.Rest.Screenplay.Interactions;
+using Suzianna.Rest.Screenplay.Questions;
 
 namespace Neo.Specs.ScreenPlay.StreamContexts.Tasks;
 
@@ -17,6 +19,13 @@ public class ModifyStreamContextByApiTask : ITask
     public void PerformAs<T>(T actor) where T : Actor
     {
         actor.AttemptsTo(Put.DataAsJson(_command)
-            .To($"/api/StreamContexts/{_command.Id}"));
+             .To($"/api/StreamContexts/{_command.Id}"));
+
+        if (!LastResponseException.HasException())
+        {
+            var status = actor.AsksFor(new GetStreamContextByIdQuestion(_command.Id)).Status;
+            if (status.Completed)
+                return;
+        }
     }
 }

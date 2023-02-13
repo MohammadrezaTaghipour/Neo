@@ -10,8 +10,8 @@ namespace Neo.Application.StreamContexts;
 
 public interface IStreamContextArgFactory : IDomainArgFactory
 {
-    Task<StreamContextArg> CreateFrom(DefineStreamContextCommand command, CancellationToken cancellationToken);
-    Task<StreamContextArg> CreateFrom(ModifyStreamContextCommand command, CancellationToken cancellationToken);
+    Task<StreamContextArg> CreateFrom(DefiningStreamContextRequested command, CancellationToken cancellationToken);
+    Task<StreamContextArg> CreateFrom(ModifyingStreamContextRequested command, CancellationToken cancellationToken);
 }
 
 public class StreamContextArgFactory : IStreamContextArgFactory
@@ -23,10 +23,9 @@ public class StreamContextArgFactory : IStreamContextArgFactory
         _streamEventTypeRepository = streamEventTypeRepository;
     }
 
-    public async Task<StreamContextArg> CreateFrom(DefineStreamContextCommand command,
+    public async Task<StreamContextArg> CreateFrom(DefiningStreamContextRequested command,
         CancellationToken cancellationToken)
     {
-        command.Id = StreamContextId.New().Value;
         return StreamContextArg.Builder
             .With(_ => _.Id, new StreamContextId(command.Id))
             .With(_ => _.Title, command.Title)
@@ -36,7 +35,7 @@ public class StreamContextArgFactory : IStreamContextArgFactory
             .Build();
     }
 
-    public async Task<StreamContextArg> CreateFrom(ModifyStreamContextCommand command,
+    public async Task<StreamContextArg> CreateFrom(ModifyingStreamContextRequested command,
         CancellationToken cancellationToken)
     {
         return StreamContextArg.Builder
@@ -49,7 +48,7 @@ public class StreamContextArgFactory : IStreamContextArgFactory
     }
 
     static async Task<IReadOnlyCollection<IStreamEventType>> GetStreamEventTypes(
-        IReadOnlyCollection<StreamEventTypeCommandItem> streamEventTypes,
+        IReadOnlyCollection<StreamEventTypeRequestItem> streamEventTypes,
         IStreamEventTypeRepository _streamEventTypeRepository,
         CancellationToken cancellationToken)
     {

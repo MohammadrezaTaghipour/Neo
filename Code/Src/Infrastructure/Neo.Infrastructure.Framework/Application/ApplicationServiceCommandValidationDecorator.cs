@@ -2,7 +2,7 @@
 namespace Neo.Infrastructure.Framework.Application;
 
 public class ApplicationServiceCommandValidationDecorator<T> :
-    IApplicationService<T> where T : ICommand
+    IApplicationService<T> where T : IRequest
 {
     private readonly IApplicationService<T> _applicationService;
     private readonly ICommandValidator<T> _commandValidator;

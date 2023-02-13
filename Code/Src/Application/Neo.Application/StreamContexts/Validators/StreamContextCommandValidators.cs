@@ -5,22 +5,22 @@ using Neo.Infrastructure.Framework.Application;
 namespace Neo.Application.StreamContexts.Validators;
 
 public class StreamContextCommandValidators :
-    ICommandValidator<DefineStreamContextCommand>,
-    ICommandValidator<ModifyStreamContextCommand>,
-    ICommandValidator<RemoveStreamContextCommand>
+    ICommandValidator<DefiningStreamContextRequested>,
+    ICommandValidator<ModifyingStreamContextRequested>,
+    ICommandValidator<RemovingStreamContextRequested>
 {
 
-    public void Validate(DefineStreamContextCommand command)
+    public void Validate(DefiningStreamContextRequested command)
     {
         new DefineStreamContextCommandValidator().ValidateAndThrow(command);
     }
 
-    public void Validate(ModifyStreamContextCommand command)
+    public void Validate(ModifyingStreamContextRequested command)
     {
         new ModifyStreamContextCommandValidator().ValidateAndThrow(command);
     }
 
-    public void Validate(RemoveStreamContextCommand command)
+    public void Validate(RemovingStreamContextRequested command)
     {
 
     }

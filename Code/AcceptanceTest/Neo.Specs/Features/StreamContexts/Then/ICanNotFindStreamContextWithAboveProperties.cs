@@ -1,12 +1,6 @@
 ﻿using Suzianna.Core.Screenplay.Actors;
 using Suzianna.Core.Screenplay;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TechTalk.SpecFlow;
-using Neo.Specs.ScreenPlay.LifeStreams.Questions;
 using Neo.Specs.ScreenPlay.StreamContexts.Questions;
 using FluentAssertions;
 
