@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using MassTransit.Courier.Contracts;
+using Microsoft.Extensions.Options;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Application.ReferentialPointers;
@@ -9,6 +10,13 @@ namespace Neo.Application.StreamEventTypes.Activities;
 public class OnDefiningStreamEventTypeRequested :
     IStateMachineActivity<StreamEventTypeMachineState, DefiningStreamEventTypeRequested>
 {
+    MassTransitOptions _options;
+
+    public OnDefiningStreamEventTypeRequested(IOptions<MassTransitOptions> options)
+    {
+        _options = options.Value;
+    }
+
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
@@ -41,13 +49,14 @@ public class OnDefiningStreamEventTypeRequested :
             });
 
 
-        await builder.AddSubscription(new Uri("queue:stream-event-type-machine-state"),
-                RoutingSlipEvents.Completed,
-                RoutingSlipEventContents.Data,
-                x => x.Send(new StreamEventTypeActivitiesCompleted
-                {
-                    Id = context.Message.Id
-                }));
+        await builder.AddSubscription(
+            new Uri(_options.StreamEventTypeStateMachineAddress),
+            RoutingSlipEvents.Completed,
+            RoutingSlipEventContents.Data,
+            x => x.Send(new StreamEventTypeActivitiesCompleted
+            {
+                Id = context.Message.Id
+            }));
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip);

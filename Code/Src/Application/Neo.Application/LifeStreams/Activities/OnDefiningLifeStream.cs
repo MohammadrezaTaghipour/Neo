@@ -3,12 +3,21 @@ using MassTransit;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.LifeStreams;
 using Neo.Application.ReferentialPointers;
+using Microsoft.Extensions.Options;
 
 namespace Neo.Application.LifeStreams.Activities;
 
 public class OnDefiningLifeStream :
-    IStateMachineActivity<LifeStreamMachineState, DefiningLifeStreamRequested>
+    IStateMachineActivity<LifeStreamMachineState,
+        DefiningLifeStreamRequested>
 {
+    private readonly MassTransitOptions _options;
+
+    public OnDefiningLifeStream(IOptions<MassTransitOptions> options)
+    {
+        _options = options.Value;
+    }
+
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
@@ -39,13 +48,14 @@ public class OnDefiningLifeStream :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
-        await builder.AddSubscription(new Uri("queue:life-stream-machine-state"),
-                RoutingSlipEvents.Completed,
-                RoutingSlipEventContents.Data,
-                x => x.Send(new LifeStreamActivitiesCompleted
-                {
-                    Id = context.Message.Id
-                }));
+        await builder.AddSubscription(
+            new Uri(_options.LifeStreamStateMachineAddress),
+            RoutingSlipEvents.Completed | RoutingSlipEvents.Supplemental,
+            RoutingSlipEventContents.Data,
+            x => x.Send(new LifeStreamActivitiesCompleted
+            {
+                Id = context.Message.Id
+            }));
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip).ConfigureAwait(false);

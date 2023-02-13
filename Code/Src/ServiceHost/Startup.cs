@@ -1,12 +1,6 @@
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using MassTransit;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Neo.Application.LifeStreams;
-using Neo.Application.StreamContexts;
-using Neo.Application.StreamContexts.Activities;
+using Neo.Application;
 using Neo.Application.StreamEventTypes;
-using Neo.Application.StreamEventTypes.Validators;
+using Neo.Application.StreamEventTypes.Activities;
 using Neo.Domain.Contracts.ReferentialPointers;
 using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.EventStore.Configurations;
@@ -37,45 +31,13 @@ public class Startup
                 typeof(ReferentialPointerDefined).Assembly))
             //.With(new EsDbSubscriptionBootstrapper(Configuration,
             //    typeof(TestEventHandler).Assembly))
+            .With(new MassTransitBootstrapper(Configuration,
+                  new[] { typeof(DefineStreamEventTypeActivity).Assembly },
+                  new[] { typeof(RoutingSlipEventConsumer).Assembly },
+                  new[] { typeof(StreamEventTypeStateMachine).Assembly }))
             .With(new SwaggerBootstrapper(Configuration))
             .With(new MvcBootstrapper())
             .Build();
-
-
-        services.AddFluentValidationAutoValidation();
-        services.AddValidatorsFromAssembly(typeof(DefineStreamEventTypeCommandValidator).Assembly);
-
-        services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
-        services.AddMassTransit(mt =>
-        {
-            mt.AddActivities(typeof(DefineStreamContextActivity).Assembly);
-            mt.AddConsumer<RoutingSlipEventConsumer>();
-
-            mt.AddSagaStateMachine<StreamContextStateMachine, StreamContextMachineState>(_ =>
-            {
-                _.ConcurrentMessageLimit = 1;
-                _.UseInMemoryOutbox();
-            })
-              .RedisRepository("127.0.0.1");
-            mt.AddSagaStateMachine<StreamEventTypeStateMachine, StreamEventTypeMachineState>(_ =>
-            {
-                _.ConcurrentMessageLimit = 1;
-                _.UseInMemoryOutbox();
-            })
-              .RedisRepository("127.0.0.1");
-            mt.AddSagaStateMachine<LifeStreamStateMachine, LifeStreamMachineState>(_ =>
-            {
-                _.ConcurrentMessageLimit = 1;
-                _.UseInMemoryOutbox();
-            })
-              .RedisRepository("127.0.0.1");
-
-            mt.UsingRabbitMq((context, cfg) =>
-            {
-                cfg.Host("localhost");
-                cfg.ConfigureEndpoints(context);
-            });
-        });
     }
 
     public void Configure(IApplicationBuilder app)

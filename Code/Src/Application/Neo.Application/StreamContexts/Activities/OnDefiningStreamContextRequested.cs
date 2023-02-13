@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using MassTransit.Courier.Contracts;
+using Microsoft.Extensions.Options;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Application.ReferentialPointers;
@@ -9,6 +10,13 @@ namespace Neo.Application.StreamContexts.Activities;
 public class OnDefiningStreamContextRequested :
     IStateMachineActivity<StreamContextMachineState, DefiningStreamContextRequested>
 {
+    private readonly MassTransitOptions _options;
+
+    public OnDefiningStreamContextRequested(IOptions<MassTransitOptions> options)
+    {
+        _options = options.Value;
+    }
+
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
@@ -39,7 +47,7 @@ public class OnDefiningStreamContextRequested :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
-        await builder.AddSubscription(new Uri("queue:stream-context-machine-state"),
+        await builder.AddSubscription(new Uri(_options.StreamContextStateMachineAddress),
                 RoutingSlipEvents.Completed | RoutingSlipEvents.Supplemental,
                 RoutingSlipEventContents.Data,
                 x => x.Send(new StreamContextActivitiesCompleted

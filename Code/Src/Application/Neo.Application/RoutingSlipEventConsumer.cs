@@ -2,7 +2,7 @@
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace Neo.Application.StreamContexts;
+namespace Neo.Application;
 
 public class RoutingSlipEventConsumer :
     IConsumer<RoutingSlipFaulted>,

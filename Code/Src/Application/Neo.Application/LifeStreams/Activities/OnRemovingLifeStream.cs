@@ -3,18 +3,27 @@ using MassTransit;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.LifeStreams;
 using Neo.Application.ReferentialPointers;
+using Microsoft.Extensions.Options;
 
 namespace Neo.Application.LifeStreams.Activities;
 
 public class OnRemovingLifeStream :
     IStateMachineActivity<LifeStreamMachineState, RemovingLifeStreamRequested>
 {
+    private readonly MassTransitOptions _options;
+
+    public OnRemovingLifeStream(IOptions<MassTransitOptions> options)
+    {
+        _options = options.Value;
+    }
+
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<LifeStreamMachineState,
+    public async Task Execute(
+        BehaviorContext<LifeStreamMachineState,
         RemovingLifeStreamRequested> context,
         IBehavior<LifeStreamMachineState, RemovingLifeStreamRequested> next)
     {
@@ -39,13 +48,14 @@ public class OnRemovingLifeStream :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
-        await builder.AddSubscription(new Uri("queue:life-stream-machine-state"),
-                RoutingSlipEvents.Completed,
-                RoutingSlipEventContents.Data,
-                x => x.Send(new LifeStreamActivitiesCompleted
-                {
-                    Id = context.Message.Id
-                }));
+        await builder.AddSubscription(
+            new Uri(_options.LifeStreamStateMachineAddress),
+            RoutingSlipEvents.Completed | RoutingSlipEvents.Supplemental,
+            RoutingSlipEventContents.Data,
+            x => x.Send(new LifeStreamActivitiesCompleted
+            {
+                Id = context.Message.Id
+            }));
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip).ConfigureAwait(false);

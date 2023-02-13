@@ -1,18 +1,28 @@
 ﻿using MassTransit.Courier.Contracts;
 using MassTransit;
 using Neo.Application.Contracts.LifeStreams;
+using Microsoft.Extensions.Options;
 
 namespace Neo.Application.LifeStreams.Activities;
 
 public class OnModifyingLifeStream :
-    IStateMachineActivity<LifeStreamMachineState, ModifyingLifeStreamRequested>
+    IStateMachineActivity<LifeStreamMachineState,
+        ModifyingLifeStreamRequested>
 {
+    private readonly MassTransitOptions _options;
+
+    public OnModifyingLifeStream(IOptions<MassTransitOptions> options)
+    {
+        _options = options.Value;
+    }
+
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<LifeStreamMachineState,
+    public async Task Execute(
+        BehaviorContext<LifeStreamMachineState,
         ModifyingLifeStreamRequested> context,
         IBehavior<LifeStreamMachineState, ModifyingLifeStreamRequested> next)
     {
@@ -24,13 +34,14 @@ public class OnModifyingLifeStream :
             context.Message);
 
 
-        await builder.AddSubscription(new Uri("queue:life-stream-machine-state"),
-        RoutingSlipEvents.Completed,
-        RoutingSlipEventContents.Data,
-        x => x.Send(new LifeStreamActivitiesCompleted
-        {
-            Id = context.Message.Id
-        }));
+        await builder.AddSubscription(
+            new Uri(_options.LifeStreamStateMachineAddress),
+            RoutingSlipEvents.Completed | RoutingSlipEvents.Supplemental,
+            RoutingSlipEventContents.Data,
+            x => x.Send(new LifeStreamActivitiesCompleted
+            {
+                Id = context.Message.Id
+            }));
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip).ConfigureAwait(false);
@@ -38,7 +49,8 @@ public class OnModifyingLifeStream :
         await next.Execute(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<LifeStreamMachineState,
+    public Task Faulted<TException>(
+        BehaviorExceptionContext<LifeStreamMachineState,
         ModifyingLifeStreamRequested, TException> context,
         IBehavior<LifeStreamMachineState, ModifyingLifeStreamRequested> next)
         where TException : Exception

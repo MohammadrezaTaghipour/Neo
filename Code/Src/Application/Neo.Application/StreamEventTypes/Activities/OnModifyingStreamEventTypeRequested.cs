@@ -1,21 +1,23 @@
 ﻿using MassTransit;
-using MassTransit.Courier.Contracts;
-using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamEventTypes;
 
 namespace Neo.Application.StreamEventTypes.Activities;
 
 public class OnModifyingStreamEventTypeRequested :
-    IStateMachineActivity<StreamEventTypeMachineState, ModifyingStreamEventTypeRequested>
+    IStateMachineActivity<StreamEventTypeMachineState, 
+        ModifyingStreamEventTypeRequested>
 {
+
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<StreamEventTypeMachineState,
+    public async Task Execute(
+        BehaviorContext<StreamEventTypeMachineState,
         ModifyingStreamEventTypeRequested> context,
-        IBehavior<StreamEventTypeMachineState, ModifyingStreamEventTypeRequested> next)
+        IBehavior<StreamEventTypeMachineState, 
+            ModifyingStreamEventTypeRequested> next)
     {
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
 

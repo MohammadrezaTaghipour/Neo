@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using MassTransit.Courier.Contracts;
+using Microsoft.Extensions.Options;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Application.ReferentialPointers;
@@ -7,16 +8,26 @@ using Neo.Application.ReferentialPointers;
 namespace Neo.Application.StreamContexts.Activities;
 
 public class OnModifyingStreamContextRequested :
-    IStateMachineActivity<StreamContextMachineState, ModifyingStreamContextRequested>
+    IStateMachineActivity<StreamContextMachineState,
+        ModifyingStreamContextRequested>
 {
+    private readonly MassTransitOptions _options;
+
+    public OnModifyingStreamContextRequested(IOptions<MassTransitOptions> options)
+    {
+        _options = options.Value;
+    }
+
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<StreamContextMachineState,
+    public async Task Execute(
+        BehaviorContext<StreamContextMachineState,
         ModifyingStreamContextRequested> context,
-        IBehavior<StreamContextMachineState, ModifyingStreamContextRequested> next)
+        IBehavior<StreamContextMachineState, 
+            ModifyingStreamContextRequested> next)
     {
         UpdateReferentialPointersState(context.Saga, context.Message);
 
@@ -37,13 +48,14 @@ public class OnModifyingStreamContextRequested :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
-        await builder.AddSubscription(new Uri("queue:stream-context-machine-state"),
-        RoutingSlipEvents.Completed,
-        RoutingSlipEventContents.Data,
-        x => x.Send(new StreamContextActivitiesCompleted
-        {
-            Id = context.Message.Id
-        }));
+        await builder.AddSubscription(
+            new Uri(_options.StreamContextStateMachineAddress),
+            RoutingSlipEvents.Completed | RoutingSlipEvents.Supplemental,
+            RoutingSlipEventContents.Data,
+            x => x.Send(new StreamContextActivitiesCompleted
+            {
+                Id = context.Message.Id
+            }));
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip);
@@ -51,9 +63,11 @@ public class OnModifyingStreamContextRequested :
         await next.Execute(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<StreamContextMachineState,
+    public Task Faulted<TException>(
+        BehaviorExceptionContext<StreamContextMachineState,
         ModifyingStreamContextRequested, TException> context,
-        IBehavior<StreamContextMachineState, ModifyingStreamContextRequested> next)
+        IBehavior<StreamContextMachineState, 
+            ModifyingStreamContextRequested> next)
         where TException : Exception
     {
         return next.Faulted(context);

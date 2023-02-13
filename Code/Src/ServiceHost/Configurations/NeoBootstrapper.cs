@@ -1,4 +1,6 @@
 using System.Reflection;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using Neo.Application.Query.StreamEventTypes;
 using Neo.Application.StreamEventTypes;
 using Neo.Application.StreamEventTypes.Validators;
@@ -16,6 +18,10 @@ public class NeoBootstrapper : IBootstrapper
         AddArgFactories(services, typeof(StreamEventTypeArgFactory).Assembly);
         AddApplicationServices(services, typeof(StreamEventTypeApplicationService).Assembly);
         AddQueryServices(services, typeof(StreamEventTypeQueryService).Assembly);
+
+
+        services.AddFluentValidationAutoValidation();
+        services.AddValidatorsFromAssembly(typeof(DefineStreamEventTypeCommandValidator).Assembly);
     }
 
     static void AddDomainRepository(IServiceCollection services,

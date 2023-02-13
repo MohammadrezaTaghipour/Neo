@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using MassTransit.Courier.Contracts;
+using Microsoft.Extensions.Options;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Application.ReferentialPointers;
@@ -7,16 +8,26 @@ using Neo.Application.ReferentialPointers;
 namespace Neo.Application.StreamContexts.Activities;
 
 public class OnRemovingStreamContextRequested :
-    IStateMachineActivity<StreamContextMachineState, RemovingStreamContextRequested>
+    IStateMachineActivity<StreamContextMachineState,
+        RemovingStreamContextRequested>
 {
+    private readonly MassTransitOptions _options;
+
+    public OnRemovingStreamContextRequested(IOptions<MassTransitOptions> options)
+    {
+        _options = options.Value;
+    }
+
     public void Accept(StateMachineVisitor visitor)
     {
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<StreamContextMachineState,
+    public async Task Execute
+        (BehaviorContext<StreamContextMachineState,
         RemovingStreamContextRequested> context,
-        IBehavior<StreamContextMachineState, RemovingStreamContextRequested> next)
+        IBehavior<StreamContextMachineState,
+            RemovingStreamContextRequested> next)
     {
         context.Saga.StreamContextId = context.Message.Id;
 
@@ -39,13 +50,14 @@ public class OnRemovingStreamContextRequested :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
-        await builder.AddSubscription(new Uri("queue:stream-context-machine-state"),
-                RoutingSlipEvents.Completed,
-                RoutingSlipEventContents.Data,
-                x => x.Send(new StreamContextActivitiesCompleted
-                {
-                    Id = context.Message.Id
-                }));
+        await builder.AddSubscription
+            (new Uri(_options.StreamContextStateMachineAddress),
+            RoutingSlipEvents.Completed | RoutingSlipEvents.Supplemental,
+            RoutingSlipEventContents.Data,
+            x => x.Send(new StreamContextActivitiesCompleted
+            {
+                Id = context.Message.Id
+            }));
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip);
