@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.12" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions " Version="11.4.0" />
+  </ItemGroup>
+  
+    <ItemGroup>
+      <ProjectReference Include="..\Application\Neo.Application.Query\Neo.Application.Query.csproj" />
+      <ProjectReference Include="..\Application\Neo.Application\Neo.Application.csproj" />
+      <ProjectReference Include="..\Gateways\Neo.Gateways.RestApi\Neo.Gateways.RestApi.csproj" />
+      <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Framework.EventStore\Neo.Infrastructure.Framework.EventStore.csproj" />
+      <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />
+      <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Persistence.ES\Neo.Infrastructure.Persistence.ES.csproj" />
+    </ItemGroup>
+
+</Project>
