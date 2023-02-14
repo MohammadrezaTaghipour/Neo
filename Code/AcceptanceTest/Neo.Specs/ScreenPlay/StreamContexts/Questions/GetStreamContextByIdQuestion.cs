@@ -1,5 +1,4 @@
-﻿using Neo.Specs.ScreenPlay.StreamEventTypes.Questions;
-using Suzianna.Core.Screenplay.Actors;
+﻿using Suzianna.Core.Screenplay.Actors;
 using Suzianna.Core.Screenplay.Questions;
 using Suzianna.Rest.Screenplay.Interactions;
 using Suzianna.Rest.Screenplay.Questions;
@@ -26,7 +25,7 @@ public class GetStreamContextByIdQuestion : IQuestion<StreamContextResponse>
                 {
                     if (response.Status.Faulted)
                     {
-                        LastResponseException.Set(  
+                        actor.Recall<LastResponseException>().Set(
                             response.Status.ErrorCode,
                             response.Status.ErrorMessage);
                     }

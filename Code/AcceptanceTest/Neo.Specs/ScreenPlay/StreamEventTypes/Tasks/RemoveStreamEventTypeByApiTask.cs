@@ -21,7 +21,7 @@ public class RemoveStreamEventTypeByApiTask : ITask
         actor.AttemptsTo(Delete
              .From($"/api/StreamEventTypes/{_command.Id}/{_command.Version}"));
 
-        if (!LastResponseException.HasException())
+        if (!actor.Recall<LastResponseException>().HasException())
         {
             var state = actor.AsksFor(new GetStreamEventTypeByIdQuestion(_command.Id)).Status;
             if (state.Completed)

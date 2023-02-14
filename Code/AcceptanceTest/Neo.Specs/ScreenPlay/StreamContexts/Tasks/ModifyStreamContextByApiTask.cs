@@ -21,7 +21,7 @@ public class ModifyStreamContextByApiTask : ITask
         actor.AttemptsTo(Put.DataAsJson(_command)
              .To($"/api/StreamContexts/{_command.Id}"));
 
-        if (!LastResponseException.HasException())
+        if (!actor.Recall<LastResponseException>().HasException())
         {
             var status = actor.AsksFor(new GetStreamContextByIdQuestion(_command.Id)).Status;
             if (status.Completed)

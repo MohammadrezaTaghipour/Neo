@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Neo.Specs.Features.Shared;
 using Newtonsoft.Json;
 using Suzianna.Rest;
@@ -9,10 +8,16 @@ namespace Neo.Specs.Utils;
 public class CustomHttpRequestSender : IHttpRequestSender
 {
     private static readonly HttpClient Client;
+    private readonly LastResponseException _lastResponseException;
 
     static CustomHttpRequestSender()
     {
         Client = new HttpClient();
+    }
+
+    public CustomHttpRequestSender(LastResponseException lastResponseException)
+    {
+        _lastResponseException = lastResponseException;
     }
 
     public HttpResponseMessage Send(HttpRequestMessage message)
@@ -24,7 +29,7 @@ public class CustomHttpRequestSender : IHttpRequestSender
                 .GetAwaiter()
                 .GetResult();
             var errorResponse = JsonConvert.DeserializeObject<ErrorResponse>(responseString);
-            LastResponseException.Set(errorResponse.Code, errorResponse.Message);
+            _lastResponseException.Set(errorResponse.Code, errorResponse.Message);
         }
         return response;
     }

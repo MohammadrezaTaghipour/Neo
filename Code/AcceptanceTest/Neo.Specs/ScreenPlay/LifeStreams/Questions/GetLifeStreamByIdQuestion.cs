@@ -25,7 +25,7 @@ public class GetLifeStreamByIdQuestion : IQuestion<LifeStreamResponse>
                 {
                     if (response.Status.Faulted)
                     {
-                        LastResponseException.Set(
+                        actor.Recall<LastResponseException>().Set(
                             response.Status.ErrorCode,
                             response.Status.ErrorMessage);
                     }

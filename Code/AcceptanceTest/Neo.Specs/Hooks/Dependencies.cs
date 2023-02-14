@@ -11,7 +11,9 @@ using Neo.Specs.ScreenPlay.StreamEventTypes.Commands;
 using Neo.Specs.ScreenPlay.StreamEventTypes.Tasks;
 using Neo.Specs.Utils;
 using Suzianna.Core.Screenplay;
+using Suzianna.Core.Screenplay.Actors;
 using Suzianna.Rest.Screenplay.Abilities;
+using Suzianna.Rest.Screenplay.Questions;
 
 namespace Neo.Specs.Hooks;
 
@@ -29,13 +31,16 @@ public static class Dependencies
         builder.Register(a =>
         {
             var options = a.Resolve<NeoOptions>();
+            var lastResponseException = new LastResponseException();
             var cast = Cast.WhereEveryoneCan(new List<IAbility>
                 {
-                    CallAnApi.At(options.ApiUrl).With(new CustomHttpRequestSender())
+                    CallAnApi.At(options.ApiUrl)
+                    .With(new CustomHttpRequestSender(lastResponseException))
                 });
 
             var stage = new Stage(cast);
-            stage.ShineSpotlightOn("Dave");
+            stage.ShineSpotlightOn("NeoTestRunner");
+            stage.ActorInTheSpotlight.Remember(lastResponseException);
             return stage;
         }).InstancePerLifetimeScope();
 

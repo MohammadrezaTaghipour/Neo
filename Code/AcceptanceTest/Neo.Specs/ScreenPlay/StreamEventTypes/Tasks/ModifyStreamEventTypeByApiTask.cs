@@ -21,7 +21,7 @@ public class ModifyStreamEventTypeByApiTask : ITask
         actor.AttemptsTo(Put.DataAsJson(_command)
              .To($"/api/StreamEventTypes/{_command.Id}"));
 
-        if (!LastResponseException.HasException())
+        if (!actor.Recall<LastResponseException>().HasException())
         {
             var state = actor.AsksFor(new GetStreamEventTypeByIdQuestion(_command.Id)).Status;
             if (state.Completed)

@@ -21,7 +21,7 @@ public class RemoveStreamContextByApiTask : ITask
         actor.AttemptsTo(Delete
              .From($"/api/StreamContexts/{_command.Id}/{_command.Version}"));
 
-        if (!LastResponseException.HasException())
+        if (!actor.Recall<LastResponseException>().HasException())
         {
             var status = actor.AsksFor(new GetStreamContextByIdQuestion(_command.Id)).Status;
             if (status.Completed)
