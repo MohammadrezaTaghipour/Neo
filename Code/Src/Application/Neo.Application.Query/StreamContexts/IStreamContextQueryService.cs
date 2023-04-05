@@ -4,6 +4,7 @@ using Neo.Domain.Contracts.StreamContexts;
 using Neo.Domain.Models.StreamContexts;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Persistence;
+using Neo.Infrastructure.Projection.MongoDB;
 
 namespace Neo.Application.Query.StreamContexts;
 

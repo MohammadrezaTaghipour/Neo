@@ -14,7 +14,8 @@ public class InMemoryCommandBus : ICommandBus
         _logger = logger;
     }
 
-    public async Task Dispatch<T>(T command, CancellationToken cancellationToken)     {
+    public async Task Dispatch<T>(T command, CancellationToken cancellationToken)
+    {
         try
         {
             _logger.LogInformation($"Starting handling command of type: {command.GetType().Name}.");

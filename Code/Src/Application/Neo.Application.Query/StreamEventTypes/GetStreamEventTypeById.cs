@@ -9,4 +9,3 @@ public class GetStreamEventTypeByIdQuery
         Id = id;
     }
 }
-

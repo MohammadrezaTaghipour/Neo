@@ -1,12 +1,10 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts.LifeStreams;
-using Neo.Application.Contracts.LifeStreams;
-using Neo.Application.Query.LifeStreams;
 using Neo.Domain.Contracts.LifeStreams;
 using Neo.Domain.Models.LifeStreams;
-using Neo.Domain.Models.StreamContexts;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Persistence;
+using Neo.Infrastructure.Projection.MongoDB;
 
 namespace Neo.Application.Query.LifeStreams;
 

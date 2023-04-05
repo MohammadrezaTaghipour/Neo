@@ -16,7 +16,6 @@ public class StreamEventTypeApplicationService :
     private readonly IStreamEventTypeArgFactory _argFactory;
     private readonly IReferentialPointerRepository _referentialPointerRepository;
 
-
     public StreamEventTypeApplicationService(
         IStreamEventTypeRepository repository,
         IStreamEventTypeArgFactory argFactory,

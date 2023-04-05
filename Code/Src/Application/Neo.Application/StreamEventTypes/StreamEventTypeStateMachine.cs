@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts;
+using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Application.StreamEventTypes.Activities;
 
@@ -34,6 +35,7 @@ public class StreamEventTypeStateMachine :
         Event(() => ModifyingExecuted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => RemovingRequested, x => x.CorrelateById(m => m.Message.Id));
         Event(() => RemovingExecuted, x => x.CorrelateById(m => m.Message.Id));
+        Event(() => SyncingReferentialPointersExecuted, x => x.CorrelateById(m => m.Message.Id));
 
         InstanceState(x => x.CurrentState);
 
@@ -48,6 +50,11 @@ public class StreamEventTypeStateMachine :
 
         During(Defining,
             When(DefiningExecuted)
+                .Then(context =>
+                {
+                    context.Saga.ProjectionSyncPosition.CurrentVersion = context.Message.CurrentVersion;
+                    context.Saga.ProjectionSyncPosition.OriginalVersion = context.Message.OriginalVersion;
+                })
                 .TransitionTo(ReferentialSyncing),
             When(ActivitiesFaulted)
                 .Activity(_ => _.OfType<OnStreamEventTypeActivitiesFaulted>())
@@ -56,6 +63,12 @@ public class StreamEventTypeStateMachine :
                 .TransitionTo(Idle));
 
         During(ReferentialSyncing,
+            When(SyncingReferentialPointersExecuted)
+                .TransitionTo(ProjectionSyncing),
+            When(ActivitiesCompleted)
+                .TransitionTo(Idle));
+
+        During(ProjectionSyncing,
             When(ActivitiesCompleted)
                 .TransitionTo(Idle));
 
@@ -82,13 +95,23 @@ public class StreamEventTypeStateMachine :
 
         During(Modifying,
             When(ModifyingExecuted)
-                .TransitionTo(Idle),
+                .Then(context =>
+                {
+                    context.Saga.ProjectionSyncPosition.CurrentVersion = context.Message.CurrentVersion;
+                    context.Saga.ProjectionSyncPosition.OriginalVersion = context.Message.OriginalVersion;
+                })
+                .TransitionTo(ProjectionSyncing),
             When(ActivitiesFaulted)
                 .Activity(_ => _.OfType<OnStreamEventTypeActivitiesFaulted>())
                 .TransitionTo(Idle));
 
         During(Removing,
             When(RemovingExecuted)
+                .Then(context =>
+                {
+                    context.Saga.ProjectionSyncPosition.CurrentVersion = context.Message.CurrentVersion;
+                    context.Saga.ProjectionSyncPosition.OriginalVersion = context.Message.OriginalVersion;
+                })
                 .TransitionTo(ReferentialSyncing),
             When(ActivitiesFaulted)
                 .Activity(_ => _.OfType<OnStreamEventTypeActivitiesFaulted>())
@@ -104,17 +127,20 @@ public class StreamEventTypeStateMachine :
                                         x.Saga.CurrentState == nameof(Faulted),
                             Faulted = x.Saga.Error != null,
                             ErrorCode = x.Saga.Error?.Code,
-                            ErrorMessage = x.Saga.Error?.Message
+                            ErrorMessage = x.Saga.Error?.Message,
+                            OriginalVersion = x.Saga.ProjectionSyncPosition.OriginalVersion,
+                            CurrentVersion = x.Saga.ProjectionSyncPosition.CurrentVersion
                         })));
     }
 
 
-    public State ReferentialSyncing { get; private set; }
     public State Defining { get; private set; }
     public State Modifying { get; private set; }
     public State Removing { get; private set; }
     public State Idle { get; private set; }
     public State Faulted { get; private set; }
+    public State ReferentialSyncing { get; private set; }
+    public State ProjectionSyncing { get; private set; }
 
 
     public Event<StreamEventTypeActivitiesCompleted> ActivitiesCompleted { get; private set; }
@@ -126,4 +152,6 @@ public class StreamEventTypeStateMachine :
     public Event<ModifyingStreamEventTypeRequestExecuted> ModifyingExecuted { get; private set; }
     public Event<RemovingStreamEventTypeRequested> RemovingRequested { get; private set; }
     public Event<RemovingStreamEventTypeRequestExecuted> RemovingExecuted { get; private set; }
+    public Event<SyncingReferentialPointersRequestExecuted> SyncingReferentialPointersExecuted { get; private set; }
+
 }

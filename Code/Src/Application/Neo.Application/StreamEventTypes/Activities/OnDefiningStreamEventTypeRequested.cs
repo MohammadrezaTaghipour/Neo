@@ -10,9 +10,10 @@ namespace Neo.Application.StreamEventTypes.Activities;
 public class OnDefiningStreamEventTypeRequested :
     IStateMachineActivity<StreamEventTypeMachineState, DefiningStreamEventTypeRequested>
 {
-    MassTransitOptions _options;
+    private readonly MassTransitOptions _options;
 
-    public OnDefiningStreamEventTypeRequested(IOptions<MassTransitOptions> options)
+    public OnDefiningStreamEventTypeRequested(
+        IOptions<MassTransitOptions> options)
     {
         _options = options.Value;
     }
@@ -33,7 +34,8 @@ public class OnDefiningStreamEventTypeRequested :
 
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
 
-        builder.AddActivity(nameof(DefineStreamEventTypeActivity),
+        builder.AddActivity(
+            nameof(DefineStreamEventTypeActivity),
             RoutingSlipAddress.ForQueue<DefineStreamEventTypeActivity,
                 DefiningStreamEventTypeRequested>(),
             context.Message);
@@ -48,6 +50,14 @@ public class OnDefiningStreamEventTypeRequested :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
+        builder.AddActivity(
+            nameof(SyncStreamEventTypeProjectionActivity),
+            RoutingSlipAddress.ForQueue<SyncStreamEventTypeProjectionActivity,
+                SyncStreamEventTypeProjection>(),
+            new SyncStreamEventTypeProjection
+            {
+                Id = context.Message.Id,
+            });
 
         await builder.AddSubscription(
             new Uri(_options.StreamEventTypeStateMachineAddress),

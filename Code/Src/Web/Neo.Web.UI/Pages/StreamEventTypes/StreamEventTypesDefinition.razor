@@ -1,0 +1,61 @@
+﻿@page "/streamEventTypes/define"
+@inject NavigationManager navigationManager
+@inject IStreamEventTypeService service
+
+<h3>Stream Event Type Definition</h3>
+
+<div class="row">
+    <div class="col-lg-4 pt-4">
+        <EditForm Model="_streamEventType" OnSubmit="Submit">
+            <div class="mb-3">
+                <label class="form-label">Title</label>
+                <input type="text" class="form-control" @bind-value="_streamEventType.Title">
+            </div>
+
+            <div class="form-group">
+                <div class="form-group">
+                    <button type="button" class="btn btn-secondary"
+                            @onclick="@(() => _streamEventType.Metadata.Add(new()))">
+                        Add Metadata
+                    </button>
+                </div>
+                @for (var i = 0; i < _streamEventType.Metadata.Count; i++)
+                {
+                    var index = i;
+                    var metadata = _streamEventType.Metadata[i];
+
+                    <div class="form-group">
+                        <label>Metadata Title:</label>
+                        <InputText class="form-control" @bind-Value="metadata.Title" />
+                    </div>
+
+                    <button type="button" class="btn btn-danger"
+                        @onclick="@(() => _streamEventType.Metadata.RemoveAt(index))">
+                        Remove
+                    </button>
+                }
+            </div>
+
+            <div class="mb-3">
+                <button class="btn btn-primary" type="submit">Save</button>
+                <button class="btn btn-secondary" type="button" @onclick="Clear">Clear</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    StreamEventTypeDefinitionModel _streamEventType = new();
+
+    async Task Submit()
+    {
+        _streamEventType.Id = Guid.NewGuid();
+        await service.Define(_streamEventType);
+        _streamEventType = new();
+    }
+
+    void Clear() => _streamEventType = new();
+
+    void NavigateToListPage() => navigationManager.NavigateTo("/streamEventTypes");
+}
+

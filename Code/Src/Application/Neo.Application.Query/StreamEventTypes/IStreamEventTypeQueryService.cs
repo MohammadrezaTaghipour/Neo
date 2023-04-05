@@ -1,64 +1,102 @@
 ﻿using MassTransit;
+using MongoDB.Driver;
 using Neo.Application.Contracts.StreamEventTypes;
-using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Domain.Models.StreamEventTypes;
 using Neo.Infrastructure.Framework.Application;
-using Neo.Infrastructure.Framework.Persistence;
+using Neo.Infrastructure.Projection.MongoDB.StreamEventTypes;
 
 namespace Neo.Application.Query.StreamEventTypes;
 
 public interface IStreamEventTypeQueryService : IQueryService
 {
     Task<StreamEventTypeResponse?> Get(Guid id, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<StreamEventTypeResponse>> GetAll(CancellationToken cancellationToken);
 }
 
 public class StreamEventTypeQueryService : IStreamEventTypeQueryService
 {
-    private readonly IAggregateReader _aggregateReader;
+    private readonly IMongoDatabase _mongoDatabase;
     private readonly IRequestClient<StreamEventTypeStatusRequested> _statusRequestClient;
 
-    public StreamEventTypeQueryService(IAggregateReader aggregateReader,
+    public StreamEventTypeQueryService(IMongoDatabase mongoDatabase,
         IRequestClient<StreamEventTypeStatusRequested> statusRequestClient)
     {
-        _aggregateReader = aggregateReader;
+        _mongoDatabase = mongoDatabase;
         _statusRequestClient = statusRequestClient;
     }
 
     public async Task<StreamEventTypeResponse?> Get(Guid id,
         CancellationToken cancellationToken)
     {
-        var streamEventTypeStatus = (await _statusRequestClient
+        var status = (await _statusRequestClient
                .GetResponse<StreamEventTypeStatusRequestExecuted>(
                new StreamEventTypeStatusRequested
                {
                    Id = id
                }).ConfigureAwait(false)).Message;
-        if (streamEventTypeStatus.Faulted)
+        if (status.Faulted)
             return StreamEventTypeResponse.CreateFaulted(
-                new StatusResponse(streamEventTypeStatus.Completed,
-                streamEventTypeStatus.ErrorCode,
-                streamEventTypeStatus.ErrorMessage));
+                new StatusResponse(status.Completed,
+                status.ErrorCode,
+                status.ErrorMessage));
 
-        var streamEventType = await _aggregateReader
-            .Load<StreamEventType, StreamEventTypeState>(
-                GetStreamName(new StreamEventTypeId(id)), cancellationToken)
+        var filter = Builders<StreamEventTypeProjectionModel>
+            .Filter
+            .Eq(_ => _.Id, id);
+
+        var projectionModel = await GetCollection<StreamEventTypeProjectionModel>()
+            .Find(filter)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        if (streamEventType == null)
+        if (projectionModel == null)
             return null;
 
-        return new StreamEventTypeResponse(
-            streamEventType.State.Id.Value,
-            streamEventType.State.Title,
-            streamEventType.State.Removed,
-            streamEventType.State.Metadata
-                .Select(_ => new StreamEventTypeMetadataResponse(_.Title))
-                .ToList(),
-            new StatusResponse(streamEventTypeStatus.Completed,
-                streamEventTypeStatus.ErrorCode,
-                streamEventTypeStatus.ErrorMessage));
+        return MapFrom(projectionModel, status);
     }
 
-    static StreamName GetStreamName(StreamEventTypeId id) =>
-        StreamName.For<StreamEventType, StreamEventTypeState, StreamEventTypeId>(id);
+
+    public async Task<IReadOnlyCollection<StreamEventTypeResponse>> GetAll(
+        CancellationToken cancellationToken)
+    {
+        var filter = Builders<StreamEventTypeProjectionModel>
+            .Filter
+            .Empty;
+
+        var projectionModels = await GetCollection<StreamEventTypeProjectionModel>()
+            .Find(filter)
+            .ToListAsync(cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+
+        if (projectionModels == null)
+            return Array.Empty<StreamEventTypeResponse>();
+
+        var response = new List<StreamEventTypeResponse>();
+        foreach (var projectionModel in projectionModels)
+        {
+            response.Add(MapFrom(projectionModel, null));
+        }
+        return response;
+    }
+
+    private IMongoCollection<T> GetCollection<T>()
+    {
+        var collection = _mongoDatabase.GetCollection<T>();
+        return collection;
+    }
+
+    static StreamEventTypeResponse MapFrom(StreamEventTypeProjectionModel projectionModel,
+        StreamEventTypeStatusRequestExecuted? statusExecutedResponse)
+    {
+        StatusResponse status = null;
+        if (statusExecutedResponse != null)
+            status = new StatusResponse(statusExecutedResponse.Completed,
+                statusExecutedResponse.ErrorCode,
+                statusExecutedResponse.ErrorMessage);
+        return new StreamEventTypeResponse(projectionModel.Id,
+            projectionModel.Title, projectionModel.Removed,
+            projectionModel.Metadata.Select(_ =>
+                new StreamEventTypeMetadataResponse(_.Title)).ToList(),
+            status);
+    }
 }

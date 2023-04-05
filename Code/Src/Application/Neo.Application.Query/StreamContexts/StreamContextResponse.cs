@@ -1,4 +1,5 @@
 ﻿
+using Neo.Infrastructure.Projection.MongoDB;
 
 namespace Neo.Application.Query.StreamContexts;
 

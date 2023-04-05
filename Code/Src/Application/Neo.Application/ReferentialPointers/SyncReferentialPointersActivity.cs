@@ -1,12 +1,13 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts.ReferentialPointers;
+using Neo.Application.StreamEventTypes.Activities;
 using Neo.Domain.Contracts.ReferentialPointers;
 using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Application.ReferentialPointers;
 
 public class SyncReferentialPointersActivity :
-    IExecuteActivity<SyncingReferentialPointersRequested>
+    IActivity<SyncingReferentialPointersRequested, StreamEventTypeActivityLog>
 {
     private readonly ICommandBus _commandBus;
 
@@ -20,6 +21,8 @@ public class SyncReferentialPointersActivity :
     {
         if (context.Arguments.NextState == null)
             return context.Completed();
+
+        var request = context.Arguments;
 
         var nextState = context.Arguments.NextState;
         nextState.DefinedItems.ToList().ForEach(async a =>
@@ -57,7 +60,26 @@ public class SyncReferentialPointersActivity :
                 a.ReferentialType), context.CancellationToken)
             .ConfigureAwait(false);
         });
+
+        await context.Send(context.SourceAddress,
+            new SyncingReferentialPointersRequestExecuted
+            {
+                Id = request.Id,
+            })
+            .ConfigureAwait(false);
+
+        return context.Completed(
+            new StreamEventTypeActivityLog
+            {
+                StreamEventTypeId = request.Id
+            });
+    }
+
+    public async Task<CompensationResult> Compensate(
+        CompensateContext<StreamEventTypeActivityLog> context)
+    {
+        //TODO: Implement compensation logic here
         await Task.CompletedTask;
-        return context.Completed();
+        return context.Compensated();
     }
 }

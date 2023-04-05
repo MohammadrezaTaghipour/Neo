@@ -1,14 +1,14 @@
-﻿
-namespace Neo.Application.Query.StreamEventTypes;
+﻿namespace Neo.Application.Query.StreamEventTypes;
 
 public record StreamEventTypeResponse(Guid? Id, string? Title,
-    bool? Removed, IReadOnlyCollection<StreamEventTypeMetadataResponse>? Metadata,
+    bool? Removed,
+    IReadOnlyCollection<StreamEventTypeMetadataResponse> Metadata,
     StatusResponse Status)
 {
     public static StreamEventTypeResponse CreateFaulted(StatusResponse response)
     {
         return new StreamEventTypeResponse(null,
-            null, null, null, response);
+            null, null, Array.Empty<StreamEventTypeMetadataResponse>(), response);
     }
 }
 

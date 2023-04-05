@@ -33,9 +33,10 @@ public class OnRemovingStreamEventTypeRequested :
 
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
 
-        builder.AddActivity(nameof(RemoveStreamEventTypeActivity),
+        builder.AddActivity(
+            nameof(RemoveStreamEventTypeActivity),
             RoutingSlipAddress.ForQueue<RemoveStreamEventTypeActivity,
-                RemovingStreamEventTypeRequested>(),
+            RemovingStreamEventTypeRequested>(),
             context.Message);
 
         builder.AddActivity(nameof(SyncReferentialPointersActivity),
@@ -48,13 +49,23 @@ public class OnRemovingStreamEventTypeRequested :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
-        await builder.AddSubscription(new Uri(_options.StreamEventTypeStateMachineAddress),
-                 RoutingSlipEvents.Completed,
-                 RoutingSlipEventContents.Data,
-                 x => x.Send(new StreamEventTypeActivitiesCompleted
-                 {
-                     Id = context.Message.Id
-                 }));
+        builder.AddActivity(
+            nameof(SyncStreamEventTypeProjectionActivity),
+            RoutingSlipAddress.ForQueue<SyncStreamEventTypeProjectionActivity,
+            SyncStreamEventTypeProjection>(),
+            new SyncStreamEventTypeProjection
+            {
+                Id = context.Message.Id,
+            });
+
+        await builder.AddSubscription(
+            new Uri(_options.StreamEventTypeStateMachineAddress),
+            RoutingSlipEvents.Completed,
+             RoutingSlipEventContents.Data,
+             x => x.Send(new StreamEventTypeActivitiesCompleted
+             {
+                 Id = context.Message.Id
+             }));
 
         var routingSlip = builder.Build();
         await context.Execute(routingSlip);

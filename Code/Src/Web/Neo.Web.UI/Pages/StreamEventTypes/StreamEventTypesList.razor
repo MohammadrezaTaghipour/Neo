@@ -1,0 +1,46 @@
+﻿@page "/streamEventTypes"
+@inject NavigationManager navigationManager
+@inject IStreamEventTypeService service
+
+<h3>Stream Event Types</h3>
+
+
+<button type="button" class="btn btn-success" @onclick="NavigateToDifinitionPage">New</button>
+<br />
+<br />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Metadata</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>
+                <button class="btn btn-success">Edit</button>
+                <button class="btn btn-danger">Remove</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+@code {
+    List<StreamEventTypeDefinitionModel> _streamEventType = new();
+
+    void NavigateToDifinitionPage() => navigationManager.NavigateTo("/streamEventTypes/define");
+
+    protected override Task OnInitializedAsync()
+    {
+
+
+        return base.OnInitializedAsync();   
+    }
+}

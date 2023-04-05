@@ -1,6 +1,8 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts;
 using Neo.Application.Contracts.StreamEventTypes;
+using Neo.Domain.Contracts.StreamEventTypes;
+using Neo.Domain.Models.StreamEventTypes;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Domain;
 
@@ -10,10 +12,13 @@ public class ModifyStreamEventTypeActivity :
     IActivity<ModifyingStreamEventTypeRequested, StreamEventTypeActivityLog>
 {
     private readonly ICommandBus _commandBus;
+    private readonly IStreamEventTypeRepository _repository;
 
-    public ModifyStreamEventTypeActivity(ICommandBus commandBus)
+    public ModifyStreamEventTypeActivity(ICommandBus commandBus,
+        IStreamEventTypeRepository repository)
     {
         _commandBus = commandBus;
+        _repository = repository;
     }
 
     public async Task<ExecutionResult> Execute(
@@ -26,10 +31,15 @@ public class ModifyStreamEventTypeActivity :
             await _commandBus.Dispatch(request, context.CancellationToken)
                 .ConfigureAwait(false);
 
+            var streamEventType = (await _repository
+                .GetBy(new StreamEventTypeId(request.Id), context.CancellationToken));
+
             await context.Send(context.SourceAddress,
                 new ModifyingStreamEventTypeRequestExecuted
                 {
-                    Id = request.Id
+                    Id = request.Id,
+                    OriginalVersion = streamEventType.OriginalVersion,
+                    CurrentVersion = streamEventType.CurrentVersion,
                 }).ConfigureAwait(false);
 
             return context.Completed(
@@ -54,6 +64,8 @@ public class ModifyStreamEventTypeActivity :
     public async Task<CompensationResult> Compensate(
         CompensateContext<StreamEventTypeActivityLog> context)
     {
+        //TODO: 
+        await Task.CompletedTask;
         return context.Compensated();
     }
 }

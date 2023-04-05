@@ -6,7 +6,9 @@ using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.EventStore.Configurations;
 using Neo.Infrastructure.Framework.AspCore;
 using Neo.Infrastructure.Framework.Configurations;
+using Neo.Infrastructure.Framework.MongoDB.Configurations;
 using Neo.Infrastructure.Framework.Swagger;
+using Neo.Infrastructure.Projection.MongoDB.Configurations;
 using ServiceHost.Configurations;
 
 namespace ServiceHost;
@@ -29,8 +31,8 @@ public class Startup
             .With(new EsDbBootstrapper(Configuration,
                 typeof(StreamEventTypeDefined).Assembly,
                 typeof(ReferentialPointerDefined).Assembly))
-            //.With(new EsDbSubscriptionBootstrapper(Configuration,
-            //    typeof(TestEventHandler).Assembly))
+            .With(new MongoBootstraper(Configuration))
+            .With(new MongoProjectionBootstraper())
             .With(new MassTransitBootstrapper(Configuration,
                   new[] { typeof(DefineStreamEventTypeActivity).Assembly },
                   new[] { typeof(RoutingSlipEventConsumer).Assembly },

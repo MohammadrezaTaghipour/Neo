@@ -1,12 +1,21 @@
 ﻿using MassTransit;
+using MassTransit.Courier.Contracts;
+using Microsoft.Extensions.Options;
 using Neo.Application.Contracts.StreamEventTypes;
 
 namespace Neo.Application.StreamEventTypes.Activities;
 
 public class OnModifyingStreamEventTypeRequested :
-    IStateMachineActivity<StreamEventTypeMachineState, 
+    IStateMachineActivity<StreamEventTypeMachineState,
         ModifyingStreamEventTypeRequested>
 {
+    private readonly MassTransitOptions _options;
+
+    public OnModifyingStreamEventTypeRequested(
+        IOptions<MassTransitOptions> options)
+    {
+        _options = options.Value;
+    }
 
     public void Accept(StateMachineVisitor visitor)
     {
@@ -16,7 +25,7 @@ public class OnModifyingStreamEventTypeRequested :
     public async Task Execute(
         BehaviorContext<StreamEventTypeMachineState,
         ModifyingStreamEventTypeRequested> context,
-        IBehavior<StreamEventTypeMachineState, 
+        IBehavior<StreamEventTypeMachineState,
             ModifyingStreamEventTypeRequested> next)
     {
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
@@ -26,15 +35,34 @@ public class OnModifyingStreamEventTypeRequested :
                 ModifyingStreamEventTypeRequested>(),
             context.Message);
 
+        builder.AddActivity(
+            nameof(SyncStreamEventTypeProjectionActivity),
+            RoutingSlipAddress.ForQueue<SyncStreamEventTypeProjectionActivity,
+                SyncStreamEventTypeProjection>(),
+            new SyncStreamEventTypeProjection
+            {
+                Id = context.Message.Id,
+            });
+
+        await builder.AddSubscription(
+            new Uri(_options.StreamEventTypeStateMachineAddress),
+            RoutingSlipEvents.Completed,
+             RoutingSlipEventContents.Data,
+             x => x.Send(new StreamEventTypeActivitiesCompleted
+             {
+                 Id = context.Message.Id
+             }));
+
         var routingSlip = builder.Build();
         await context.Execute(routingSlip);
 
         await next.Execute(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<StreamEventTypeMachineState,
+    public Task Faulted<TException>(
+        BehaviorExceptionContext<StreamEventTypeMachineState,
         ModifyingStreamEventTypeRequested, TException> context,
-        IBehavior<StreamEventTypeMachineState, ModifyingStreamEventTypeRequested> next)
+            IBehavior<StreamEventTypeMachineState, ModifyingStreamEventTypeRequested> next)
         where TException : Exception
     {
         return next.Faulted(context);

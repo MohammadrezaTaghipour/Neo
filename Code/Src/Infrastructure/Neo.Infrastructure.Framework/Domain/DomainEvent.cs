@@ -1,8 +1,7 @@
+
 namespace Neo.Infrastructure.Framework.Domain;
 
-using System;
-
-public class DomainEvent : IDomainEvent
+public abstract class DomainEvent : IDomainEvent
 {
     protected DomainEvent()
     {
