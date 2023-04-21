@@ -1,7 +1,7 @@
-﻿using MassTransit.Courier.Contracts;
-using MassTransit;
-using Neo.Application.Contracts.LifeStreams;
+﻿using MassTransit;
+using MassTransit.Courier.Contracts;
 using Microsoft.Extensions.Options;
+using Neo.Application.Contracts.LifeStreams;
 
 namespace Neo.Application.LifeStreams.Activities;
 

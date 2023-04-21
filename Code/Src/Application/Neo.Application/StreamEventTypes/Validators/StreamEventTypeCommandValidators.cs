@@ -22,6 +22,6 @@ public class StreamEventTypeCommandValidators :
 
     public void Validate(RemovingStreamEventTypeRequested command)
     {
-        
+
     }
 }

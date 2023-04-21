@@ -1,10 +1,10 @@
-using System.Reflection;
 using EventStore.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Neo.Infrastructure.EventStore.Serializations;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Framework.Persistence;
+using System.Reflection;
 
 namespace Neo.Infrastructure.EventStore.Configurations;
 
@@ -22,7 +22,7 @@ public class EsDbBootstrapper : IBootstrapper
 
     public void Bootstrap(IServiceCollection services)
     {
-        var esDbOption = _configuration.GetSection("esDb").Get<EsDbOption>();
+        var esDbOption = _configuration.GetSection("esDb").Get<EsDbOptions>();
 
         services.AddSingleton(_ =>
         {

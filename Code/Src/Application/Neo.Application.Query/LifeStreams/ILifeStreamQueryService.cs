@@ -4,7 +4,6 @@ using Neo.Domain.Contracts.LifeStreams;
 using Neo.Domain.Models.LifeStreams;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Persistence;
-using Neo.Infrastructure.Projection.MongoDB;
 
 namespace Neo.Application.Query.LifeStreams;
 

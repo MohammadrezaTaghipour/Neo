@@ -1,6 +1,6 @@
 ﻿using MassTransit;
-using Neo.Application.Contracts.LifeStreams;
 using Neo.Application.Contracts;
+using Neo.Application.Contracts.LifeStreams;
 using Neo.Application.LifeStreams.Activities;
 
 namespace Neo.Application.LifeStreams;

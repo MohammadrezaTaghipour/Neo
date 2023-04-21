@@ -1,9 +1,9 @@
-﻿using MassTransit.Courier.Contracts;
-using MassTransit;
-using Neo.Application.Contracts.ReferentialPointers;
-using Neo.Application.Contracts.LifeStreams;
-using Neo.Application.ReferentialPointers;
+﻿using MassTransit;
+using MassTransit.Courier.Contracts;
 using Microsoft.Extensions.Options;
+using Neo.Application.Contracts.LifeStreams;
+using Neo.Application.Contracts.ReferentialPointers;
+using Neo.Application.ReferentialPointers;
 
 namespace Neo.Application.LifeStreams.Activities;
 

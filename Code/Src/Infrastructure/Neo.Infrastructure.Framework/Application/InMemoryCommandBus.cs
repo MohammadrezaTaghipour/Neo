@@ -18,20 +18,21 @@ public class InMemoryCommandBus : ICommandBus
     {
         try
         {
-            _logger.LogInformation($"Starting handling command of type: {command.GetType().Name}.");
+            _logger.LogInformation($"Handling command of type: {command.GetType().Name} started.");
 
             var handler = _serviceProvider
                 .GetService(typeof(IApplicationService<T>)) as IApplicationService<T>;
 
             if (handler == null)
-                throw new Exception($"Could not resolve any handler for type: {command.GetType()}.");
+                throw new Exception($"Could not resolve any handler for command type: {command.GetType()}.");
 
             await handler.Handle(command, cancellationToken).ConfigureAwait(false);
 
-            _logger.LogInformation($"Handling command of type: {command.GetType().Name} finished successfully");
+            _logger.LogInformation($"Handling command of type: {command.GetType().Name} finished.");
         }
         catch (Exception e)
         {
+            _logger.LogError($"Handling command of type: {command.GetType().Name} failed.");
             _logger.LogError(e, e.Message);
             throw;
         }

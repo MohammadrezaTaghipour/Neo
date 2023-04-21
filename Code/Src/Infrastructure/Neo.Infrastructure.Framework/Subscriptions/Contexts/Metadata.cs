@@ -1,6 +1,7 @@
 namespace Neo.Infrastructure.Framework.Subscriptions.Contexts;
 
-public class Metadata : Dictionary<string, object?> {
+public class Metadata : Dictionary<string, object?>
+{
     public Metadata() { }
 
     public static Metadata FromMeta(Metadata? metadata) => metadata == null ? new Metadata() : new Metadata(metadata);
@@ -12,8 +13,10 @@ public class Metadata : Dictionary<string, object?> {
 
     public Dictionary<string, string?> ToHeaders() => this.ToDictionary(x => x.Key, x => x.Value?.ToString());
 
-    public Metadata With<T>(string key, T? value) {
-        if (value != null) this[key] = value;
+    public Metadata With<T>(string key, T? value)
+    {
+        if (value != null)
+            this[key] = value;
         return this;
     }
 
@@ -21,8 +24,10 @@ public class Metadata : Dictionary<string, object?> {
 
     public T? Get<T>(string key) => TryGetValue(key, out var value) && value is T v ? v : default;
 
-    public Metadata AddNotNull(string key, string? value) {
-        if (!string.IsNullOrEmpty(value)) Add(key, value);
+    public Metadata AddNotNull(string key, string? value)
+    {
+        if (!string.IsNullOrEmpty(value))
+            Add(key, value);
         return this;
     }
 }

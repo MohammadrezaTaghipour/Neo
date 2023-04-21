@@ -1,12 +1,12 @@
-using System.Reflection;
-using FluentValidation.AspNetCore;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Neo.Application.Query.StreamEventTypes;
 using Neo.Application.StreamEventTypes;
 using Neo.Application.StreamEventTypes.Validators;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Persistence.ES;
+using System.Reflection;
 
 namespace ServiceHost.Configurations;
 

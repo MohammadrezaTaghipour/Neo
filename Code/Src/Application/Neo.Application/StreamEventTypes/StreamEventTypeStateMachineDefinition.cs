@@ -11,7 +11,7 @@ public class StreamEventTypeStateMachineDefinition :
     }
 
     protected override void ConfigureSaga(
-        IReceiveEndpointConfigurator endpointConfigurator, 
+        IReceiveEndpointConfigurator endpointConfigurator,
         ISagaConfigurator<StreamEventTypeMachineState> sagaConfigurator)
     {
         endpointConfigurator.UseMessageRetry(r => r.Intervals(2, 3000));

@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Domain.Contracts.StreamContexts;
-using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Application.StreamContexts.Validators;
@@ -9,8 +8,8 @@ namespace Neo.Application.StreamContexts.Validators;
 public class DefineStreamContextCommandValidator :
      AbstractValidator<DefiningStreamContextRequested>
 {
-	public DefineStreamContextCommandValidator()
-	{
+    public DefineStreamContextCommandValidator()
+    {
         RuleFor(x => x.Id).Custom((value, _) =>
         {
             if (value == Guid.Empty)
@@ -37,10 +36,10 @@ public class DefineStreamContextCommandValidator :
 
         RuleFor(x => x.StreamEventTypes).Custom((value, _) =>
         {
-            if(value == null || !value.Any())
+            if (value == null || !value.Any())
                 throw new BusinessException(StreamContextErrorCodes.SC_BR_10006);
 
-            if(value.Any(_=>_.StreamEventTypeId == Guid.Empty))
+            if (value.Any(_ => _.StreamEventTypeId == Guid.Empty))
                 throw new BusinessException(StreamContextErrorCodes.SC_BR_10006);
 
             if (value.GroupBy(a => a.StreamEventTypeId).Any(c => c.Count() > 1))

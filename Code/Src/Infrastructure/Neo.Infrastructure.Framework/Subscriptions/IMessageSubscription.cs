@@ -3,10 +3,10 @@ namespace Neo.Infrastructure.Framework.Subscriptions;
 public interface IMessageSubscription
 {
     string SubscriptionId { get; }
-    
+
     Task Subscribe(
-        OnSubscribed      onSubscribed,
-        OnDropped         onDropped,
+        OnSubscribed onSubscribed,
+        OnDropped onDropped,
         CancellationToken cancellationToken
     );
 
@@ -19,7 +19,8 @@ public delegate void OnDropped(string subscriptionId, DropReason dropReason, Exc
 
 public delegate void OnUnsubscribed(string subscriptionId);
 
-public enum DropReason {
+public enum DropReason
+{
     Stopped,
     ServerError,
     SubscriptionError

@@ -1,9 +1,9 @@
-using Neo.Infrastructure.Framework.Application;
 using Neo.Application.Contracts.StreamEventTypes;
-using Neo.Domain.Models.StreamEventTypes;
-using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Domain.Contracts.ReferentialPointers;
+using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Domain.Models.ReferentialPointers;
+using Neo.Domain.Models.StreamEventTypes;
+using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Application.StreamEventTypes;
 

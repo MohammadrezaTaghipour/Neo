@@ -23,7 +23,8 @@ public class AppendStreamEventActivity :
         {
             var request = context.Arguments;
 
-            await _commandBus.Dispatch(request, context.CancellationToken)
+            await _commandBus
+                .Dispatch(request, context.CancellationToken)
                 .ConfigureAwait(false);
 
             await context.Send(context.SourceAddress,
@@ -54,6 +55,7 @@ public class AppendStreamEventActivity :
     public async Task<CompensationResult> Compensate(
         CompensateContext<LifeStreamActivityLog> context)
     {
+        await Task.CompletedTask;
         return context.Compensated();
     }
 }

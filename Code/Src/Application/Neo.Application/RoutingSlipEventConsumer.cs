@@ -1,5 +1,5 @@
-﻿using MassTransit.Courier.Contracts;
-using MassTransit;
+﻿using MassTransit;
+using MassTransit.Courier.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace Neo.Application;

@@ -1,8 +1,8 @@
-using System.Text;
 using EventStore.Client;
 using Neo.Infrastructure.Framework.Domain;
 using Neo.Infrastructure.Framework.Persistence;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace Neo.Infrastructure.EventStore;
 

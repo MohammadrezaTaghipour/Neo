@@ -12,4 +12,4 @@ public class LifeStreamId : AggregateId
     public static LifeStreamId New() => new(Guid.NewGuid());
 }
 
-public record StreamEventId (long Value);
+public record StreamEventId(long Value);

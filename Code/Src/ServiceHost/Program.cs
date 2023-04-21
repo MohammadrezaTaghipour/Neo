@@ -1,5 +1,5 @@
-using ServiceHost;
 using Microsoft.AspNetCore;
+using ServiceHost;
 
 try
 {
@@ -8,7 +8,7 @@ try
 catch (Exception e)
 {
     Console.WriteLine(e);
-	throw;
+    throw;
 }
 
 static IWebHostBuilder CreateWebHostBuilder(string[] args) =>

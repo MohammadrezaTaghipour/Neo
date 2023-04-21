@@ -12,14 +12,14 @@ public class LifeStreamRepository : ILifeStreamRepository
         IEventSourcedRepository<LifeStream, LifeStreamState, LifeStreamId> repository)
     {
         _repository = repository;
-    }        
+    }
 
     public async Task<LifeStream> GetBy(LifeStreamId id,
        CancellationToken cancellationToken)
          => await _repository.GetById(GetStreamName(id), id, cancellationToken)
             .ConfigureAwait(false);
 
-    public async Task<LifeStream> GetBy(LifeStreamId id, long version, 
+    public async Task<LifeStream> GetBy(LifeStreamId id, long version,
         CancellationToken cancellationToken)
          => await _repository.GetBy(GetStreamName(id),
                 id, version, cancellationToken)

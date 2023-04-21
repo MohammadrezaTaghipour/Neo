@@ -1,4 +1,3 @@
-using System.Reflection;
 using EventStore.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +8,7 @@ using Neo.Infrastructure.EventStore.Subscriptions;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Framework.Subscriptions;
 using Neo.Infrastructure.Framework.Subscriptions.Consumers;
+using System.Reflection;
 
 namespace Neo.Infrastructure.EventStore.Configurations;
 
@@ -26,7 +26,7 @@ public class EsDbSubscriptionBootstrapper : IBootstrapper
 
     public void Bootstrap(IServiceCollection services)
     {
-        var esDbOption = _configuration.GetSection("esDb").Get<EsDbOption>();
+        var esDbOption = _configuration.GetSection("esDb").Get<EsDbOptions>();
 
         services.AddSingleton(_ => new PersistentSubscriptionOptions(esDbOption.SubscriptionId)
         {

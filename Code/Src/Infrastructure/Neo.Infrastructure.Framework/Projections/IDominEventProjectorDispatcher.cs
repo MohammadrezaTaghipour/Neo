@@ -1,6 +1,4 @@
-﻿using Neo.Infrastructure.Framework.Domain;
-
-namespace Neo.Infrastructure.Framework.Projections;
+﻿namespace Neo.Infrastructure.Framework.Projections;
 
 public interface IDominEventProjectorDispatcher
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Neo.Infrastructure.Framework.Application;
+﻿namespace Neo.Infrastructure.Framework.Application;
 
 public interface ICommandValidator<in T>
 {

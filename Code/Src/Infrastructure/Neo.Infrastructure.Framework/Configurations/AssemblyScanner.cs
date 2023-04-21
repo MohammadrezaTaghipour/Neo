@@ -1,6 +1,6 @@
-using System.Reflection;
-using System.Collections;
 using Neo.Infrastructure.Framework.Application;
+using System.Collections;
+using System.Reflection;
 
 namespace Neo.Infrastructure.Framework.Configurations;
 
@@ -59,13 +59,13 @@ public class AssemblyScanner : IEnumerable<AssemblyScanner.AssemblyScanResult>
         var openGenericType = typeof(IApplicationService<>);
 
         var query = from type in _types
-            where !type.IsAbstract && !type.IsGenericTypeDefinition
-            let interfaces = type.GetInterfaces()
-            let genericInterfaces =
-                interfaces.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
-            let matchingInterface = genericInterfaces.FirstOrDefault()
-            where matchingInterface != null
-            select new AssemblyScanResult(matchingInterface, type);
+                    where !type.IsAbstract && !type.IsGenericTypeDefinition
+                    let interfaces = type.GetInterfaces()
+                    let genericInterfaces =
+                        interfaces.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
+                    let matchingInterface = genericInterfaces.FirstOrDefault()
+                    where matchingInterface != null
+                    select new AssemblyScanResult(matchingInterface, type);
 
         return query;
     }

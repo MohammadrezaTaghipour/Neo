@@ -1,6 +1,6 @@
-using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Reflection;
 
 namespace Neo.Infrastructure.EventStore.Serializations;
 
@@ -10,7 +10,8 @@ public class PrivateSetterContractResolver : DefaultContractResolver
         MemberSerialization memberSerialization)
     {
         var jProperty = base.CreateProperty(member, memberSerialization);
-        if (jProperty.Writable) return jProperty;
+        if (jProperty.Writable)
+            return jProperty;
         jProperty.Writable = member.IsPropertyWithSetter();
         return jProperty;
     }

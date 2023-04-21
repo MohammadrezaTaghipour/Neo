@@ -19,7 +19,8 @@ public class SwaggerBootstrapper : IBootstrapper
     public void Bootstrap(IServiceCollection services)
     {
         var options = _configuration.GetSection("swagger").Get<SwaggerOptions>();
-        if (!options.Enabled) return;
+        if (!options.Enabled)
+            return;
 
         services.AddSwaggerGen(c =>
         {

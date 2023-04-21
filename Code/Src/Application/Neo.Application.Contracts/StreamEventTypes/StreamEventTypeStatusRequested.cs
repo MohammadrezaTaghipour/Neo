@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Neo.Application.Contracts.StreamEventTypes;
+﻿namespace Neo.Application.Contracts.StreamEventTypes;
 
 public class StreamEventTypeStatusRequested
 {

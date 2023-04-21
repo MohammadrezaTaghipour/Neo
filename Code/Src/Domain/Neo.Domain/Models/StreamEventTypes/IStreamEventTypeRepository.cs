@@ -1,5 +1,5 @@
-using Neo.Infrastructure.Framework.Domain;
 using Neo.Domain.Contracts.StreamEventTypes;
+using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Domain.Models.StreamEventTypes;
 

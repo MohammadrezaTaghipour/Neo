@@ -1,8 +1,5 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts.ReferentialPointers;
-using Neo.Infrastructure.Framework.AspCore;
-using Neo.Infrastructure.Framework.Domain;
-using Newtonsoft.Json;
 
 namespace Neo.Application.StreamEventTypes;
 
@@ -25,7 +22,7 @@ public class StreamEventTypeMachineState :
     //TODO: this approach doesn't work well
     // in some situations a request might receive others error
     // so, think to find another solution.
-    public ErrorResponse Error { get; set; }
+    //public ErrorResponse Error { get; set; }
 
     public ReferentialPointerContainer ReferentialPointerCurrentState { get; set; }
     public ReferentialPointerContainer ReferentialPointerNextState { get; set; }
@@ -34,6 +31,6 @@ public class StreamEventTypeMachineState :
 
 public class ProjectionSyncPosition
 {
-    public long OriginalVersion { get; set; } 
+    public long OriginalVersion { get; set; }
     public long CurrentVersion { get; set; }
 }

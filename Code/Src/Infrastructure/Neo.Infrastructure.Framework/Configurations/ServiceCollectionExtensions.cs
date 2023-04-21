@@ -8,7 +8,8 @@ public static class ServiceCollectionExtensions
     {
         var serviceDescriptor = services
             .FirstOrDefault(descriptor => descriptor.ServiceType == typeof(T));
-        if (serviceDescriptor != null) services.Remove(serviceDescriptor);
+        if (serviceDescriptor != null)
+            services.Remove(serviceDescriptor);
 
         return services;
     }

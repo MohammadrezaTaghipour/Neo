@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Neo.Domain.Contracts.StreamEventTypes;
 using Neo.Infrastructure.Framework.Configurations;
-using Neo.Infrastructure.Framework.Domain;
 using Neo.Infrastructure.Framework.Projections;
 using Neo.Infrastructure.Projection.MongoDB.StreamEventTypes;
 using System.Reflection;

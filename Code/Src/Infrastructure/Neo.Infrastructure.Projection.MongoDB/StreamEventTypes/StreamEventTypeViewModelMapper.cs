@@ -7,8 +7,8 @@ public static class StreamEventTypeViewModelMapper
     public static StreamEventTypeProjectionModel MapFrom(StreamEventTypeDefined @event)
     {
         return new StreamEventTypeProjectionModel(@event.Id.Value,
-            @event.Title, false, @event.Version, 
-            @event.Metadata.Select(_=> new StreamEventTypeMetadataProjectionModel(_.Title))
+            @event.Title, false, @event.Version,
+            @event.Metadata.Select(_ => new StreamEventTypeMetadataProjectionModel(_.Title))
                 .ToList());
     }
 

@@ -41,9 +41,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{62048606-56E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo.Web.UI", "Web\Neo.Web.UI\Neo.Web.UI.csproj", "{DEE3A886-8B36-4E02-A4DF-E5048C595721}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.Framework.MongoDB", "Infrastructure\Neo.Infrastructure.Framework.MongoDB\Neo.Infrastructure.Framework.MongoDB.csproj", "{7A2C5865-C171-462D-8B3B-AD56983D39CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo.Infrastructure.Framework.MongoDB", "Infrastructure\Neo.Infrastructure.Framework.MongoDB\Neo.Infrastructure.Framework.MongoDB.csproj", "{7A2C5865-C171-462D-8B3B-AD56983D39CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.Projection.MongoDB", "Infrastructure\Neo.Infrastructure.Projection.MongoDB\Neo.Infrastructure.Projection.MongoDB.csproj", "{54C485CB-5AE3-48EB-8E1F-6F4F1C10A1A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo.Infrastructure.Projection.MongoDB", "Infrastructure\Neo.Infrastructure.Projection.MongoDB\Neo.Infrastructure.Projection.MongoDB.csproj", "{54C485CB-5AE3-48EB-8E1F-6F4F1C10A1A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neo.Infrastructure.Framework.Redis", "Infrastructure\Neo.Infrastructure.Framework.Redis\Neo.Infrastructure.Framework.Redis.csproj", "{4C621BC5-7FAB-4013-A1A9-002D89ABD20D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,6 +109,10 @@ Global
 		{54C485CB-5AE3-48EB-8E1F-6F4F1C10A1A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54C485CB-5AE3-48EB-8E1F-6F4F1C10A1A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54C485CB-5AE3-48EB-8E1F-6F4F1C10A1A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C621BC5-7FAB-4013-A1A9-002D89ABD20D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C621BC5-7FAB-4013-A1A9-002D89ABD20D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C621BC5-7FAB-4013-A1A9-002D89ABD20D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C621BC5-7FAB-4013-A1A9-002D89ABD20D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +138,7 @@ Global
 		{DEE3A886-8B36-4E02-A4DF-E5048C595721} = {62048606-56E7-46BE-B925-55E44829C804}
 		{7A2C5865-C171-462D-8B3B-AD56983D39CF} = {68DC6BC7-9F15-42D8-857A-0ACEC781B777}
 		{54C485CB-5AE3-48EB-8E1F-6F4F1C10A1A3} = {68DC6BC7-9F15-42D8-857A-0ACEC781B777}
+		{4C621BC5-7FAB-4013-A1A9-002D89ABD20D} = {68DC6BC7-9F15-42D8-857A-0ACEC781B777}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C3EA8D61-AF55-432F-B527-5870D349C985}

@@ -23,6 +23,9 @@ public class MvcBootstrapper : IBootstrapper
     {
         services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddControllers()
-            .AddMvcOptions(x => { x.EnableEndpointRouting = false; });
+            .AddMvcOptions(x =>
+            {
+                x.EnableEndpointRouting = false;
+            });
     }
 }

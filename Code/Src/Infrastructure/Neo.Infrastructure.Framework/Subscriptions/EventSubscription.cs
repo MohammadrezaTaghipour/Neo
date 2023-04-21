@@ -89,7 +89,8 @@ public abstract class EventSubscription<T> : IMessageSubscription
 
     protected void Dropped(DropReason reason, Exception? exception)
     {
-        if (!IsRunning) return;
+        if (!IsRunning)
+            return;
         _logger.LogWarning(exception, $"SubscriptionDropped: {Options.SubscriptionId}", reason);
 
         IsDropped = true;

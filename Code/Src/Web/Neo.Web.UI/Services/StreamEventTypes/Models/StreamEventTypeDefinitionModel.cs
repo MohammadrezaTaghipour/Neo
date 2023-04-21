@@ -9,6 +9,6 @@ public class StreamEventTypeDefinitionModel
 
     public Guid Id { get; set; }
     public string Title { get; set; }
-    public IList<StreamEventTypeMetadataItem> Metadata { get; set; } 
+    public IList<StreamEventTypeMetadataItem> Metadata { get; set; }
 }
 

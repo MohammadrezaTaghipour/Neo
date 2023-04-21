@@ -1,7 +1,7 @@
 using FizzWare.NBuilder;
-using Neo.Domain.Models.StreamEventTypes;
 using Neo.Application.Contracts.StreamEventTypes;
 using Neo.Domain.Contracts.StreamEventTypes;
+using Neo.Domain.Models.StreamEventTypes;
 using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Application.StreamEventTypes;

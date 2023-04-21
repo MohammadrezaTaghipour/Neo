@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Neo.Infrastructure.Framework.Persistence;
+﻿namespace Neo.Infrastructure.Framework.Persistence;
 
 public interface IEventReader
 {

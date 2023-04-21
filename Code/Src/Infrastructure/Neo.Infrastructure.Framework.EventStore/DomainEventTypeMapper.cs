@@ -1,5 +1,5 @@
-using System.Reflection;
 using Neo.Infrastructure.Framework.Domain;
+using System.Reflection;
 
 namespace Neo.Infrastructure.EventStore;
 

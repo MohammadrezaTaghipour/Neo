@@ -1,5 +1,5 @@
-using System.Text.Json;
 using Neo.Infrastructure.Framework.Subscriptions.Contexts;
+using System.Text.Json;
 
 namespace Neo.Infrastructure.EventStore.Subscriptions;
 
@@ -17,7 +17,8 @@ public static class MetadataSerializer
         string stream,
         ulong position = 0)
     {
-        if (meta.IsEmpty) return null;
+        if (meta.IsEmpty)
+            return null;
         try
         {
             return JsonSerializer.Deserialize<Metadata>(meta.Span, Options);

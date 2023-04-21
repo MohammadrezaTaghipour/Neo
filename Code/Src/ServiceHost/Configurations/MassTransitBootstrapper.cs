@@ -1,11 +1,11 @@
-﻿using Neo.Application.StreamEventTypes;
-using Neo.Infrastructure.Framework.Configurations;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Neo.Application.StreamContexts;
-using Neo.Application.LifeStreams;
-using System.Reflection;
 using Neo.Application;
+using Neo.Application.LifeStreams;
+using Neo.Application.StreamContexts;
+using Neo.Application.StreamEventTypes;
+using Neo.Infrastructure.Framework.Configurations;
+using System.Reflection;
 
 namespace ServiceHost.Configurations;
 

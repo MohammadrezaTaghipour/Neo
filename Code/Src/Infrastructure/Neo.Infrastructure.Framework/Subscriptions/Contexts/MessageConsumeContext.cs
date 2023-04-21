@@ -1,5 +1,5 @@
-using System.Diagnostics;
 using Neo.Infrastructure.Framework.Persistence;
+using System.Diagnostics;
 
 namespace Neo.Infrastructure.Framework.Subscriptions.Contexts;
 

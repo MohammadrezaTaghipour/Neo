@@ -1,7 +1,6 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamContexts;
-using Neo.Application.Contracts.StreamEventTypes;
 
 namespace Neo.Gateways.RestApi.StreamContexts;
 

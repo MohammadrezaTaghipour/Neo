@@ -14,7 +14,8 @@ public class DefaultMessageConsumer : IMessageConsumer
     {
         try
         {
-            if (context.Message == null) return;
+            if (context.Message == null)
+                return;
 
             var tasks = _eventHandlers.Select(a => Handle(a, context));
             await Task.WhenAll(tasks).ConfigureAwait(false);

@@ -26,7 +26,7 @@ public class OnModifyingStreamContextRequested :
     public async Task Execute(
         BehaviorContext<StreamContextMachineState,
         ModifyingStreamContextRequested> context,
-        IBehavior<StreamContextMachineState, 
+        IBehavior<StreamContextMachineState,
             ModifyingStreamContextRequested> next)
     {
         UpdateReferentialPointersState(context.Saga, context.Message);
@@ -66,7 +66,7 @@ public class OnModifyingStreamContextRequested :
     public Task Faulted<TException>(
         BehaviorExceptionContext<StreamContextMachineState,
         ModifyingStreamContextRequested, TException> context,
-        IBehavior<StreamContextMachineState, 
+        IBehavior<StreamContextMachineState,
             ModifyingStreamContextRequested> next)
         where TException : Exception
     {

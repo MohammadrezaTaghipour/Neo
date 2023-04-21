@@ -1,5 +1,5 @@
-﻿using MassTransit.Courier.Contracts;
-using MassTransit;
+﻿using MassTransit;
+using MassTransit.Courier.Contracts;
 using Neo.Application.Contracts.LifeStreams;
 using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.ReferentialPointers;

@@ -1,12 +1,12 @@
 
-using System.Collections.Concurrent;
-using System.Text;
 using EventStore.Client;
 using Microsoft.Extensions.Logging;
 using Neo.Infrastructure.EventStore.Serializations;
 using Neo.Infrastructure.Framework.Subscriptions;
 using Neo.Infrastructure.Framework.Subscriptions.Consumers;
 using Neo.Infrastructure.Framework.Subscriptions.Contexts;
+using System.Collections.Concurrent;
+using System.Text;
 
 namespace Neo.Infrastructure.EventStore.Subscriptions;
 
@@ -23,7 +23,7 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
 
     protected PersistentSubscriptionBase(
         EventStorePersistentSubscriptionsClient subscriptionClient,
-        T options, 
+        T options,
         DomainEventTypeMapper mapper,
         IMessageConsumer messageConsumer,
         IEventSerializer eventSerializer,
@@ -137,7 +137,8 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
         var re = ctx.Items.GetItem<ResolvedEvent>(ResolvedEventKey);
         AckQueue.Enqueue(re);
 
-        if (AckQueue.Count < Options.BufferSize) return;
+        if (AckQueue.Count < Options.BufferSize)
+            return;
 
         var subscription = ctx.Items.GetItem<PersistentSubscription>(SubscriptionKey)!;
 
@@ -145,7 +146,8 @@ public abstract class PersistentSubscriptionBase<T> : EventSubscription<T>
 
         for (var i = 0; i < Options.BufferSize; i++)
         {
-            if (AckQueue.TryDequeue(out var evt)) toAck.Add(evt);
+            if (AckQueue.TryDequeue(out var evt))
+                toAck.Add(evt);
         }
 
         await subscription.Ack(toAck).ConfigureAwait(false);

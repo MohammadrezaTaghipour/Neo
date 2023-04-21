@@ -1,6 +1,4 @@
-﻿using Neo.Infrastructure.Projection.MongoDB;
-
-namespace Neo.Application.Query.LifeStreams;
+﻿namespace Neo.Application.Query.LifeStreams;
 
 public record LifeStreamResponse(
     Guid? Id,

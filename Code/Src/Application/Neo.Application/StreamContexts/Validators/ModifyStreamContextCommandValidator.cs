@@ -8,8 +8,8 @@ namespace Neo.Application.StreamContexts.Validators;
 public class ModifyStreamContextCommandValidator :
      AbstractValidator<ModifyingStreamContextRequested>
 {
-	public ModifyStreamContextCommandValidator()
-	{
+    public ModifyStreamContextCommandValidator()
+    {
         RuleFor(x => x.Id).Custom((value, _) =>
         {
             if (value == Guid.Empty)

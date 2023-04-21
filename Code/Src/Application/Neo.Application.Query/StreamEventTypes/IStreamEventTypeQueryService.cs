@@ -1,7 +1,6 @@
 ﻿using MassTransit;
 using MongoDB.Driver;
 using Neo.Application.Contracts.StreamEventTypes;
-using Neo.Domain.Models.StreamEventTypes;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Projection.MongoDB.StreamEventTypes;
 

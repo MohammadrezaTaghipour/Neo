@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Neo.Domain.Contracts.StreamEventTypes;
+﻿namespace Neo.Domain.Contracts.StreamEventTypes;
 
 public enum StreamEventTypeErrorCodes
 {

@@ -1,11 +1,13 @@
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamEventTypes;
+using Neo.Infrastructure.Framework.AspCore;
 
 namespace Neo.Gateways.RestApi.StreamEventTypes;
 
 [ApiController]
 [Route("api/[controller]")]
+[ServiceFilter(typeof(RequestCorrelationFilterAttribute))]
 public class StreamEventTypesController : ControllerBase
 {
     IRequestClient<DefiningStreamEventTypeRequested> _definingClient;
@@ -45,18 +47,17 @@ public class StreamEventTypesController : ControllerBase
         return Accepted();
     }
 
-    [HttpDelete("{id:guid}/{version:long}")]
-    public async Task<IActionResult> Delete(Guid id, int version,
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id,
+        RemovingStreamEventTypeRequested command,
         CancellationToken cancellationToken)
     {
-        var command = new RemovingStreamEventTypeRequested
-        {
-            Id = id,
-            Version = version
-        };
+        command.Id = id;
         await _removingClient
             .GetResponse<RemovingStreamEventTypeRequested>(command, cancellationToken)
             .ConfigureAwait(false);
         return NoContent();
     }
 }
+
+

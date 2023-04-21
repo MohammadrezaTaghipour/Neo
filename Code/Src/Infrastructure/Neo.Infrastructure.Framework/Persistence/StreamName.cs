@@ -8,7 +8,8 @@ public class StreamName
 
     public StreamName(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) throw new ArgumentNullException(value);
+        if (string.IsNullOrWhiteSpace(value))
+            throw new ArgumentNullException(value);
 
         Value = value;
     }
@@ -20,6 +21,6 @@ public class StreamName
         => new($"{typeof(T).Name}-{entityId}");
 
     public override string ToString() => Value;
-    
+
     public static implicit operator string(StreamName streamName) => streamName.Value;
 }

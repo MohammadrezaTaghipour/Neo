@@ -125,9 +125,6 @@ public class StreamEventTypeStateMachine :
                             Id = x.Saga.StreamEventTypeId,
                             Completed = x.Saga.CurrentState == nameof(Idle) ||
                                         x.Saga.CurrentState == nameof(Faulted),
-                            Faulted = x.Saga.Error != null,
-                            ErrorCode = x.Saga.Error?.Code,
-                            ErrorMessage = x.Saga.Error?.Message,
                             OriginalVersion = x.Saga.ProjectionSyncPosition.OriginalVersion,
                             CurrentVersion = x.Saga.ProjectionSyncPosition.CurrentVersion
                         })));

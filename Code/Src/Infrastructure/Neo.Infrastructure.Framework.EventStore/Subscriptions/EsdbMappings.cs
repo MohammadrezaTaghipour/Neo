@@ -3,9 +3,11 @@ using Neo.Infrastructure.Framework.Subscriptions;
 
 namespace Neo.Infrastructure.EventStore.Subscriptions;
 
-static class EsdbMappings {
+static class EsdbMappings
+{
     public static DropReason AsDropReason(SubscriptionDroppedReason reason)
-        => reason switch {
+        => reason switch
+        {
             SubscriptionDroppedReason.Disposed => DropReason.Stopped,
             SubscriptionDroppedReason.ServerError => DropReason.ServerError,
             SubscriptionDroppedReason.SubscriberError => DropReason.SubscriptionError,

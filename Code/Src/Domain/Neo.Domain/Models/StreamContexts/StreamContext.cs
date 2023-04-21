@@ -59,7 +59,7 @@ public class StreamContext : EventSourcedAggregate<StreamContextState>,
     {
         return State.Removed;
     }
-    
+
     static void GuardAgainstRemovedStreamEventTypes(
         IReadOnlyCollection<IStreamEventType> streamEventTypes)
     {

@@ -13,16 +13,16 @@ namespace Neo.Infrastructure.Framework.AspCore
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext,
+        public async Task Invoke(HttpContext context,
             IErrorResponseBuilder errorResponseBuilder)
         {
             try
             {
-                await _next.Invoke(httpContext);
+                await _next.Invoke(context);
             }
             catch (Exception exception)
             {
-                await HandleException(httpContext, exception, errorResponseBuilder);
+                await HandleException(context, exception, errorResponseBuilder);
             }
         }
 
@@ -32,7 +32,7 @@ namespace Neo.Infrastructure.Framework.AspCore
             switch (exception)
             {
                 case BusinessException businessException:
-                    await HandleBusinessException(httpContext, 
+                    await HandleBusinessException(httpContext,
                             businessException, errorResponseBuilder);
                     break;
                 default:

@@ -15,10 +15,10 @@ public class ApplicationServiceCommandValidationDecorator<T> :
         _commandValidator = commandValidator;
     }
 
-    public async Task Handle(T command, CancellationToken cancellationToken)
+    public async Task Handle(T request, CancellationToken cancellationToken)
     {
-        _commandValidator.Validate(command);
-        await _applicationService.Handle(command, cancellationToken)
+        _commandValidator.Validate(request);
+        await _applicationService.Handle(request, cancellationToken)
             .ConfigureAwait(false);
     }
 }

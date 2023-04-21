@@ -3,7 +3,7 @@ using Neo.Infrastructure.Framework.Application;
 
 namespace Neo.Infrastructure.Framework.Projections;
 
-public class InMemoryDominEventProjectorDispatcher 
+public class InMemoryDominEventProjectorDispatcher
     : IDominEventProjectorDispatcher
 {
     private readonly IServiceProvider _serviceProvider;

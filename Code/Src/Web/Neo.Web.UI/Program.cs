@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Neo.Web.UI.Data;
 using Neo.Web.UI.Services.StreamEventTypes;
 

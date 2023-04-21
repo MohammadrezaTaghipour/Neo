@@ -28,7 +28,7 @@ public record StreamContextState : AggregateState<StreamContextState>
             _streamEventTypes = eventToHandle.StreamEventTypes.Select(_ => _.Value).ToList(),
         };
     }
-    
+
     private StreamContextState When(StreamContextModified eventToHandle)
     {
         return this with
@@ -39,7 +39,7 @@ public record StreamContextState : AggregateState<StreamContextState>
             _streamEventTypes = eventToHandle.StreamEventTypes.Select(_ => _.Value).ToList(),
         };
     }
-    
+
     private StreamContextState When(StreamContextRemoved eventToHandle)
     {
         return this with

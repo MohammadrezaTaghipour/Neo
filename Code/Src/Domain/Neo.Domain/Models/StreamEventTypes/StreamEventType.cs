@@ -1,7 +1,6 @@
-using Neo.Infrastructure.Framework.Domain;
 using Neo.Domain.Contracts.StreamEventTypes;
-using Neo.Domain.Contracts.StreamContexts;
 using Neo.Domain.Models.ReferentialPointers;
+using Neo.Infrastructure.Framework.Domain;
 
 namespace Neo.Domain.Models.StreamEventTypes;
 

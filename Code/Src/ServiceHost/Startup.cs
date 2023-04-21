@@ -13,6 +13,7 @@ using ServiceHost.Configurations;
 
 namespace ServiceHost;
 
+
 public class Startup
 {
     public readonly IConfiguration Configuration;
@@ -45,6 +46,7 @@ public class Startup
     public void Configure(IApplicationBuilder app)
     {
         app.UseApplicationExceptionMiddleware();
+        app.UseRequestCorrelationMiddleware();
         app.UseSwaggerDocs();
         app.UseCors("CorsPolicy");
         app.UseMvcWithDefaultRoute();

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Neo.Infrastructure.EventStore;
+﻿namespace Neo.Infrastructure.EventStore;
 
 public class ReadFromStreamException : Exception
 {

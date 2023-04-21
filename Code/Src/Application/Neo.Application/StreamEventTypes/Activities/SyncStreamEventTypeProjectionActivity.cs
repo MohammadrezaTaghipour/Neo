@@ -43,7 +43,7 @@ public class SyncStreamEventTypeProjectionActivity :
         if (status.OriginalVersion != 0)
         {
             changeEvents = streamEventType.Current
-                .Where(_ => _.Version > status.OriginalVersion 
+                .Where(_ => _.Version > status.OriginalVersion
                             && _.Version <= status.CurrentVersion)
                 .ToList();
         }
