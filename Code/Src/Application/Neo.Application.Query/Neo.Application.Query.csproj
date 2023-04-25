@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Neo.Domain\Neo.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Neo.Infrastructure.Framework.Redis\Neo.Infrastructure.Framework.Redis.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Neo.Infrastructure.Projection.MongoDB\Neo.Infrastructure.Projection.MongoDB.csproj" />
     <ProjectReference Include="..\Neo.Application.Contracts\Neo.Application.Contracts.csproj" />

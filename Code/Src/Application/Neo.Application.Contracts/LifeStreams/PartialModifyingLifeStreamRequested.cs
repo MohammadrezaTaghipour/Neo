@@ -2,13 +2,14 @@
 
 namespace Neo.Application.Contracts.LifeStreams;
 
-public class PartialModifyingLifeStreamRequested : BaseRequest
+public class PartialModifyingLifeStreamRequested : IRequest
 {
     public PartialModifyingLifeStreamRequested()
     {
         Metadata = new List<StreamEventMetadaRequestItem>();
     }
 
+    public string? RequestId { get; set; }
     public long Id { get; set; }
     public LifeStreamPartialModificationOperationType OperationType { get; set; }
     public Guid LifeStreamId { get; set; }
@@ -29,10 +30,4 @@ public class StreamEventMetadaRequestItem
 {
     public string Key { get; set; }
     public string Value { get; set; }
-}
-
-
-public class PartialModifyingLifeStreamRequestExecuted
-{
-    public Guid Id { get; set; }
 }

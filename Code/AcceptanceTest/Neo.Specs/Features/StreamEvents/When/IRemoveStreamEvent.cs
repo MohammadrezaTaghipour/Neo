@@ -1,9 +1,9 @@
 ﻿using Neo.Specs.Framework;
-using Neo.Specs.ScreenPlay.StreamEvents.Commands;
-using Suzianna.Core.Screenplay.Actors;
-using Suzianna.Core.Screenplay;
-using TechTalk.SpecFlow;
 using Neo.Specs.ScreenPlay.LifeStreams.Questions;
+using Neo.Specs.ScreenPlay.StreamEvents.Commands;
+using Suzianna.Core.Screenplay;
+using Suzianna.Core.Screenplay.Actors;
+using TechTalk.SpecFlow;
 
 namespace Neo.Specs.Features.StreamEvents.When;
 

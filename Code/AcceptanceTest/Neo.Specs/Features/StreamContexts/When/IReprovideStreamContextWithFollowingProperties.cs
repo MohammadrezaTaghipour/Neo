@@ -35,6 +35,6 @@ public class IReprovideStreamContextWithFollowingProperties
     public void Func(string title)
     {
         var command = _context.Get<ModifyStreamContextCommand>();
-        _commandBus.Dispatch(command);  
+        _commandBus.Dispatch(command);
     }
 }

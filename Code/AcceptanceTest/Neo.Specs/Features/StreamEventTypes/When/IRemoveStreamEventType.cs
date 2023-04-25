@@ -1,7 +1,5 @@
 ﻿using Neo.Specs.Framework;
 using Neo.Specs.ScreenPlay.StreamEventTypes.Commands;
-using Suzianna.Core.Screenplay;
-using Suzianna.Core.Screenplay.Actors;
 using TechTalk.SpecFlow;
 
 namespace Neo.Specs.Features.StreamEventTypes.When;
@@ -19,7 +17,7 @@ public class IRemoveStreamEventType
         _commandBus = commandBus;
     }
 
-    [When("I remove stream event type '(.*)'")]
+    [When("I remove stream event type '([^']*)'")]
     public void Func(string title)
     {
         var command = new RemoveStreamEventTypeCommand

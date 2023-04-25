@@ -25,15 +25,17 @@ public class OnStreamEventTypeActivitiesFaulted :
     }
 
     public async Task Execute(
-        BehaviorContext<StreamEventTypeMachineState,
-        ActivitiesFaulted> context, IBehavior<StreamEventTypeMachineState,
-            ActivitiesFaulted> next)
+        BehaviorContext<StreamEventTypeMachineState, ActivitiesFaulted> context,
+        IBehavior<StreamEventTypeMachineState, ActivitiesFaulted> next)
     {
         var errorResponse = _errorResponseBuilder
             .Buid(context.Message.ErrorCode, context.Message.ErrorMessage);
 
         await _notificationPublisher
-            .Publish(new NotificationMessage(context.Message.RequestId, errorResponse))
+            .Publish(RequestStatusNotificationMessage.Failed(
+                context.Message.RequestId, context.Message.Id,
+                context.Saga.CurrentState,
+                errorResponse.Code, errorResponse.Message))
             .ConfigureAwait(false);
 
         await next.Execute(context).ConfigureAwait(false);
@@ -41,7 +43,7 @@ public class OnStreamEventTypeActivitiesFaulted :
 
     public Task Faulted<TException>(
         BehaviorExceptionContext<StreamEventTypeMachineState,
-        ActivitiesFaulted, TException> context,
+            ActivitiesFaulted, TException> context,
         IBehavior<StreamEventTypeMachineState, ActivitiesFaulted> next)
         where TException : Exception
     {

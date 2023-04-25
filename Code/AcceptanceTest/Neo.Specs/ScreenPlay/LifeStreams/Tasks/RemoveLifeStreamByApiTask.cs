@@ -21,7 +21,7 @@ public class RemoveLifeStreamByApiTask : ITask
         actor.AttemptsTo(Delete
           .From($"/api/LifeStreams/{_command.Id}/{_command.Version}"));
 
-        if (!actor.Recall<LastResponseException>().HasException())
+        if (!actor.Recall<LastRequestResponse>().HasException())
         {
             var status = actor.AsksFor(
                 new GetLifeStreamByIdQuestion(_command.Id)).Status;

@@ -4,6 +4,7 @@ namespace Neo.Specs.ScreenPlay.LifeStreams.Commands;
 
 public class DefineLifeStreamCommand : ICommand
 {
+    public string RequestId { get; set; }
     public Guid Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }

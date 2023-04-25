@@ -19,11 +19,6 @@ public class StreamEventTypeMachineState :
     public string CurrentState { get; set; }
 
     public Guid StreamEventTypeId { get; set; }
-    //TODO: this approach doesn't work well
-    // in some situations a request might receive others error
-    // so, think to find another solution.
-    //public ErrorResponse Error { get; set; }
-
     public ReferentialPointerContainer ReferentialPointerCurrentState { get; set; }
     public ReferentialPointerContainer ReferentialPointerNextState { get; set; }
     public ProjectionSyncPosition ProjectionSyncPosition { get; set; }

@@ -4,7 +4,7 @@ namespace Neo.Specs.Configurations;
 
 public static class ConfigurationExtensions
 {
-    public static TModel GetOptions<TModel>(this IConfiguration configuration, string section) 
+    public static TModel GetOptions<TModel>(this IConfiguration configuration, string section)
         where TModel : new()
     {
         var model = new TModel();

@@ -1,8 +1,8 @@
-﻿using Suzianna.Core.Screenplay.Actors;
-using Suzianna.Core.Screenplay;
-using TechTalk.SpecFlow;
+﻿using FluentAssertions;
 using Neo.Specs.ScreenPlay.StreamContexts.Questions;
-using FluentAssertions;
+using Suzianna.Core.Screenplay;
+using Suzianna.Core.Screenplay.Actors;
+using TechTalk.SpecFlow;
 
 namespace Neo.Specs.Features.StreamContexts.Then;
 

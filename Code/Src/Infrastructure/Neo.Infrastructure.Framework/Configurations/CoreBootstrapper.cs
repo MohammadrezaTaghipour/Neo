@@ -20,8 +20,6 @@ public class CoreBootstrapper : IBootstrapper
         services.AddSingleton<IMessageSerializer, NewtonsoftMessageSerializer>();
 
         services.AddScoped<IDominEventProjectorDispatcher, InMemoryDominEventProjectorDispatcher>();
-
-        services.AddScoped<IActionFilter, RequestCorrelationFilterAttribute>();
-
+        services.AddScoped<RequestCorrelationFilterAttribute>();
     }
 }

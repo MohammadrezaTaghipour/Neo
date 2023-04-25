@@ -2,5 +2,5 @@
 
 public interface INotificationPublisher
 {
-    Task Publish(NotificationMessage message);
+    Task Publish<T>(T message) where T : NotificationMessage;
 }

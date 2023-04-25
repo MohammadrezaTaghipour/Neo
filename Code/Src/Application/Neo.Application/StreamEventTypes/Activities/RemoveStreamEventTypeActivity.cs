@@ -53,9 +53,10 @@ public class RemoveStreamEventTypeActivity :
             await context.Send(context.SourceAddress,
                 new ActivitiesFaulted
                 {
+                    RequestId = context.Arguments.RequestId,
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
-                    ErrorMessage = e.Message
+                    ErrorMessage = e.Message,
                 }).ConfigureAwait(false);
             throw;
         }

@@ -47,12 +47,18 @@ public class StreamEventTypesController : ControllerBase
         return Accepted();
     }
 
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("{id:guid}/{version:long}")]
     public async Task<IActionResult> Delete(Guid id,
-        RemovingStreamEventTypeRequested command,
+        long version, 
+        [FromHeader(Name = NeoApplicationConstants.RequestInitiatorHeaderKey)] string requestId,
         CancellationToken cancellationToken)
     {
-        command.Id = id;
+        var command = new RemovingStreamEventTypeRequested
+        {
+            RequestId = requestId,
+            Id = id,
+            Version = version
+        };
         await _removingClient
             .GetResponse<RemovingStreamEventTypeRequested>(command, cancellationToken)
             .ConfigureAwait(false);

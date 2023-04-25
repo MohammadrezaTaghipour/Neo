@@ -2,13 +2,9 @@
 
 namespace Neo.Application.Contracts.LifeStreams;
 
-public class RemovingLifeStreamRequested : BaseRequest
+public class RemovingLifeStreamRequested : IRequest
 {
+    public string? RequestId { get; set; }
     public Guid Id { get; set; }
     public long Version { get; set; }
-}
-
-public class RemovingLifeStreamRequestExecuted
-{
-    public Guid Id { get; set; }
 }

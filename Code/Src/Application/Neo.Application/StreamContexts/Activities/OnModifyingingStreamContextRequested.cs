@@ -13,7 +13,8 @@ public class OnModifyingStreamContextRequested :
 {
     private readonly MassTransitOptions _options;
 
-    public OnModifyingStreamContextRequested(IOptions<MassTransitOptions> options)
+    public OnModifyingStreamContextRequested(
+        IOptions<MassTransitOptions> options)
     {
         _options = options.Value;
     }
@@ -25,7 +26,7 @@ public class OnModifyingStreamContextRequested :
 
     public async Task Execute(
         BehaviorContext<StreamContextMachineState,
-        ModifyingStreamContextRequested> context,
+            ModifyingStreamContextRequested> context,
         IBehavior<StreamContextMachineState,
             ModifyingStreamContextRequested> next)
     {
@@ -54,6 +55,7 @@ public class OnModifyingStreamContextRequested :
             RoutingSlipEventContents.Data,
             x => x.Send(new StreamContextActivitiesCompleted
             {
+                RequestId = context.Message.RequestId,
                 Id = context.Message.Id
             }));
 
@@ -65,7 +67,7 @@ public class OnModifyingStreamContextRequested :
 
     public Task Faulted<TException>(
         BehaviorExceptionContext<StreamContextMachineState,
-        ModifyingStreamContextRequested, TException> context,
+            ModifyingStreamContextRequested, TException> context,
         IBehavior<StreamContextMachineState,
             ModifyingStreamContextRequested> next)
         where TException : Exception

@@ -2,6 +2,7 @@
 using MassTransit.Courier.Contracts;
 using Microsoft.Extensions.Options;
 using Neo.Application.Contracts.StreamEventTypes;
+using Neo.Infrastructure.Framework.Notifications;
 
 namespace Neo.Application.StreamEventTypes.Activities;
 
@@ -24,7 +25,7 @@ public class OnModifyingStreamEventTypeRequested :
 
     public async Task Execute(
         BehaviorContext<StreamEventTypeMachineState,
-        ModifyingStreamEventTypeRequested> context,
+            ModifyingStreamEventTypeRequested> context,
         IBehavior<StreamEventTypeMachineState,
             ModifyingStreamEventTypeRequested> next)
     {
@@ -50,7 +51,8 @@ public class OnModifyingStreamEventTypeRequested :
              RoutingSlipEventContents.Data,
              x => x.Send(new StreamEventTypeActivitiesCompleted
              {
-                 Id = context.Message.Id
+                 Id = context.Message.Id,
+                 RequestId = context.Message.RequestId
              }));
 
         var routingSlip = builder.Build();
@@ -61,8 +63,8 @@ public class OnModifyingStreamEventTypeRequested :
 
     public Task Faulted<TException>(
         BehaviorExceptionContext<StreamEventTypeMachineState,
-        ModifyingStreamEventTypeRequested, TException> context,
-            IBehavior<StreamEventTypeMachineState, ModifyingStreamEventTypeRequested> next)
+            ModifyingStreamEventTypeRequested, TException> context,
+        IBehavior<StreamEventTypeMachineState, ModifyingStreamEventTypeRequested> next)
         where TException : Exception
     {
         return next.Faulted(context);

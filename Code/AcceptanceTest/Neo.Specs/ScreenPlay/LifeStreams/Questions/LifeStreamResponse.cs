@@ -6,7 +6,7 @@ namespace Neo.Specs.ScreenPlay.LifeStreams.Questions;
 
 public record LifeStreamResponse(Guid? Id,
     string? Title,
-    string? Description, 
+    string? Description,
     bool? Removed,
     IReadOnlyCollection<StreamEventResponse>? StreamEvents,
     StatusResponse Status);

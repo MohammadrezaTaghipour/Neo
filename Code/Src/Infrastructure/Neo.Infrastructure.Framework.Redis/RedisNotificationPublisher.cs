@@ -16,12 +16,12 @@ public class RedisNotificationPublisher : INotificationPublisher
         _seializer = seializer;
     }
 
-    public async Task Publish(NotificationMessage message)
+    public async Task Publish<T>(T message) where T : NotificationMessage
     {
         var db = _connectionFactory.GetConnection().GetDatabase();
         await db.StringSetAsync(message.Id,
-            _seializer.Serialize(message.Content),
-            TimeSpan.FromSeconds(60))
+            _seializer.Serialize(message),
+            message.TTL)
             .ConfigureAwait(false);
     }
 }

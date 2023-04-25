@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.LifeStreams;
+using Neo.Infrastructure.Framework.AspCore;
 
 namespace Neo.Gateways.RestApi.LifeStreams;
 
@@ -50,10 +51,13 @@ public class LifeStreamsController : ControllerBase
 
     [HttpDelete("{id:guid}/{version:long}")]
     public async Task<IActionResult> Delete(Guid id,
-        int version, CancellationToken cancellationToken)
+        int version,
+        [FromHeader(Name = NeoApplicationConstants.RequestInitiatorHeaderKey)] string requestId, 
+        CancellationToken cancellationToken)
     {
         var command = new RemovingLifeStreamRequested
         {
+            RequestId = requestId,
             Id = id,
             Version = version
         };

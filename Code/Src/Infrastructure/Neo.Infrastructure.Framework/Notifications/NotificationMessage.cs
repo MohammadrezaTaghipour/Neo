@@ -1,13 +1,15 @@
 ﻿namespace Neo.Infrastructure.Framework.Notifications;
 
-public class NotificationMessage
+public abstract class NotificationMessage
 {
     public string Id { get; }
-    public object Content { get; }
+    public TimeSpan? TTL { get; }
+    public DateTime PublishDateTime { get; }
 
-    public NotificationMessage(string id, object content)
+    protected NotificationMessage(string id, TimeSpan? ttl)
     {
         Id = id;
-        Content = content;
+        TTL = ttl;
+        PublishDateTime = DateTime.Now;
     }
 }

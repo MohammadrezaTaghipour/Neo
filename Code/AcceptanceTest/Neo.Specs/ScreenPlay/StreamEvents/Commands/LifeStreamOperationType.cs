@@ -5,4 +5,3 @@ public enum LifeStreamOperationType
     AppendStreamEvent,
     RemoveStreamEvent,
 }
- 

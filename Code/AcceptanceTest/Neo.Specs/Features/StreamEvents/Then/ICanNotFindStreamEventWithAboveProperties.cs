@@ -1,10 +1,10 @@
-﻿using Neo.Specs.Framework;
-using Suzianna.Core.Screenplay.Actors;
-using Suzianna.Core.Screenplay;
-using TechTalk.SpecFlow;
-using Neo.Specs.ScreenPlay.StreamEvents.Commands;
+﻿using FluentAssertions;
+using Neo.Specs.Framework;
 using Neo.Specs.ScreenPlay.LifeStreams.Questions;
-using FluentAssertions;
+using Neo.Specs.ScreenPlay.StreamEvents.Commands;
+using Suzianna.Core.Screenplay;
+using Suzianna.Core.Screenplay.Actors;
+using TechTalk.SpecFlow;
 
 namespace Neo.Specs.Features.StreamEvents.Then;
 

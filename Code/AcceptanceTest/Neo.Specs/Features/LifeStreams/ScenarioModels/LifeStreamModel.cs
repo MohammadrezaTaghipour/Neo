@@ -1,5 +1,4 @@
-﻿using System;
-namespace Neo.Specs.Features.LifeStreams.ScenarioModels
+﻿namespace Neo.Specs.Features.LifeStreams.ScenarioModels
 {
     public class LifeStreamModel
     {

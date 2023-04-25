@@ -2,12 +2,14 @@
 
 namespace Neo.Application.Contracts.StreamContexts;
 
-public class DefiningStreamContextRequested : BaseRequest
+public class DefiningStreamContextRequested : IRequest
 {
     public DefiningStreamContextRequested()
     {
         StreamEventTypes = new List<StreamEventTypeRequestItem>();
     }
+
+    public string? RequestId { get; set; }
     public Guid Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }

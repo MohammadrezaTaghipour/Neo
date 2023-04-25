@@ -43,6 +43,7 @@ public class ModifyStreamContextActivity :
             await context.Send(context.SourceAddress,
                 new ActivitiesFaulted
                 {
+                    RequestId = context.Arguments.RequestId,
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
                     ErrorMessage = e.Message
@@ -54,6 +55,8 @@ public class ModifyStreamContextActivity :
     public async Task<CompensationResult> Compensate(
         CompensateContext<StreamContextActivityLog> context)
     {
+        //TODO: 
+        await Task.CompletedTask;
         return context.Compensated();
     }
 }

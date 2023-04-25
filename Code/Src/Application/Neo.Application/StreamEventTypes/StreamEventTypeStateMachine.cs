@@ -21,12 +21,12 @@ public class StreamEventTypeStateMachine :
                     await context.RespondAsync(
                         new StreamEventTypeStatusRequestExecuted
                         {
-                            Faulted = true,
                             ErrorMessage = $"Item with id:'{context.Message.Id}' not found."
                         });
                 }
             }));
         });
+
         Event(() => ActivitiesCompleted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => ActivitiesFaulted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => DefiningRequested, x => x.CorrelateById(m => m.Message.Id));
@@ -57,19 +57,21 @@ public class StreamEventTypeStateMachine :
                 })
                 .TransitionTo(ReferentialSyncing),
             When(ActivitiesFaulted)
-                .Activity(_ => _.OfType<OnStreamEventTypeActivitiesFaulted>())
-                .TransitionTo(Faulted),
+                .Activity(_ => _.OfType<OnStreamEventTypeActivitiesFaulted>()),
             When(ActivitiesCompleted)
+                .Activity(_ => _.OfType<OnStreamEventTypeActivitiesCompleted>())
                 .TransitionTo(Idle));
 
         During(ReferentialSyncing,
             When(SyncingReferentialPointersExecuted)
                 .TransitionTo(ProjectionSyncing),
             When(ActivitiesCompleted)
+                .Activity(_ => _.OfType<OnStreamEventTypeActivitiesCompleted>())
                 .TransitionTo(Idle));
 
         During(ProjectionSyncing,
             When(ActivitiesCompleted)
+                .Activity(_ => _.OfType<OnStreamEventTypeActivitiesCompleted>())
                 .TransitionTo(Idle));
 
         During(Idle,
@@ -119,15 +121,14 @@ public class StreamEventTypeStateMachine :
 
         DuringAny(
             When(StatusRequested)
-                    .RespondAsync(x => x.Init<StreamEventTypeStatusRequestExecuted>(
-                        new StreamEventTypeStatusRequestExecuted
-                        {
-                            Id = x.Saga.StreamEventTypeId,
-                            Completed = x.Saga.CurrentState == nameof(Idle) ||
-                                        x.Saga.CurrentState == nameof(Faulted),
-                            OriginalVersion = x.Saga.ProjectionSyncPosition.OriginalVersion,
-                            CurrentVersion = x.Saga.ProjectionSyncPosition.CurrentVersion
-                        })));
+                .RespondAsync(x => x.Init<StreamEventTypeStatusRequestExecuted>(
+                    new StreamEventTypeStatusRequestExecuted
+                    {
+                        Id = x.Saga.StreamEventTypeId,
+                        Completed = x.Saga.CurrentState == nameof(Idle),
+                        OriginalVersion = x.Saga.ProjectionSyncPosition.OriginalVersion,
+                        CurrentVersion = x.Saga.ProjectionSyncPosition.CurrentVersion
+                    })));
     }
 
 
@@ -135,7 +136,6 @@ public class StreamEventTypeStateMachine :
     public State Modifying { get; private set; }
     public State Removing { get; private set; }
     public State Idle { get; private set; }
-    public State Faulted { get; private set; }
     public State ReferentialSyncing { get; private set; }
     public State ProjectionSyncing { get; private set; }
 
@@ -150,5 +150,4 @@ public class StreamEventTypeStateMachine :
     public Event<RemovingStreamEventTypeRequested> RemovingRequested { get; private set; }
     public Event<RemovingStreamEventTypeRequestExecuted> RemovingExecuted { get; private set; }
     public Event<SyncingReferentialPointersRequestExecuted> SyncingReferentialPointersExecuted { get; private set; }
-
 }

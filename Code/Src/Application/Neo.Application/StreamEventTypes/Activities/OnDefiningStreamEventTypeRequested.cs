@@ -23,8 +23,9 @@ public class OnDefiningStreamEventTypeRequested :
         visitor.Visit(this);
     }
 
-    public async Task Execute(BehaviorContext<StreamEventTypeMachineState,
-        DefiningStreamEventTypeRequested> context,
+    public async Task Execute(
+        BehaviorContext<StreamEventTypeMachineState,
+            DefiningStreamEventTypeRequested> context,
         IBehavior<StreamEventTypeMachineState,
             DefiningStreamEventTypeRequested> next)
     {
@@ -65,7 +66,8 @@ public class OnDefiningStreamEventTypeRequested :
             RoutingSlipEventContents.Data,
             x => x.Send(new StreamEventTypeActivitiesCompleted
             {
-                Id = context.Message.Id
+                RequestId = context.Message.RequestId,
+                Id = context.Message.Id,
             }));
 
         var routingSlip = builder.Build();
@@ -74,8 +76,9 @@ public class OnDefiningStreamEventTypeRequested :
         await next.Execute(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<StreamEventTypeMachineState,
-        DefiningStreamEventTypeRequested, TException> context,
+    public Task Faulted<TException>(
+        BehaviorExceptionContext<StreamEventTypeMachineState,
+            DefiningStreamEventTypeRequested, TException> context,
         IBehavior<StreamEventTypeMachineState, DefiningStreamEventTypeRequested> next)
         where TException : Exception
     {

@@ -13,7 +13,8 @@ public class OnRemovingStreamContextRequested :
 {
     private readonly MassTransitOptions _options;
 
-    public OnRemovingStreamContextRequested(IOptions<MassTransitOptions> options)
+    public OnRemovingStreamContextRequested(
+        IOptions<MassTransitOptions> options)
     {
         _options = options.Value;
     }
@@ -23,9 +24,9 @@ public class OnRemovingStreamContextRequested :
         visitor.Visit(this);
     }
 
-    public async Task Execute
-        (BehaviorContext<StreamContextMachineState,
-        RemovingStreamContextRequested> context,
+    public async Task Execute(
+        BehaviorContext<StreamContextMachineState,
+            RemovingStreamContextRequested> context,
         IBehavior<StreamContextMachineState,
             RemovingStreamContextRequested> next)
     {
@@ -56,6 +57,7 @@ public class OnRemovingStreamContextRequested :
             RoutingSlipEventContents.Data,
             x => x.Send(new StreamContextActivitiesCompleted
             {
+                RequestId = context.Message.RequestId,
                 Id = context.Message.Id
             }));
 

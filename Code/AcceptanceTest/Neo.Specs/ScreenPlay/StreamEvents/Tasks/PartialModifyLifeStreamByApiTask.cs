@@ -21,7 +21,7 @@ public class PartialModifyLifeStreamByApiTask : ITask
         actor.AttemptsTo(Patch.DataAsJson(_command)
             .To($"/api/LifeStreams/{_command.LifeStreamId}"));
 
-        if (!actor.Recall<LastResponseException>().HasException())
+        if (!actor.Recall<LastRequestResponse>().HasException())
         {
             var status = actor.AsksFor(
                 new GetLifeStreamByIdQuestion(_command.LifeStreamId)).Status;

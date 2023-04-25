@@ -9,7 +9,7 @@ public class ModifyingStreamEventTypeRequested : IRequest
         Metadata = new List<StreamEventTypeMetadataRequestItem>();
     }
 
-    public string RequestId { get; set; }
+    public string? RequestId { get; set; }
     public Guid Id { get; set; }
     public string Title { get; set; }
     public IReadOnlyList<StreamEventTypeMetadataRequestItem> Metadata { get; set; }

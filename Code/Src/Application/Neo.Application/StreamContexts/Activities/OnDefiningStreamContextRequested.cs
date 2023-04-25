@@ -32,12 +32,14 @@ public class OnDefiningStreamContextRequested :
 
         var builder = new RoutingSlipBuilder(NewId.NextGuid());
 
-        builder.AddActivity(nameof(DefineStreamContextActivity),
+        builder.AddActivity(
+            nameof(DefineStreamContextActivity),
             RoutingSlipAddress.ForQueue<DefineStreamContextActivity,
                 DefiningStreamContextRequested>(),
             context.Message);
 
-        builder.AddActivity(nameof(SyncReferentialPointersActivity),
+        builder.AddActivity(
+            nameof(SyncReferentialPointersActivity),
             RoutingSlipAddress.ForQueue<SyncReferentialPointersActivity,
                 SyncingReferentialPointersRequested>(),
             new SyncingReferentialPointersRequested
@@ -47,11 +49,22 @@ public class OnDefiningStreamContextRequested :
                 NextState = context.Saga.ReferentialPointerNextState
             });
 
-        await builder.AddSubscription(new Uri(_options.StreamContextStateMachineAddress),
+        builder.AddActivity(
+            nameof(SyncStreamContextProjectionActivity),
+            RoutingSlipAddress.ForQueue<SyncStreamContextProjectionActivity,
+                SyncStreamContextProjection>(),
+            new SyncStreamContextProjection
+            {
+                Id = context.Message.Id,
+            });
+
+        await builder.AddSubscription(
+            new Uri(_options.StreamContextStateMachineAddress),
                 RoutingSlipEvents.Completed | RoutingSlipEvents.Supplemental,
                 RoutingSlipEventContents.Data,
                 x => x.Send(new StreamContextActivitiesCompleted
                 {
+                    RequestId = context.Message.RequestId,
                     Id = context.Message.Id
                 }));
 

@@ -19,6 +19,7 @@
       <ProjectReference Include="..\Gateways\Neo.Gateways.RestApi\Neo.Gateways.RestApi.csproj" />
       <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Framework.EventStore\Neo.Infrastructure.Framework.EventStore.csproj" />
       <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Framework.MongoDB\Neo.Infrastructure.Framework.MongoDB.csproj" />
+      <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Framework.Redis\Neo.Infrastructure.Framework.Redis.csproj" />
       <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Framework\Neo.Infrastructure.Framework.csproj" />
       <ProjectReference Include="..\Infrastructure\Neo.Infrastructure.Persistence.ES\Neo.Infrastructure.Persistence.ES.csproj" />
     </ItemGroup>

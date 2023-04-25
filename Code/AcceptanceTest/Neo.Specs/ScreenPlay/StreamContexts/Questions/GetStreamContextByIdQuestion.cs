@@ -16,21 +16,8 @@ public class GetStreamContextByIdQuestion : IQuestion<StreamContextResponse>
 
     public StreamContextResponse AnsweredBy(Actor actor)
     {
-        while (true)
-        {
-            actor.AttemptsTo(Get.ResourceAt($"/api/StreamContextsQuery/{_id}"));
-            var response = actor.AsksFor(LastResponse.Content<StreamContextResponse>());
-            if (response != null && response.Status != null)
-                if (response.Status.Completed)
-                {
-                    if (response.Status.Faulted)
-                    {
-                        actor.Recall<LastResponseException>().Set(
-                            response.Status.ErrorCode,
-                            response.Status.ErrorMessage);
-                    }
-                    return response;
-                }
-        }
+        actor.AttemptsTo(Get.ResourceAt($"/api/streamContextsQuery/{_id}"));
+        var response = actor.AsksFor(LastResponse.Content<StreamContextResponse>());
+        return response;
     }
 }

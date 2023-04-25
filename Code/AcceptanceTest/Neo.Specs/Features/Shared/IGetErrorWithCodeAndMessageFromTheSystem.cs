@@ -1,8 +1,8 @@
-﻿using Suzianna.Rest.Screenplay.Questions;
-using TechTalk.SpecFlow;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Suzianna.Core.Screenplay;
 using Suzianna.Core.Screenplay.Actors;
+using Suzianna.Rest.Screenplay.Questions;
+using TechTalk.SpecFlow;
 
 namespace Neo.Specs.Features.Shared
 {
@@ -19,7 +19,7 @@ namespace Neo.Specs.Features.Shared
         [Then("I get error with code '(.*)' and message '(.*)' from the system")]
         public void Func(string code, string message)
         {
-            var actual = _actor.Recall<LastResponseException>().Content();
+            var actual = _actor.Recall<LastRequestResponse>().Content();
             actual.Code.Should().Be(code);
         }
     }

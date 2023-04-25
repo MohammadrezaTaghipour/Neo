@@ -1,6 +1,4 @@
-﻿using MassTransit;
-using MongoDB.Driver;
-using Neo.Application.Contracts.StreamEventTypes;
+﻿using MongoDB.Driver;
 using Neo.Infrastructure.Framework.Application;
 using Neo.Infrastructure.Projection.MongoDB.StreamEventTypes;
 
@@ -15,30 +13,15 @@ public interface IStreamEventTypeQueryService : IQueryService
 public class StreamEventTypeQueryService : IStreamEventTypeQueryService
 {
     private readonly IMongoDatabase _mongoDatabase;
-    private readonly IRequestClient<StreamEventTypeStatusRequested> _statusRequestClient;
 
-    public StreamEventTypeQueryService(IMongoDatabase mongoDatabase,
-        IRequestClient<StreamEventTypeStatusRequested> statusRequestClient)
+    public StreamEventTypeQueryService(IMongoDatabase mongoDatabase)
     {
         _mongoDatabase = mongoDatabase;
-        _statusRequestClient = statusRequestClient;
     }
 
     public async Task<StreamEventTypeResponse?> Get(Guid id,
         CancellationToken cancellationToken)
     {
-        var status = (await _statusRequestClient
-               .GetResponse<StreamEventTypeStatusRequestExecuted>(
-               new StreamEventTypeStatusRequested
-               {
-                   Id = id
-               }).ConfigureAwait(false)).Message;
-        if (status.Faulted)
-            return StreamEventTypeResponse.CreateFaulted(
-                new StatusResponse(status.Completed,
-                status.ErrorCode,
-                status.ErrorMessage));
-
         var filter = Builders<StreamEventTypeProjectionModel>
             .Filter
             .Eq(_ => _.Id, id);
@@ -51,7 +34,7 @@ public class StreamEventTypeQueryService : IStreamEventTypeQueryService
         if (projectionModel == null)
             return null;
 
-        return MapFrom(projectionModel, status);
+        return MapFrom(projectionModel);
     }
 
 
@@ -73,7 +56,7 @@ public class StreamEventTypeQueryService : IStreamEventTypeQueryService
         var response = new List<StreamEventTypeResponse>();
         foreach (var projectionModel in projectionModels)
         {
-            response.Add(MapFrom(projectionModel, null));
+            response.Add(MapFrom(projectionModel));
         }
         return response;
     }
@@ -84,18 +67,12 @@ public class StreamEventTypeQueryService : IStreamEventTypeQueryService
         return collection;
     }
 
-    static StreamEventTypeResponse MapFrom(StreamEventTypeProjectionModel projectionModel,
-        StreamEventTypeStatusRequestExecuted? statusExecutedResponse)
+    static StreamEventTypeResponse MapFrom(
+        StreamEventTypeProjectionModel projectionModel)
     {
-        StatusResponse status = null;
-        if (statusExecutedResponse != null)
-            status = new StatusResponse(statusExecutedResponse.Completed,
-                statusExecutedResponse.ErrorCode,
-                statusExecutedResponse.ErrorMessage);
         return new StreamEventTypeResponse(projectionModel.Id,
             projectionModel.Title, projectionModel.Removed,
             projectionModel.Metadata.Select(_ =>
-                new StreamEventTypeMetadataResponse(_.Title)).ToList(),
-            status);
+                new StreamEventTypeMetadataResponse(_.Title)).ToList());
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Neo.Infrastructure.Framework.Domain;
 using Newtonsoft.Json;
 
@@ -7,6 +8,8 @@ namespace Neo.Infrastructure.Framework.AspCore
     public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private ILogger<ExceptionHandlerMiddleware> _logger;
+
 
         public ExceptionHandlerMiddleware(RequestDelegate next)
         {
@@ -14,8 +17,10 @@ namespace Neo.Infrastructure.Framework.AspCore
         }
 
         public async Task Invoke(HttpContext context,
-            IErrorResponseBuilder errorResponseBuilder)
+            IErrorResponseBuilder errorResponseBuilder,
+            ILogger<ExceptionHandlerMiddleware> logger)
         {
+            _logger = logger;
             try
             {
                 await _next.Invoke(context);
@@ -36,7 +41,7 @@ namespace Neo.Infrastructure.Framework.AspCore
                             businessException, errorResponseBuilder);
                     break;
                 default:
-                    await HandleDefaultException(httpContext, errorResponseBuilder);
+                    await HandleDefaultException(httpContext, exception, errorResponseBuilder);
                     break;
             }
         }
@@ -51,8 +56,10 @@ namespace Neo.Infrastructure.Framework.AspCore
         }
 
         private async Task HandleDefaultException(HttpContext httpContext,
+            Exception exception,
             IErrorResponseBuilder errorResponseBuilder)
         {
+            _logger.LogError(exception, exception.Message);
             var error = errorResponseBuilder
                 .Buid(string.Empty, "Unhandled exception");
             await WriteToResponse(httpContext, error);

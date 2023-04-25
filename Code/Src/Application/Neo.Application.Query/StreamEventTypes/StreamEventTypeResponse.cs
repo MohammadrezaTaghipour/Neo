@@ -2,14 +2,8 @@
 
 public record StreamEventTypeResponse(Guid? Id, string? Title,
     bool? Removed,
-    IReadOnlyCollection<StreamEventTypeMetadataResponse> Metadata,
-    StatusResponse Status)
+    IReadOnlyCollection<StreamEventTypeMetadataResponse> Metadata)
 {
-    public static StreamEventTypeResponse CreateFaulted(StatusResponse response)
-    {
-        return new StreamEventTypeResponse(null,
-            null, null, Array.Empty<StreamEventTypeMetadataResponse>(), response);
-    }
 }
 
 

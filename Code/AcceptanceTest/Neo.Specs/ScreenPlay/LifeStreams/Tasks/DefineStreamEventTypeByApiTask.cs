@@ -21,7 +21,7 @@ public class DefineLifeStreamByApiTask : ITask
         actor.AttemptsTo(Post.DataAsJson(_command)
             .To($"/api/LifeStreams"));
 
-        if (!actor.Recall<LastResponseException>().HasException())
+        if (!actor.Recall<LastRequestResponse>().HasException())
         {
             var status = actor.AsksFor(
                 new GetLifeStreamByIdQuestion(_command.Id)).Status;

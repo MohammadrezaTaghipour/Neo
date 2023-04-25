@@ -2,8 +2,9 @@
 
 namespace Suzianna.Rest.Screenplay.Questions;
 
-public class LastResponseException
+public class LastRequestResponse
 {
+    public string RequestId { get; set; }
     private ErrorResponse _response;
 
     public void Set(string errorCode, string errorMessage)

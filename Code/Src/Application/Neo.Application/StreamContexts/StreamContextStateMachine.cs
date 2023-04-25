@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts;
+using Neo.Application.Contracts.ReferentialPointers;
 using Neo.Application.Contracts.StreamContexts;
 using Neo.Application.StreamContexts.Activities;
 
@@ -19,7 +20,6 @@ public class StreamContextStateMachine :
                 {
                     await context.RespondAsync(new StreamContextStatusRequestExecuted
                     {
-                        Faulted = true,
                         ErrorMessage = $"Item with id:'{context.Message.Id}' not found."
                     });
                 }
@@ -33,6 +33,7 @@ public class StreamContextStateMachine :
         Event(() => ModifyingExecuted, x => x.CorrelateById(m => m.Message.Id));
         Event(() => RemovingRequested, x => x.CorrelateById(m => m.Message.Id));
         Event(() => RemovingExecuted, x => x.CorrelateById(m => m.Message.Id));
+        Event(() => SyncingReferentialPointersExecuted, x => x.CorrelateById(m => m.Message.Id));
 
         InstanceState(x => x.CurrentState);
 
@@ -49,13 +50,22 @@ public class StreamContextStateMachine :
             When(DefiningExecuted)
                 .TransitionTo(ReferentialSyncing),
             When(ActivitiesCompleted)
+                .Activity(_ => _.OfType<OnStreamContextActivitiesCompleted>())
                 .TransitionTo(Idle),
             When(ActivitiesFaulted)
                 .Activity(_ => _.OfType<OnStreamContextActivitiesFaulted>())
-                .TransitionTo(Faulted));
+                .Finalize());
 
         During(ReferentialSyncing,
+            When(SyncingReferentialPointersExecuted)
+                .TransitionTo(ProjectionSyncing),
             When(ActivitiesCompleted)
+                .Activity(_ => _.OfType<OnStreamContextActivitiesCompleted>())
+                .TransitionTo(Idle));
+
+        During(ProjectionSyncing,
+            When(ActivitiesCompleted)
+                .Activity(_ => _.OfType<OnStreamContextActivitiesCompleted>())
                 .TransitionTo(Idle));
 
         During(Idle,
@@ -95,25 +105,21 @@ public class StreamContextStateMachine :
 
         DuringAny(
             When(StatusRequested)
-                    .RespondAsync(x => x.Init<StreamContextStatusRequestExecuted>(
-                        new StreamContextStatusRequestExecuted
-                        {
-                            Id = x.Saga.StreamContextId,
-                            Completed = x.Saga.CurrentState == nameof(Idle) ||
-                                        x.Saga.CurrentState == nameof(Faulted),
-                            Faulted = x.Saga.Error != null,
-                            ErrorCode = x.Saga.Error?.Code,
-                            ErrorMessage = x.Saga.Error?.Message
-                        })));
+                .RespondAsync(x => x.Init<StreamContextStatusRequestExecuted>(
+                    new StreamContextStatusRequestExecuted
+                    {
+                        Id = x.Saga.StreamContextId,
+                        Completed = x.Saga.CurrentState == nameof(Idle),
+                    })));
     }
 
 
-    public State ReferentialSyncing { get; private set; }
     public State Defining { get; private set; }
     public State Modifying { get; private set; }
     public State Removing { get; private set; }
     public State Idle { get; private set; }
-    public State Faulted { get; private set; }
+    public State ReferentialSyncing { get; private set; }
+    public State ProjectionSyncing { get; private set; }
 
     public Event<StreamContextStatusRequested> StatusRequested { get; private set; }
     public Event<StreamContextActivitiesCompleted> ActivitiesCompleted { get; private set; }
@@ -124,5 +130,5 @@ public class StreamContextStateMachine :
     public Event<ModifyingStreamContextRequestExecuted> ModifyingExecuted { get; private set; }
     public Event<RemovingStreamContextRequested> RemovingRequested { get; private set; }
     public Event<RemovingStreamContextRequestExecuted> RemovingExecuted { get; private set; }
-
+    public Event<SyncingReferentialPointersRequestExecuted> SyncingReferentialPointersExecuted { get; private set; }
 }

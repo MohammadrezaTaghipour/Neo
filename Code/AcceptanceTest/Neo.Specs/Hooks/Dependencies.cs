@@ -31,7 +31,7 @@ public static class Dependencies
         builder.Register(a =>
         {
             var options = a.Resolve<NeoOptions>();
-            var lastResponseException = new LastResponseException();
+            var lastResponseException = new LastRequestResponse();
             var cast = Cast.WhereEveryoneCan(new List<IAbility>
                 {
                     CallAnApi.At(options.ApiUrl)

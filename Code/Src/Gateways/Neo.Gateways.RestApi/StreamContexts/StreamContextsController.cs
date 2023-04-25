@@ -1,11 +1,13 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Neo.Application.Contracts.StreamContexts;
+using Neo.Infrastructure.Framework.AspCore;
 
 namespace Neo.Gateways.RestApi.StreamContexts;
 
 [ApiController]
 [Route("api/[controller]")]
+[ServiceFilter(typeof(RequestCorrelationFilterAttribute))]
 public class StreamContextsController : ControllerBase
 {
     IRequestClient<DefiningStreamContextRequested> _definingClient;
@@ -46,11 +48,14 @@ public class StreamContextsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}/{version:long}")]
-    public async Task<IActionResult> Delete(Guid id, int version,
+    public async Task<IActionResult> Delete(Guid id,
+        int version,
+        [FromHeader(Name = NeoApplicationConstants.RequestInitiatorHeaderKey)] string requestId,
         CancellationToken cancellationToken)
     {
         var command = new RemovingStreamContextRequested
         {
+            RequestId = requestId,
             Id = id,
             Version = version
         };

@@ -2,15 +2,11 @@
 
 namespace Neo.Application.Contracts.LifeStreams;
 
-public class ModifyingLifeStreamRequested : BaseRequest
+public class ModifyingLifeStreamRequested : IRequest
 {
+    public string? RequestId { get; set; }
     public Guid Id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public long Version { get; set; }
-}
-
-public class ModifyingLifeStreamRequestExecuted
-{
-    public Guid Id { get; set; }
 }

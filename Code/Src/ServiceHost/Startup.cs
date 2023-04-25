@@ -7,6 +7,7 @@ using Neo.Infrastructure.EventStore.Configurations;
 using Neo.Infrastructure.Framework.AspCore;
 using Neo.Infrastructure.Framework.Configurations;
 using Neo.Infrastructure.Framework.MongoDB.Configurations;
+using Neo.Infrastructure.Framework.Redis.Configurations;
 using Neo.Infrastructure.Framework.Swagger;
 using Neo.Infrastructure.Projection.MongoDB.Configurations;
 using ServiceHost.Configurations;
@@ -34,6 +35,7 @@ public class Startup
                 typeof(ReferentialPointerDefined).Assembly))
             .With(new MongoBootstraper(Configuration))
             .With(new MongoProjectionBootstraper())
+            .With(new RedisBootstraper(Configuration))
             .With(new MassTransitBootstrapper(Configuration,
                   new[] { typeof(DefineStreamEventTypeActivity).Assembly },
                   new[] { typeof(RoutingSlipEventConsumer).Assembly },

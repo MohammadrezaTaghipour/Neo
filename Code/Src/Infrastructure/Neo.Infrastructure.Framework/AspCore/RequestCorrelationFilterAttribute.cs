@@ -23,7 +23,7 @@ public class RequestCorrelationFilterAttribute : IActionFilter
         var param = context.ActionArguments.SingleOrDefault(p => p.Value is IRequest);
         if (param.Value is IRequest request)
             request.RequestId = _httpContextAccessor.HttpContext
-                .Request.Headers[RequestCorrelationMiddleware.CorrelationHeaderKey];
+                .Request.Headers[NeoApplicationConstants.RequestInitiatorHeaderKey];
         ;
     }
 }

@@ -13,7 +13,8 @@ public class OnRemovingStreamEventTypeRequested :
 {
     private readonly MassTransitOptions _options;
 
-    public OnRemovingStreamEventTypeRequested(IOptions<MassTransitOptions> options)
+    public OnRemovingStreamEventTypeRequested(
+        IOptions<MassTransitOptions> options)
     {
         _options = options.Value;
     }
@@ -25,7 +26,7 @@ public class OnRemovingStreamEventTypeRequested :
 
     public async Task Execute(
         BehaviorContext<StreamEventTypeMachineState,
-        RemovingStreamEventTypeRequested> context,
+            RemovingStreamEventTypeRequested> context,
         IBehavior<StreamEventTypeMachineState,
             RemovingStreamEventTypeRequested> next)
     {
@@ -64,7 +65,8 @@ public class OnRemovingStreamEventTypeRequested :
              RoutingSlipEventContents.Data,
              x => x.Send(new StreamEventTypeActivitiesCompleted
              {
-                 Id = context.Message.Id
+                 Id = context.Message.Id,
+                 RequestId = context.Message.RequestId
              }));
 
         var routingSlip = builder.Build();
@@ -73,8 +75,9 @@ public class OnRemovingStreamEventTypeRequested :
         await next.Execute(context).ConfigureAwait(false);
     }
 
-    public Task Faulted<TException>(BehaviorExceptionContext<StreamEventTypeMachineState,
-        RemovingStreamEventTypeRequested, TException> context,
+    public Task Faulted<TException>(
+        BehaviorExceptionContext<StreamEventTypeMachineState,
+            RemovingStreamEventTypeRequested, TException> context,
         IBehavior<StreamEventTypeMachineState, RemovingStreamEventTypeRequested> next)
         where TException : Exception
     {

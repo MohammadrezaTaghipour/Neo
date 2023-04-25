@@ -43,6 +43,7 @@ public class RemoveStreamContextActivity :
             await context.Send(context.SourceAddress,
                 new ActivitiesFaulted
                 {
+                    RequestId = context.Arguments.RequestId,
                     Id = context.Arguments.Id,
                     ErrorCode = (e as BusinessException)?.ErrorCode,
                     ErrorMessage = e.Message
@@ -54,6 +55,7 @@ public class RemoveStreamContextActivity :
     public async Task<CompensationResult> Compensate(
         CompensateContext<StreamContextActivityLog> context)
     {
+        await Task.CompletedTask;
         return context.Compensated();
     }
 }

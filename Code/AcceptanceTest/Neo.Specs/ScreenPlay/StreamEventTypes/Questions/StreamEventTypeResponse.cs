@@ -1,10 +1,9 @@
 ﻿namespace Neo.Specs.ScreenPlay.StreamEventTypes.Questions;
 
-public record StreamEventTypeResponse(Guid? Id, 
+public record StreamEventTypeResponse(Guid? Id,
     string? Title,
     bool? Removed,
-    IReadOnlyCollection<StreamEventTypeMetadataResponseItem>? Metadata,
-    StatusResponse Status);
+    IReadOnlyCollection<StreamEventTypeMetadataResponseItem>? Metadata);
 
 public record StreamEventTypeMetadataResponseItem(string Title);
 

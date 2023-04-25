@@ -6,7 +6,7 @@ namespace Neo.Specs.Features.StreamContexts.Given;
 
 [Binding]
 public class StreamContextHasBeenRemoved
-{ 
+{
     private readonly ICommandBus _commandBus;
     private readonly ScenarioContext _context;
 

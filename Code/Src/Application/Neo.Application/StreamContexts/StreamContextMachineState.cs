@@ -1,6 +1,5 @@
 ﻿using MassTransit;
 using Neo.Application.Contracts.ReferentialPointers;
-using Neo.Infrastructure.Framework.AspCore;
 
 namespace Neo.Application.StreamContexts;
 
@@ -19,7 +18,6 @@ public class StreamContextMachineState :
     public string CurrentState { get; set; }
 
     public Guid StreamContextId { get; set; }
-    public ErrorResponse Error { get; set; }
     public ReferentialPointerContainer ReferentialPointerCurrentState { get; set; }
     public ReferentialPointerContainer ReferentialPointerNextState { get; set; }
 }
